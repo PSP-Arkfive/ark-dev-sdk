@@ -13,7 +13,6 @@ target_link_libraries(screenprinter PRIVATE colordebugger)
 add_dependencies(screenprinter CopyPrebuiltSdkLibs)
 
 add_custom_command(TARGET screenprinter POST_BUILD
-   DEPENDS screenprinter
    COMMAND cp "$<TARGET_FILE:screenprinter>" "${SDK_LIBS_DIR}/"
    COMMENT "Copying to libs folder"
 )

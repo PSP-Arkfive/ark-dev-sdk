@@ -48,7 +48,6 @@ target_compile_options(iplsdk PRIVATE -Os -G0 -Wall -fno-pic -std=c99 -fdata-sec
 add_dependencies(iplsdk CopyPrebuiltSdkLibs)
 
 add_custom_command(TARGET iplsdk POST_BUILD
-   DEPENDS iplsdk
    COMMAND ${CMAKE_COMMAND} -E make_directory "${SDK_INCLUDE_DIR}/iplsdk"
    COMMAND cp "$<TARGET_FILE:iplsdk>" "${SDK_LIBS_DIR}/"
    COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h" "${SDK_INCLUDE_DIR}/iplsdk/"

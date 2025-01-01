@@ -10,7 +10,6 @@ target_include_directories(colordebugger PUBLIC ${SDK_INCLUDE_DIR})
 add_dependencies(colordebugger CopyPrebuiltSdkLibs)
 
 add_custom_command(TARGET colordebugger POST_BUILD
-   DEPENDS colordebugger
    COMMAND cp "$<TARGET_FILE:colordebugger>" "${SDK_LIBS_DIR}/"
    COMMENT "Copying to libs folder"
 )

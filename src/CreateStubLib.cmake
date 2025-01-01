@@ -25,7 +25,6 @@ function(add_stub_lib LIB_NAME SRC_FILE DEFINE_PREFIX NUM_STUBS)
    add_dependencies(${LIB_NAME} CopyPrebuiltSdkLibs)
 
    add_custom_command(TARGET ${LIB_NAME} POST_BUILD
-      DEPENDS ${LIB_NAME}
       COMMAND cp "$<TARGET_FILE:${LIB_NAME}>" "${SDK_LIBS_DIR}/"
       COMMENT "Copying to libs folder"
    )
