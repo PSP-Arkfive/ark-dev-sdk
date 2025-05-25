@@ -2,7 +2,7 @@
 
 1. Clone the repo
 
-2. Place `pspdev` directory in `/usr/local'
+2. Place `pspdev` directory in `/usr/local`
 
 3. Append to `$HOME/.bashrc`
 
