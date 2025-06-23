@@ -3,6 +3,7 @@
 #include "gpio.h"
 #include "sysreg.h"
 #include "spi.h"
+#include <string.h>
 
 unsigned int g_baryon_version = 0;
 
@@ -154,7 +155,7 @@ int syscon_read_scratchpad(unsigned int src, unsigned int *dest)
 {
     unsigned char data = (unsigned char)(src << 2) | (unsigned char)(sizeof(unsigned int) >> 1);
 
-    return syscon_issue_command_read_write(SYSCON_READ_SCRATCHPAD, &data, sizeof(data), dest);
+    return syscon_issue_command_read_write(SYSCON_READ_SCRATCHPAD, &data, sizeof(data), (unsigned char *)dest);
 }
 
 int syscon_write_scratchpad(unsigned int dest, unsigned int *src)

@@ -1,5 +1,6 @@
 #include "kirk.h"
 #include "cpu.h"
+#include <string.h>
 
 typedef struct
 {

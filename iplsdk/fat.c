@@ -19,6 +19,8 @@ u8    sec_per_cluster;
 int fat_type;
 char filename[256], filename2[256];
 
+extern void pspMsInit(void);
+
 MsFatFile thefile; // Only opened file
 
 int MsFatReadLogicalSector(int sector, void *buf)
@@ -276,7 +278,7 @@ int MsFatFindFile(u32 dir_cluster, char *filename, int rootcase, MsFatFile *file
 
         				if (lfn)
         				{
-        					if (strcasecmp(filename, ++p) == 0)
+        					if (strcmp(filename, ++p) == 0)
         					{
         						// Found
         						MsFatFillFileStruct(entry, file);
@@ -317,7 +319,7 @@ int MsFatFindFile(u32 dir_cluster, char *filename, int rootcase, MsFatFile *file
         						filename2[i+1+j-8] = 0; 
         					}							
 
-        					if (strcasecmp(filename, filename2) == 0)
+        					if (strcmp(filename, filename2) == 0)
         					{
         						// Found
         						MsFatFillFileStruct(entry, file);
