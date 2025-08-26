@@ -12,7 +12,7 @@ all:
 	$(MAKE) -C src/ansi-c
 	$(MAKE) -C src/colordebugger
 	$(MAKE) -C src/screenprinter
-	$(Q)mkdir libs
+	$(Q)mkdir -p libs
 	$(Q)cp src/KUBridge/*.a libs/
 	$(Q)cp src/SystemCtrlForUser/*.a libs
 	$(Q)cp src/SystemCtrlForKernel/*.a libs
