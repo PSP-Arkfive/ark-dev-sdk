@@ -61,5 +61,7 @@ typedef struct RebootConfigARK {
 
 #define IS_ARK_CONFIG(config) (*((u32*)config) == ARK_CONFIG_MAGIC)
 
+extern RebootConfigARK* sctrlHENGetRebootexConfig(RebootConfigARK*);
+
 #endif
 
