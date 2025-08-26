@@ -9,7 +9,7 @@ char* strstr(const char* source, const char* search){
         int i = 0;
         while (source[i] != 0){
             if (strncmp(&source[i], search, len)==0){
-                return &source[i];
+                return (char*)&source[i];
             }
             i++;
         }

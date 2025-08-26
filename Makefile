@@ -11,6 +11,7 @@ all:
 	$(MAKE) -C src/guglue
 	$(MAKE) -C src/ansi-c
 	$(MAKE) -C src/colordebugger
+	$(MAKE) -C src/screenprinter
 	$(Q)cp src/KUBridge/*.a libs/
 	$(Q)cp src/SystemCtrlForUser/*.a libs
 	$(Q)cp src/SystemCtrlForKernel/*.a libs
@@ -22,6 +23,7 @@ all:
 	$(Q)cp src/guglue/*.a libs
 	$(Q)cp src/ansi-c/*.a libs
 	$(Q)cp src/colordebugger/*.a libs
+	$(Q)cp src/screenprinter/*.a libs
 
 clean:
 	-rm -f libs/*.a
@@ -36,4 +38,5 @@ clean:
 	$(MAKE) -C src/guglue clean
 	$(MAKE) -C src/ansi-c clean
 	$(MAKE) -C src/colordebugger clean
+	$(MAKE) -C src/screenprinter clean
 
