@@ -114,7 +114,7 @@ unsigned int sctrlKernelRand(void);
 /**
  * Register Custom init.prx sceKernelStartModule Handler, returns previous handler (if any)
  */
-void sctrlSetCustomStartModule(int (* func)(int modid, SceSize argsize, void * argp, int * modstatus, SceKernelSMOption * opt));
+void* sctrlSetStartModuleExtra(int (* func)(int modid, SceSize argsize, void * argp, int * modstatus, SceKernelSMOption * opt));
 
 /**
  * Read parameter from an SFO file or an EBOOT.PBP file
