@@ -10,6 +10,7 @@ all:
 	$(MAKE) -C src/libpspftp_stub
 	$(MAKE) -C src/guglue
 	$(MAKE) -C src/ansi-c
+	$(MAKE) -C src/colordebugger
 	$(Q)cp src/KUBridge/*.a libs/
 	$(Q)cp src/SystemCtrlForUser/*.a libs
 	$(Q)cp src/SystemCtrlForKernel/*.a libs
@@ -20,6 +21,7 @@ all:
 	$(Q)cp src/libpspftp_stub/*.a libs
 	$(Q)cp src/guglue/*.a libs
 	$(Q)cp src/ansi-c/*.a libs
+	$(Q)cp src/colordebugger/*.a libs
 
 clean:
 	-rm -f libs/*.a
@@ -33,4 +35,5 @@ clean:
 	$(MAKE) -C src/libpspftp_stub clean
 	$(MAKE) -C src/guglue clean
 	$(MAKE) -C src/ansi-c clean
+	$(MAKE) -C src/colordebugger clean
 
