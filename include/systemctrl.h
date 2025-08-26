@@ -367,6 +367,13 @@ int sctrlHENGetVersion();
 int sctrlHENGetMinorVersion();
 
 /**
+ * Check if currently running on a toolkit.
+ *
+ * @return 0 if retail, 1 if TestingTool, 2 if DevelopmentTool
+ */
+int sctrlHENIsToolKit();
+
+/**
  * Finds a driver
  *
  * @param drvname - The name of the driver (without ":" or numbers)

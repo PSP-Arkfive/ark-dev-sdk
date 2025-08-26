@@ -1,6 +1,10 @@
 #ifndef __VSHCTRL_H__
 #define __VSHCTRL_H__
 
+#include <pspctrl.h>
+
+typedef struct SEConfig SEConfig;
+
 /**
  * This api is for vsh menu, xmb control or any other vsh/xmb plugin.
  * 
@@ -8,7 +12,10 @@
 */
 
 
-
+/**
+ * Allocate memory in user ram.
+*/
+void* user_malloc(size_t size);
 
 /**
  * Registers the vsh menu.
@@ -115,7 +122,7 @@ void isoClose();
  * 
  * @returns 0 on success, < 0 on error.
  */
-int isoGetFileInfo(char * path, u32 *filesize, u32 *lba);
+int isoGetFileInfo(const char * path, u32 *filesize, u32 *lba);
 
 
 /**
@@ -145,7 +152,7 @@ int has_prometheus_module(const char *isopath);
  * 
  * @returns boolean - 1 if update available, 0 if unavailable.
  */
-int has_update_file(const char *isopath);
+int has_update_file(const char *isopath, char* update_file);
 
 
 

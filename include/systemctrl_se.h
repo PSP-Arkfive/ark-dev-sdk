@@ -149,7 +149,7 @@ enum umdregion
 };
 
 // keep ARK's SEConfig binary compatible with PRO's
-typedef struct _SEConfig
+typedef struct SEConfig
 {
     u32 magic;
     s16 iso_cache_size; // in MB, automatic
