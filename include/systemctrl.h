@@ -107,16 +107,6 @@ int sctrlHookImportByNID(SceModule2 * pMod, char * library, unsigned int nid, vo
 int sctrlKernelExitVSH(struct SceKernelLoadExecVSHParam *param);
 
 /**
- *  Return Reboot Configuration UMD File
- */
-char * sctrlSEGetUmdFile(void);
-
-/**
- * Set Reboot Configuration UMD File
- */
-void sctrlSESetUmdFile(char * file);
-
-/**
  *  Calculate Random Number via KIRK
  */
 unsigned int sctrlKernelRand(void);
@@ -384,7 +374,7 @@ int sctrlHENGetMinorVersion();
  * @returns the driver if found, NULL otherwise
  *
  */
-PspIoDrv *sctrlHENFindDriver(char *drvname);
+PspIoDrv *sctrlHENFindDriver(const char *drvname);
 
 /** 
  * Finds a function.
@@ -398,6 +388,17 @@ PspIoDrv *sctrlHENFindDriver(char *drvname);
  */
 unsigned int sctrlHENFindFunction(char *modname, char *libname, unsigned int nid);
 
+/** 
+ * Finds an import.
+ *
+ * @param modname - The module where to search the function
+ * @param libname - The library name
+ * @nid - The nid of the function
+ *
+ * @returns - The function address or 0 if not found
+ *
+ */
+unsigned int sctrlHENFindImport(const char *modname, const char *libname, unsigned int nid);
 
 /**
  * Sets a function to be called just before module_start of a module is gonna be called (useful for patching purposes)

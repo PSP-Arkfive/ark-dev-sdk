@@ -34,6 +34,8 @@ extern ARKConfig* ark_config;
 
 extern int (* DisplaySetFrameBuf)(void*, int, int, int);
 
+extern int isSystemBooted(void);
+
 // Get PSID hash
 int sctrlKernelGetPSIDHash(unsigned char psidHash[16]);
 

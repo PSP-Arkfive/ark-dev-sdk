@@ -15,20 +15,20 @@ extern "C"{
 
 // interface for passing arguments to kernel functions
 struct KernelCallArg {
-    u32 arg1;
-    u32 arg2;
-    u32 arg3;
-    u32 arg4;
-    u32 arg5;
-    u32 arg6;
-    u32 arg7;
-    u32 arg8;
-    u32 arg9;
-    u32 arg10;
-    u32 arg11;
-    u32 arg12;
-    u32 ret1;
-    u32 ret2;
+    uint32_t arg1;
+    uint32_t arg2;
+    uint32_t arg3;
+    uint32_t arg4;
+    uint32_t arg5;
+    uint32_t arg6;
+    uint32_t arg7;
+    uint32_t arg8;
+    uint32_t arg9;
+    uint32_t arg10;
+    uint32_t arg11;
+    uint32_t arg12;
+    uint32_t ret1;
+    uint32_t ret2;
 };
 
 /**
@@ -147,14 +147,14 @@ void kuKernelIcacheInvalidateAll(void);
  *
  * @param addr - Address to read, must have 4 bytes alignment
  */
-u32 kuKernelPeekw(void *addr);
+unsigned int kuKernelPeekw(void *addr);
 
 /**
  * Write 4 bytes to memory (with kernel memory access)
  *
  * @param addr - Address to write, must have 4 bytes alignment
  */
-void kuKernelPokew(void *addr, u32 value);
+void kuKernelPokew(void *addr, unsigned int value);
 
 /**
  * memcpy (with kernel memory access)

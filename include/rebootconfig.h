@@ -19,10 +19,6 @@
 #define _REBOOTCONFIG_H_
 
 #include <pspsdk.h>
-#include <macros.h>
-#include <systemctrl_se.h>
-#include <functions.h>
-#include "ansi_c_functions.h"
 #include <ark.h>
 
 #define REBOOTEX_MAX_SIZE 0x5000

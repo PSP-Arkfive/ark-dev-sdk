@@ -296,18 +296,13 @@ int sctrlSEGetDiscType(void);
 char *sctrlSEGetUmdFile(void);
 
 /**
- * Gets the current umd file (kernel only)
-*/
-void sctrlSESetUmdFile(char *file);
-
-/**
  * Sets the current umd file (kernel only)
  *
  * @param file - The umd file
 */
-void sctrlSESetUmdFile(char *file);
+void sctrlSESetUmdFile(const char *file);
+void SetUmdFile(const char *file);
 
-void SetUmdFile(char *file);
 
 /** 
  * Sets the boot config file for next reboot
