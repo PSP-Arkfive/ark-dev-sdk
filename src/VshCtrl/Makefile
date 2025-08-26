@@ -30,4 +30,5 @@ ASFLAGS = $(CFLAGS)
 LDFLAGS=-nodefaultlibs
 
 LIBDIR =
+
 include ../beauty_stub.mak
