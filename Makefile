@@ -12,6 +12,7 @@ all:
 	$(MAKE) -C src/ansi-c
 	$(MAKE) -C src/colordebugger
 	$(MAKE) -C src/screenprinter
+	$(Q)mkdir libs
 	$(Q)cp src/KUBridge/*.a libs/
 	$(Q)cp src/SystemCtrlForUser/*.a libs
 	$(Q)cp src/SystemCtrlForKernel/*.a libs
@@ -26,7 +27,7 @@ all:
 	$(Q)cp src/screenprinter/*.a libs
 
 clean:
-	-rm -f libs/*.a
+	$(Q)rm -rf libs
 	$(MAKE) -C src/KUBridge clean
 	$(MAKE) -C src/SystemCtrlForUser clean
 	$(MAKE) -C src/SystemCtrlForKernel clean
