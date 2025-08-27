@@ -36,7 +36,7 @@ extern int (* DisplaySetFrameBuf)(void*, int, int, int);
 
 extern int isSystemBooted(void);
 
-extern int msstorCacheInit(char*);
+extern int msstorCacheInit(const char* driver);
 
 // Get PSID hash
 int sctrlKernelGetPSIDHash(unsigned char psidHash[16]);

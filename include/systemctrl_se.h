@@ -153,8 +153,9 @@ typedef struct SEConfig
 {
     u32 magic;
     u16 iso_cache_size_kb; // in KB, automatic
-    u16 iso_cache_num;
+    u16 iso_cache_num; // number of cache slots
     u8 iso_cache_partition;
+    u8 iso_cache_type; // 0 = no cache, 1 = LRU, 2 = RR
     u8 umdseek;
     u8 umdspeed;
     u8 cpubus_clock;
