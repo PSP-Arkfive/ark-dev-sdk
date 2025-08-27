@@ -152,9 +152,8 @@ enum umdregion
 typedef struct SEConfig
 {
     u32 magic;
-    s16 iso_cache_size; // in MB, automatic
-    s16 iso_cache_num;
-    u8 iso_cache;
+    u16 iso_cache_size_kb; // in KB, automatic
+    u16 iso_cache_num;
     u8 iso_cache_partition;
     u8 umdseek;
     u8 umdspeed;

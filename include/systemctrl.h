@@ -566,6 +566,11 @@ void sctrlSetCustomStartModule(int (*func)(int modid, SceSize argsize, void *arg
 void sctrlHENLoadModuleOnReboot(char *module_after, void *buf, int size, int flags);
 
 /**
+ * Override rebootex.
+ */
+void sctrlHENSetRebootexOverride(const u8 *rebootex);
+
+/**
  * Enable/disable NID Resolver on particular library
  *
  * @param libname the name of the library to be enabled/disabled
