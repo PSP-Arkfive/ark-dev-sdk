@@ -218,3 +218,12 @@
 #ifdef F_SystemCtrlForUser_0070
 	IMPORT_FUNC  "SystemCtrlForUser",0x72F47790,sctrlHookImportByNID
 #endif
+#ifdef F_SystemCtrlForUser_0071
+	IMPORT_FUNC  "SystemCtrlForUser",0xD067B0E9,sctrlHENsctrlHENFindJAL
+#endif
+#ifdef F_SystemCtrlForUser_0072
+	IMPORT_FUNC  "SystemCtrlForUser",0x2F46829B,sctrlHENFindFirstBEQ
+#endif
+#ifdef F_SystemCtrlForUser_0073
+	IMPORT_FUNC  "SystemCtrlForUser",0x6F515CDC,sctrlHENFindRefInGlobals
+#endif

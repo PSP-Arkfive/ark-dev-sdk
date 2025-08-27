@@ -81,6 +81,20 @@ typedef struct SceThreadContext SceThreadContext;
 typedef int (* KDEC_HANDLER)(u32 *buf, int size, int *retSize, int m);
 typedef int (* MDEC_HANDLER)(u32 *tag, u8 *keys, u32 code, u32 *buf, int size, int *retSize, int m, void *unk0, int unk1, int unk2, int unk3, int unk4);
 
+// patch helper functions
+u32 sctrlHENsctrlHENFindJAL(u32 addr, int reversed, int skip);
+#define sctrlHENFindFirstJAL(addr) sctrlHENsctrlHENFindJAL(addr, 0, 0)
+#define sctrlHENFindFirstJALReverse(addr) sctrlHENsctrlHENFindJAL(addr, 1, 0)
+#define sctrlHENFindJAL(addr, pos) sctrlHENsctrlHENFindJAL(addr, 0, pos)
+#define sctrlHENFindJALReverse(addr, pos) sctrlHENsctrlHENFindJAL(addr, 1, pos)
+#define sctrlHENFindFirstJALForFunction(modname, libname, uid) sctrlHENFindFirstJAL(FindFunction(modname, libname, uid))
+#define sctrlHENFindJALForFunction(modname, libname, uid, pos) sctrlHENFindJAL(FindFunction(modname, libname, uid), pos)
+#define sctrlHENFindFirstJALReverseForFunction(modname, libname, uid) sctrlHENFindFirstJALReverse(FindFunction(modname, libname, uid))
+#define sctrlHENFindJALReverseForFunction(modname, libname, uid, pos) sctrlHENFindJALReverse(FindFunction(modname, libname, uid), pos)
+
+u32 sctrlHENFindFirstBEQ(u32 addr);
+u32 sctrlHENFindRefInGlobals(char* libname, u32 addr, u32 ptr);
+
 /**
  *  Find Import Library Stub Table
  */
