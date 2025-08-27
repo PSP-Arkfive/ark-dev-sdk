@@ -1,70 +1,9 @@
 #ifndef __KERMIT_H__
 #define __KERMIT_H__
 
-typedef struct KermitPacket_
-{
-    u32 cmd;            //0x0
-    SceUID sema;        //0x4
-    struct KermitPacket_ *self; //0x8
-    u32 unk_C;          //0xC
-} KermitPacket;
+#include <pspsdk.h>
 
 #define KERMIT_MAX_ARGC     (14)
-
-/*
-    Issue a command to kermit.
-    
-    packet:             a kermit packet. Header followed by 64 bit words (LE) as arguements.
-    cmd_mode:           a valid command mode type.
-    cmd:                a valid command subtype of cmd_mode.
-    argc:               the number of 64 bit arguements following the header. Max 13 arguements.
-    allow_callback:     set non-zero to use callback permitting semaphore wait.
-    resp:               64 bit word returned by the kermit call.
-    
-    returns 0 on success, else < 0 on error.
-*/
-int sceKermit_driver_4F75AA05(KermitPacket *packet, u32 cmd_mode, u32 cmd, u32 argc, u32 allow_callback, u64 *resp);
-
-#define KERMIT_INPUT_MODE   (1)
-#define KERMIT_OUTPUT_MODE  (2)
-
-/*
-    Apply IO to kermit packet.
-    
-    packet:             a kermit packet. Header followed by 64 bit words (LE) as arguements.
-    argc:               the number of arguements in the packet. Max 13 arguements.
-    buffer:             the input buffer containing the data to be sent or the output buffer to store data.
-    buffer_size:        the size of the input data, else the size of the output buffer.
-    io_mode:            KERMIT_INPUT_MODE for data input. KERMIT_OUTPUT_MODE for expecting output data.
-*/
-void sceKermitMemory_driver_AAF047AC(KermitPacket *packet, u32 argc, u8 *buffer, u32 buffer_size, u32 io_mode);
-
-/*
-    Send data to vita host.
-    
-    data:               pointer to the data to be sent to host.
-    len:                the size of the data to be sent.
-*/
-void sceKermitMemory_driver_80E1240A(u8 *data, u32 len);
-
-/*
-    Recieve data from vita host.
-    
-    data:               pointer to buffer to store output data.
-    len:                the size of the expected output data.
-*/
-void sceKermitMemory_driver_90B662D0(u8 *data, u32 data_size);
-
-/* Kermit command modes */
-#define KERMIT_MODE_MSFS        (0x3)
-#define KERMIT_MODE_FLASHFS     (0x4)
-#define KERMIT_MODE_AUDIO       (0x5)
-#define KERMIT_MODE_ME          (0x6)
-#define KERMIT_MODE_LOWIO       (0x7)
-#define KERMIT_MODE_PERIPHERAL  (0x9)
-#define KERMIT_MODE_WLAN        (0xA)
-#define KERMIT_MODE_USB         (0xC)
-#define KERMIT_MODE_UTILITY     (0xD)
 
 /* kermit KERMIT_MODE_PERIPHERAL commands */
 #define KERMIT_CMD_RTC_GET_CURRENT_TICK     (0x0)
@@ -176,6 +115,126 @@ void sceKermitMemory_driver_90B662D0(u8 *data, u32 data_size);
 #define KERMIT_PACKET(x)    (x | (2-KERNEL(x))*0x20000000)
 #define ALIGN_64(x) ((x) & -64)
 #define KERMIT_CALLBACK_DISABLE 0
+
+enum KermitModes {
+    KERMIT_MODE_NONE,
+    KERMIT_MODE_UNK_1,
+    KERMIT_MODE_UNK_2,
+    KERMIT_MODE_MSFS,
+    KERMIT_MODE_FLASHFS,
+    KERMIT_MODE_AUDIOOUT,
+    KERMIT_MODE_ME,
+    KERMIT_MODE_LOWIO,
+    KERMIT_MODE_POCS_USBPSPCM,
+    KERMIT_MODE_PERIPHERAL,
+    KERMIT_MODE_WLAN,
+    KERMIT_MODE_AUDIOIN,
+    KERMIT_MODE_USB,
+    KERMIT_MODE_UTILITY,
+    KERMIT_MODE_EXTRA_1,
+    KERMIT_MODE_EXTRA_2,
+};
+
+enum KermitVirtualInterrupts {
+    KERMIT_VIRTUAL_INTR_NONE,
+    KERMIT_VIRTUAL_INTR_AUDIO_CH1,
+    KERMIT_VIRTUAL_INTR_AUDIO_CH2,
+    KERMIT_VIRTUAL_INTR_AUDIO_CH3,
+    KERMIT_VIRTUAL_INTR_ME_DMA_CH1,
+    KERMIT_VIRTUAL_INTR_ME_DMA_CH2,
+    KERMIT_VIRTUAL_INTR_ME_DMA_CH3,
+    KERMIT_VIRTUAL_INTR_WLAN_CH1,
+    KERMIT_VIRTUAL_INTR_WLAN_CH2,
+    KERMIT_VIRTUAL_INTR_IMPOSE_CH1,
+    KERMIT_VIRTUAL_INTR_POWER_CH1,
+    KERMIT_VIRTUAL_INTR_UNKNOWN_CH1,    // <- used after settings
+    KERMIT_VIRTUAL_INTR_USBGPS_CH1,
+    KERMIT_VIRTUAL_INTR_USBPSPCM_CH1,
+};
+
+enum KermitArgumentModes {
+  KERMIT_INPUT_MODE = 0x1,
+  KERMIT_OUTPUT_MODE = 0x2,
+};
+
+typedef struct {
+    uint32_t cmd; //0x0
+    SceUID sema_id; //0x4
+    uint64_t *response; //0x8
+    uint32_t padding; //0xC
+    uint64_t args[14]; // 0x10
+} SceKermitRequest; //0x80
+
+// 0xBFC00800
+typedef struct {
+    uint32_t cmd; //0x00
+    SceKermitRequest *request; //0x04
+} SceKermitCommand; //0x8
+
+// 0xBFC00840
+typedef struct {
+    uint64_t result; //0x0
+    SceUID sema_id; //0x8
+    int32_t unk_C; //0xC
+    uint64_t *response; //0x10
+    uint64_t unk_1C; //0x1C
+} SceKermitResponse; //0x24 or 0x30????
+
+// 0xBFC008C0
+typedef struct {
+    int32_t unk_0; //0x0
+    int32_t unk_4; //0x4
+} SceKermitInterrupt; //0x8
+
+typedef struct KermitPacket_
+{
+    u32 cmd;            //0x0
+    SceUID sema;        //0x4
+    struct KermitPacket_ *self; //0x8
+    u32 unk_C;          //0xC
+} KermitPacket;
+
+
+/*
+    Issue a command to kermit.
+    
+    packet:             a kermit packet. Header followed by 64 bit words (LE) as arguements.
+    cmd_mode:           a valid command mode type.
+    cmd:                a valid command subtype of cmd_mode.
+    argc:               the number of 64 bit arguements following the header. Max 13 arguements.
+    allow_callback:     set non-zero to use callback permitting semaphore wait.
+    resp:               64 bit word returned by the kermit call.
+    
+    returns 0 on success, else < 0 on error.
+*/
+int sceKermit_driver_4F75AA05(KermitPacket *packet, u32 cmd_mode, u32 cmd, u32 argc, u32 allow_callback, u64 *resp);
+
+/*
+    Apply IO to kermit packet.
+    
+    packet:             a kermit packet. Header followed by 64 bit words (LE) as arguements.
+    argc:               the number of arguements in the packet. Max 13 arguements.
+    buffer:             the input buffer containing the data to be sent or the output buffer to store data.
+    buffer_size:        the size of the input data, else the size of the output buffer.
+    io_mode:            KERMIT_INPUT_MODE for data input. KERMIT_OUTPUT_MODE for expecting output data.
+*/
+void sceKermitMemory_driver_AAF047AC(KermitPacket *packet, u32 argc, u8 *buffer, u32 buffer_size, u32 io_mode);
+
+/*
+    Send data to vita host.
+    
+    data:               pointer to the data to be sent to host.
+    len:                the size of the data to be sent.
+*/
+void sceKermitMemory_driver_80E1240A(u8 *data, u32 len);
+
+/*
+    Recieve data from vita host.
+    
+    data:               pointer to buffer to store output data.
+    len:                the size of the expected output data.
+*/
+void sceKermitMemory_driver_90B662D0(u8 *data, u32 data_size);
 
 
 
