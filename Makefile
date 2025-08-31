@@ -13,6 +13,7 @@ all:
 	$(MAKE) -C src/colordebugger
 	$(MAKE) -C src/screenprinter
 	$(Q)mkdir -p libs
+	$(Q)cp src/pre-built/*.a libs/
 	$(Q)cp src/KUBridge/*.a libs/
 	$(Q)cp src/SystemCtrlForUser/*.a libs
 	$(Q)cp src/SystemCtrlForKernel/*.a libs
