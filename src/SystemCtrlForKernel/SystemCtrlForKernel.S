@@ -276,7 +276,7 @@
     IMPORT_FUNC "SystemCtrlForKernel",0x8476E2F1,sctrlArkExitLauncher
 #endif
 #ifdef F_SystemCtrlForKernel_0090
-    IMPORT_FUNC "SystemCtrlForKernel",0xD067B0E9,sctrlHENsctrlHENFindJAL
+    IMPORT_FUNC "SystemCtrlForKernel",0xD067B0E9,sctrlHENFindJAL
 #endif
 #ifdef F_SystemCtrlForKernel_0091
     IMPORT_FUNC "SystemCtrlForKernel",0x2F46829B,sctrlHENFindFirstBEQ
