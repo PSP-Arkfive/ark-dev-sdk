@@ -12,6 +12,7 @@ all:
 	$(MAKE) -C src/ansi-c
 	$(MAKE) -C src/colordebugger
 	$(MAKE) -C src/screenprinter
+	$(MAKE) -C src/mini2d
 	$(Q)mkdir -p libs
 	$(Q)cp src/pre-built/*.a libs/
 	$(Q)cp src/KUBridge/*.a libs/
@@ -26,6 +27,7 @@ all:
 	$(Q)cp src/ansi-c/*.a libs
 	$(Q)cp src/colordebugger/*.a libs
 	$(Q)cp src/screenprinter/*.a libs
+	$(Q)cp src/mini2d/*.a libs
 
 clean:
 	$(Q)rm -rf libs
@@ -41,4 +43,4 @@ clean:
 	$(MAKE) -C src/ansi-c clean
 	$(MAKE) -C src/colordebugger clean
 	$(MAKE) -C src/screenprinter clean
-
+	$(MAKE) -C src/mini2d clean
