@@ -219,7 +219,7 @@
 	IMPORT_FUNC  "SystemCtrlForUser",0x72F47790,sctrlHookImportByNID
 #endif
 #ifdef F_SystemCtrlForUser_0071
-	IMPORT_FUNC  "SystemCtrlForUser",0xD067B0E9,sctrlHENFindJAL
+	IMPORT_FUNC  "SystemCtrlForUser",0xC68F9EF8,sctrlHENFindJALGeneric
 #endif
 #ifdef F_SystemCtrlForUser_0072
 	IMPORT_FUNC  "SystemCtrlForUser",0x2F46829B,sctrlHENFindFirstBEQ
