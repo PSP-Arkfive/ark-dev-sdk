@@ -80,7 +80,7 @@ typedef struct _pspMsPrivateDirent {
 //#define sctrlKernelQuerySystemCall sceKernelQuerySystemCall
 
 // Prologue Module Start Handler
-typedef int (* STMOD_HANDLER)(SceModule2 *);
+typedef int (* STMOD_HANDLER)(SceModule *);
 
 // Thread Context
 typedef struct SceThreadContext SceThreadContext;
@@ -106,17 +106,17 @@ u32 sctrlHENFindRefInGlobals(char* libname, u32 addr, u32 ptr);
 /**
  *  Find Import Library Stub Table
  */
-SceLibraryStubTable * sctrlFindImportLib(SceModule2 * pMod, char * library);
+SceLibraryStubTable * sctrlFindImportLib(SceModule * pMod, char * library);
 
 /**
  *  Find Import Function Stub Address
  */
-unsigned int sctrlFindImportByNID(SceModule2 * pMod, char * library, unsigned int nid);
+unsigned int sctrlFindImportByNID(SceModule * pMod, char * library, unsigned int nid);
 
 /**
  *  Replace Import Function Stub
  */
-int sctrlHookImportByNID(SceModule2 * pMod, char * library, unsigned int nid, void * func);
+int sctrlHookImportByNID(SceModule * pMod, char * library, unsigned int nid, void * func);
 
 /**
  * Restart the vsh.
@@ -442,14 +442,14 @@ unsigned int sctrlHENFindImport(const char *modname, const char *libname, unsign
  *
  * STMOD_HANDLER previous = NULL;
  *
- * int OnModuleStart(SceModule2 *mod);
+ * int OnModuleStart(SceModule *mod);
  *
  * void somepointofmycode()
  * {
  *        previous = sctrlHENSetStartModuleHandler(OnModuleStart);
  * }
  *
- * int OnModuleStart(SceModule2 *mod)
+ * int OnModuleStart(SceModule *mod)
  * {
  *        if (strcmp(mod->modname, "vsh_module") == 0)
  *        {

@@ -68,7 +68,7 @@ void installJALTrace(unsigned int address);
 void installMemoryJALTrace(unsigned int start, unsigned int size);
 
 // Install Whole-Module JAL Trace (NOT STABLE! DON'T DO IT IF NOT DESPERATE!)
-void installModuleJALTrace(SceModule2 * module);
+void installModuleJALTrace(SceModule * module);
 
 #ifdef __cplusplus
 }
