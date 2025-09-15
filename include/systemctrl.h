@@ -54,6 +54,14 @@ enum BootLoadFlags
     BOOTLOAD_UMDEMU = 64, /* for original NP9660 */
 };
 
+// Console type (value returned by sctrlHENIsToolKit)
+enum ToolkitType
+{
+    PSP_TOOLKIT_TYPE_RETAIL = 0, // retail unit (not a toolkit)
+    PSP_TOOLKIT_TYPE_TEST = 1, // testing tool kit
+    PSP_TOOLKIT_TYPE_DEV = 2, // development tool kit
+};
+
 typedef struct _pspMsPrivateDirent {
   SceSize size;
   char s_name[16];
