@@ -11,7 +11,7 @@ extern "C"{
 #include <pspsysmem_kernel.h>
 #include <pspctrl.h>
 #include <psputilsforkernel.h>
-#include <module2.h>
+
 
 // interface for passing arguments to kernel functions
 struct KernelCallArg {

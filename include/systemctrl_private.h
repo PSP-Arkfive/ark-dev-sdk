@@ -22,7 +22,7 @@
 extern "C"{
 #endif
 
-#include "module2.h"
+
 #include <ark.h>
 
 /*

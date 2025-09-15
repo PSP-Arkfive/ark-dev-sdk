@@ -29,7 +29,7 @@ extern "C"{
 #include <psploadcore.h>
 #include <pspkernel.h>
 #include <pspinit.h>
-#include <module2.h>
+
 
 #define GAME_ID_MINIMUM_BUFFER_SIZE 10
 
