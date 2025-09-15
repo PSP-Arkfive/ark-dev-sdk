@@ -22,6 +22,7 @@
 extern "C"{
 #endif
 
+#include <psploadcore.h>
 
 #include <ark.h>
 
