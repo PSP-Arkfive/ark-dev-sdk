@@ -5,6 +5,8 @@ all:
 	$(MAKE) -C src/SystemCtrlForKernel
 	$(MAKE) -C src/VshCtrl
 	$(MAKE) -C src/SysclibForUser
+	$(MAKE) -C src/idsRegeneration
+	$(MAKE) -C src/idsRegeneration_driver
 	$(MAKE) -C src/libintraFont_stub
 	$(MAKE) -C src/libpspav_stub
 	$(MAKE) -C src/libpspftp_stub
@@ -20,6 +22,8 @@ all:
 	$(Q)cp src/SystemCtrlForKernel/*.a libs
 	$(Q)cp src/VshCtrl/*.a libs
 	$(Q)cp src/SysclibForUser/*.a libs
+	$(Q)cp src/idsRegeneration/*.a libs
+	$(Q)cp src/idsRegeneration_driver/*.a libs
 	$(Q)cp src/libintraFont_stub/*.a libs
 	$(Q)cp src/libpspav_stub/*.a libs
 	$(Q)cp src/libpspftp_stub/*.a libs
@@ -36,6 +40,8 @@ clean:
 	$(MAKE) -C src/SystemCtrlForKernel clean
 	$(MAKE) -C src/VshCtrl clean
 	$(MAKE) -C src/SysclibForUser clean
+	$(MAKE) -C src/idsRegeneration clean
+	$(MAKE) -C src/idsRegeneration_driver clean
 	$(MAKE) -C src/libintraFont_stub clean
 	$(MAKE) -C src/libpspav_stub clean
 	$(MAKE) -C src/libpspftp_stub clean
