@@ -26,6 +26,7 @@ typedef enum {
 
 int syscon_ctrl_led(SysconLed led, unsigned int on);
 int syscon_ctrl_hr_power(unsigned int on);
+int syscon_ctrl_ms_power(unsigned int on);
 int syscon_handshake_unlock(void);
 int syscon_get_pommel_version(unsigned int *version);
 int syscon_get_power_status(unsigned int *status);

@@ -80,7 +80,7 @@ typedef struct _pspMsPrivateDirent {
 //#define sctrlKernelQuerySystemCall sceKernelQuerySystemCall
 
 // Prologue Module Start Handler
-typedef int (* STMOD_HANDLER)(SceModule *);
+typedef void (* STMOD_HANDLER)(SceModule *);
 
 // Thread Context
 typedef struct SceThreadContext SceThreadContext;
@@ -449,19 +449,15 @@ unsigned int sctrlHENFindImport(const char *modname, const char *libname, unsign
  *        previous = sctrlHENSetStartModuleHandler(OnModuleStart);
  * }
  *
- * int OnModuleStart(SceModule *mod)
+ * void OnModuleStart(SceModule *mod)
  * {
  *        if (strcmp(mod->modname, "vsh_module") == 0)
  *        {
  *            // Do something with vsh module here
  *        }
  *
- *        if (!previous)
- *            return 0;
- *
  *        // Call previous handler
- *
- *        return previous(mod);
+ *        if (previous) previous(mod);
  * }
  *
  * @Note2: The above example should be compiled with the flag -fno-pic
