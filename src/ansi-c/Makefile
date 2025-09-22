@@ -32,5 +32,4 @@ ASFLAGS = $(CFLAGS)
 LIBDIR =
 
 PSPSDK=$(shell psp-config --pspsdk-path)
-PSPDEV=$(shell psp-config --pspdev-path)
 include $(PSPSDK)/lib/build.mak

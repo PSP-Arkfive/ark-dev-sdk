@@ -15,7 +15,9 @@ all:
 	$(MAKE) -C src/colordebugger
 	$(MAKE) -C src/screenprinter
 	$(MAKE) -C src/mini2d
+	$(MAKE) -C src/iplsdk
 	$(Q)mkdir -p libs
+	$(Q)mkdir -p include/iplsdk
 	$(Q)cp src/pre-built/*.a libs/
 	$(Q)cp src/KUBridge/*.a libs/
 	$(Q)cp src/SystemCtrlForUser/*.a libs
@@ -32,9 +34,12 @@ all:
 	$(Q)cp src/colordebugger/*.a libs
 	$(Q)cp src/screenprinter/*.a libs
 	$(Q)cp src/mini2d/*.a libs
+	$(Q)cp src/iplsdk/*.a libs
+	$(Q)cp src/iplsdk/*.h include/iplsdk
 
 clean:
 	$(Q)rm -rf libs
+	$(Q)rm -rf include/iplsdk
 	$(MAKE) -C src/KUBridge clean
 	$(MAKE) -C src/SystemCtrlForUser clean
 	$(MAKE) -C src/SystemCtrlForKernel clean
@@ -50,3 +55,4 @@ clean:
 	$(MAKE) -C src/colordebugger clean
 	$(MAKE) -C src/screenprinter clean
 	$(MAKE) -C src/mini2d clean
+	$(MAKE) -C src/iplsdk clean
