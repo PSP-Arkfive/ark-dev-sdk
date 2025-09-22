@@ -80,7 +80,7 @@ typedef struct _pspMsPrivateDirent {
 //#define sctrlKernelQuerySystemCall sceKernelQuerySystemCall
 
 // Prologue Module Start Handler
-typedef void (* STMOD_HANDLER)(SceModule *);
+typedef int (* STMOD_HANDLER)(SceModule *);
 
 // Thread Context
 typedef struct SceThreadContext SceThreadContext;
