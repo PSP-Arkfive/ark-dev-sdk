@@ -14,6 +14,7 @@ int syscon_init(void);
 #define BARYON_MODEL_CODE_IS_HANDSHAKE_TYPE2(code) (code == 0x30)
 
 unsigned int syscon_get_baryon_version(void);
+unsigned int syscon_get_tachyon_version(void);
 
 int syscon_ctrl_power(unsigned int dev, unsigned int arg);
 
