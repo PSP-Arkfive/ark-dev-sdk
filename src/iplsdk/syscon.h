@@ -36,6 +36,7 @@ int syscon_ctrl_voltage(unsigned int a0, unsigned int a1);
 int syscon_reset_device(unsigned int a0, unsigned int a1);
 int syscon_read_scratchpad(unsigned int src, unsigned int *dest);
 int syscon_write_scratchpad(unsigned int dest, unsigned int *src);
+int syscon_recv_auth(unsigned char key, unsigned char *data);
 
 #define SYSCON_CTRL_UP          (0x00000001)
 #define SYSCON_CTRL_RIGHT       (0x00000002)
