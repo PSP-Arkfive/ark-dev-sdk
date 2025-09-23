@@ -26,7 +26,7 @@ int MsFatReadLogicalSector();
 u32 MsFatGetNextCluster(u32 cluster);
 int MsFatIsValidCluster(u32 cluster);
 int MsFatFindFile(u32 dir_cluster, char *filename, int rootcase, MsFatFile *file);
-int MsFatOpen(char *path);
+int MsFatOpen(const char *path);
 int MsFatRead(void *buf, u32 size);
 int MsFatClose();
 

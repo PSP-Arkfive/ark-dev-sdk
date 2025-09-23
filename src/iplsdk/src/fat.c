@@ -359,7 +359,7 @@ FILE_NOT_FOUND:
     return -1;
 }
 
-int MsFatOpen(char *path)
+int MsFatOpen(const char *path)
 {
     u32 dir_cluster;
     int rootcase = 0;
