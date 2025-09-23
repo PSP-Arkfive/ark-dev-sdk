@@ -35,7 +35,7 @@ all:
 	$(Q)cp src/screenprinter/*.a libs
 	$(Q)cp src/mini2d/*.a libs
 	$(Q)cp src/iplsdk/*.a libs
-	$(Q)cp src/iplsdk/*.h include/iplsdk
+	$(Q)cp src/iplsdk/include/*.h include/iplsdk
 
 clean:
 	$(Q)rm -rf libs
