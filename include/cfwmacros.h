@@ -131,7 +131,7 @@
 #define MAKE_SYSCALL_FUNCTION(a, n) \
 { \
     _sw(JR_RA, (u32)(a)); \
-    MAKE_SYSCALL(n, (u32)(a) + 4); \
+    MAKE_SYSCALL((u32)(a) + 4, n); \
 }
 
 
