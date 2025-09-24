@@ -27,17 +27,18 @@
 // j addr getter (for kernel range, use in combination with KERNELIFY, works with j & jal)
 #define JUMP_TARGET(i) (((unsigned int)(i) & 0x03ffffff) << 2)
 
+// syscall number
+#define SYSCALL(n) ((n<<6)|12)
+
 // jal addr
 #define JAL(f) (0x0C000000 | (((unsigned int)(f) >> 2) & 0x03ffffff))
 
 #define MAKE_JUMP(a, f) _sw(JUMP(f), a);
 #define MAKE_CALL(a, f) _sw(JAL(f), a);
+#define MAKE_SYSCALL(a, n) _sw(SYSCALL(n), (u32)(a));
 
 // jal checker
 #define IS_JAL(i) ((((unsigned int)i) & 0xFC000000) == 0x0C000000)
-
-// syscall number
-#define SYSCALL(n) ((n<<6)|12)
 
 // nop
 #define NOP 0
@@ -130,7 +131,7 @@
 #define MAKE_SYSCALL_FUNCTION(a, n) \
 { \
     _sw(JR_RA, (u32)(a)); \
-    _sw(SYSCALL(n), (u32)(a) + 4); \
+    MAKE_SYSCALL(n, (u32)(a) + 4); \
 }
 
 
