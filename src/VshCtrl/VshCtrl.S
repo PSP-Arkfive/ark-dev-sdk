@@ -24,32 +24,35 @@
 	IMPORT_FUNC  "VshCtrlLib",0x12DC7CF4,fakeParamInexistance
 #endif
 #ifdef F_VshCtrl_0006
-	IMPORT_FUNC  "VshCtrlLib",0x36197FB3,vshCtrlDeleteHibernation
+	IMPORT_FUNC  "VshCtrlLib",0x0647645A,vshCtrlHibernationExists
 #endif
 #ifdef F_VshCtrl_0007
-	IMPORT_FUNC  "VshCtrlLib",0xF1E6A46D,isoOpen
+	IMPORT_FUNC  "VshCtrlLib",0x36197FB3,vshCtrlDeleteHibernation
 #endif
 #ifdef F_VshCtrl_0008
-	IMPORT_FUNC  "VshCtrlLib",0xC4B3078E,isoRead
+	IMPORT_FUNC  "VshCtrlLib",0xF1E6A46D,isoOpen
 #endif
 #ifdef F_VshCtrl_0009
-	IMPORT_FUNC  "VshCtrlLib",0x4DA81CDD,isoClose
+	IMPORT_FUNC  "VshCtrlLib",0xC4B3078E,isoRead
 #endif
 #ifdef F_VshCtrl_0010
-	IMPORT_FUNC  "VshCtrlLib",0xE2498CEC,isoGetFileInfo
+	IMPORT_FUNC  "VshCtrlLib",0x4DA81CDD,isoClose
 #endif
 #ifdef F_VshCtrl_0011
-	IMPORT_FUNC  "VshCtrlLib",0x4BDA734F,isoGetTotalSectorSize
+	IMPORT_FUNC  "VshCtrlLib",0xE2498CEC,isoGetFileInfo
 #endif
 #ifdef F_VshCtrl_0012
-	IMPORT_FUNC  "VshCtrlLib",0x29154CE0,has_prometheus_module
+	IMPORT_FUNC  "VshCtrlLib",0x4BDA734F,isoGetTotalSectorSize
 #endif
 #ifdef F_VshCtrl_0013
-	IMPORT_FUNC  "VshCtrlLib",0x39F5F78E,has_update_file
+	IMPORT_FUNC  "VshCtrlLib",0x29154CE0,has_prometheus_module
 #endif
 #ifdef F_VshCtrl_0014
-	IMPORT_FUNC  "VshCtrlLib",0x0B8D8F45,vctrlGetRegistryValue
+	IMPORT_FUNC  "VshCtrlLib",0x39F5F78E,has_update_file
 #endif
 #ifdef F_VshCtrl_0015
+	IMPORT_FUNC  "VshCtrlLib",0x0B8D8F45,vctrlGetRegistryValue
+#endif
+#ifdef F_VshCtrl_0016
 	IMPORT_FUNC  "VshCtrlLib",0x3A65060D,vctrlSetRegistryValue
 #endif

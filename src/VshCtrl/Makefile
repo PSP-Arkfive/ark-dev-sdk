@@ -19,6 +19,7 @@ OBJS = \
 	VshCtrl_0013.o \
 	VshCtrl_0014.o \
 	VshCtrl_0015.o \
+	VshCtrl_0016.o \
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 

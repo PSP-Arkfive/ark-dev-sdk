@@ -75,6 +75,13 @@ int vshDetectDiscType(const char *path);
 
 
 /**
+ * Check if PSP Go has a hibernation (paused game).
+ * 
+ * @returns boolean.
+ */
+int vshCtrlHibernationExists();
+
+/**
  * Delete PSP Go hibernation (paused game).
  * 
  * @returns 0 on success, < 0 on error.
