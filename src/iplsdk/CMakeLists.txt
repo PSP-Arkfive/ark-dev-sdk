@@ -45,6 +45,8 @@ target_sources(iplsdk PRIVATE
 
 target_compile_options(iplsdk PRIVATE -Os -G0 -Wall -fno-pic -std=c99 -fdata-sections -ffunction-sections -Wl,--gc-sections)
 
+add_dependencies(iplsdk CopyPrebuilt)
+
 add_custom_command(TARGET iplsdk POST_BUILD
    DEPENDS iplsdk
    COMMAND ${CMAKE_COMMAND} -E make_directory "${SDK_INCLUDE_DIR}/iplsdk"

@@ -21,6 +21,8 @@ target_sources(ansic PRIVATE
 
 target_compile_options(ansic PRIVATE -std=c99 -Wall -Os -G0 -fno-pic)
 
+add_dependencies(ansic CopyPrebuilt)
+
 add_custom_command(TARGET ansic POST_BUILD
    DEPENDS ansic
    COMMAND cp "$<TARGET_FILE:ansic>" "${SDK_LIBS_DIR}/"
