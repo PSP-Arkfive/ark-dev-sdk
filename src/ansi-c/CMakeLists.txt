@@ -16,7 +16,7 @@ target_sources(ansic PRIVATE
    strbeginswith.c
    strreplaceall.c
    strcasecmp.c
-   lowerstring.o
+   lowerstring.c
 )
 
 target_compile_options(ansic PRIVATE -std=c99 -Wall -Os -G0 -fno-pic)
