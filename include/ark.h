@@ -152,10 +152,10 @@ typedef struct ARKConfig{
 } ARKConfig;
 
 // macros for device checking
-#define IS_PSP(ark_config) ((ark_config->exec_mode&DEV_MASK)==PSP_ORIG)
-#define IS_VITA(ark_config) ((ark_config->exec_mode&DEV_MASK)==PS_VITA)
-#define IS_VITA_ADR(ark_config) (ark_config->exec_mode==PSV_ADR)
-#define IS_VITA_POPS(ark_config) (ark_config->exec_mode==PSV_POPS)
+#define IS_PSP(_arkconfigptr_) ((_arkconfigptr_->exec_mode&DEV_MASK)==PSP_ORIG)
+#define IS_VITA(_arkconfigptr_) ((_arkconfigptr_->exec_mode&DEV_MASK)==PS_VITA)
+#define IS_VITA_ADR(_arkconfigptr_) (_arkconfigptr_->exec_mode==PSV_ADR)
+#define IS_VITA_POPS(_arkconfigptr_) (_arkconfigptr_->exec_mode==PSV_POPS)
 
 // Function to obtain ARK's execution environment configuration
 void* sctrlArkGetConfig(ARKConfig* conf);
