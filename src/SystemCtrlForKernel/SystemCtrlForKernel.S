@@ -264,23 +264,20 @@
     IMPORT_FUNC "SystemCtrlForKernel",0x22A45DB7,sctrlHENIsToolKit
 #endif
 #ifdef F_SystemCtrlForKernel_0086
-    IMPORT_FUNC "SystemCtrlForKernel",0x18B687A6,sctrlHENGetRebootexConfig
-#endif
-#ifdef F_SystemCtrlForKernel_0087
     IMPORT_FUNC "SystemCtrlForKernel",0x6A5F76B5,sctrlHENRegisterLLEHandler
 #endif
-#ifdef F_SystemCtrlForKernel_0088
+#ifdef F_SystemCtrlForKernel_0087
     IMPORT_FUNC "SystemCtrlForKernel",0x23833651,sctrlGetThreadUIDByName
 #endif
-#ifdef F_SystemCtrlForKernel_0089
+#ifdef F_SystemCtrlForKernel_0088
     IMPORT_FUNC "SystemCtrlForKernel",0x8476E2F1,sctrlArkExitLauncher
 #endif
-#ifdef F_SystemCtrlForKernel_0090
+#ifdef F_SystemCtrlForKernel_0089
     IMPORT_FUNC "SystemCtrlForKernel",0xC68F9EF8,sctrlHENFindJALGeneric
 #endif
-#ifdef F_SystemCtrlForKernel_0091
+#ifdef F_SystemCtrlForKernel_0090
     IMPORT_FUNC "SystemCtrlForKernel",0x2F46829B,sctrlHENFindFirstBEQ
 #endif
-#ifdef F_SystemCtrlForKernel_0092
+#ifdef F_SystemCtrlForKernel_0091
     IMPORT_FUNC "SystemCtrlForKernel",0x6F515CDC,sctrlHENFindRefInGlobals
 #endif
