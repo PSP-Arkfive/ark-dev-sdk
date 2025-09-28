@@ -18,3 +18,4 @@ add_custom_target(CopyPrebuilt ALL
 )
 
 add_subdirectory(src)
+add_subdirectory(build-tools)
