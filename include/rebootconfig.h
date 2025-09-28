@@ -57,6 +57,11 @@ typedef struct RebootConfigARK {
     char game_id[10];
     unsigned int boot_from_fw_version;
     int fake_apitype;
+    struct {
+        int apitype;
+        char game_id[10];
+        char path[REBOOTEX_CONFIG_ISO_PATH_MAXSIZE];
+    } last_played;
 } RebootConfigARK;
 
 #define IS_ARK_CONFIG(config) (*((u32*)config) == ARK_CONFIG_MAGIC)
