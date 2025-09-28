@@ -13,7 +13,7 @@ add_custom_command(
     COMMENT "Copying pre-built files"
 )
 
-add_custom_target(CopyPrebuilt ALL
+add_custom_target(CopyPrebuiltSdkLibs ALL
     DEPENDS ${STAMP_FILE}
 )
 

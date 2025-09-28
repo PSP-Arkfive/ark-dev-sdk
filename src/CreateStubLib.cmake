@@ -22,7 +22,7 @@ function(add_stub_lib LIB_NAME SRC_FILE DEFINE_PREFIX NUM_STUBS)
    set_source_files_properties(${STUB_FILE} PROPERTIES COMPILE_DEFINITIONS ${STUB_DEFINE})
    endforeach()
 
-   add_dependencies(${LIB_NAME} CopyPrebuilt)
+   add_dependencies(${LIB_NAME} CopyPrebuiltSdkLibs)
 
    add_custom_command(TARGET ${LIB_NAME} POST_BUILD
       DEPENDS ${LIB_NAME}
