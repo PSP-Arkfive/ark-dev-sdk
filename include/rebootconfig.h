@@ -43,21 +43,21 @@
 
 // ARK Rebootex config
 typedef struct RebootConfigARK {
-    unsigned int magic;
-    unsigned int reboot_buffer_size;
-    unsigned char iso_mode;
-    unsigned char iso_disc_type;
+    unsigned int magic; // ARK magic
+    unsigned int reboot_buffer_size; // size of this struct (redundancy)
+    unsigned char iso_mode; // Inferno, NP9660
+    unsigned char iso_disc_type; // mounted ISO disc type (GAME/VIDEO/AUDIO)
     char iso_path[REBOOTEX_CONFIG_ISO_PATH_MAXSIZE]; // inferno ISO path
-    struct { // runtime module
+    struct { // runtime module, gets injected into boot sequence during reboot
         char *before;
         void *buffer;
         u32 size;
         u32 flags;
     } rtm_mod;
-    char game_id[10];
-    unsigned int boot_from_fw_version;
-    int fake_apitype;
-    struct {
+    char game_id[10]; // GameID of currently running game
+    unsigned int boot_from_fw_version; // for TimeMachine
+    int fake_apitype; // for pspemu ef0 support
+    struct { // information about last played
         int apitype;
         char game_id[10];
         char path[REBOOTEX_CONFIG_ISO_PATH_MAXSIZE];
