@@ -1,5 +1,10 @@
 project(sdktools VERSION 1.0)
 
+add_custom_target(tool_btcnf ALL
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/btcnf.py
+)
+set_property(TARGET tool_btcnf PROPERTY EXEC ${CMAKE_CURRENT_SOURCE_DIR}/btcnf.py)
+
 foreach(script gz pspgz)
    add_custom_target(tool_${script} ALL
       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gz/${script}.py
