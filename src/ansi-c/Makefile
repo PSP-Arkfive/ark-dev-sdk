@@ -10,13 +10,16 @@ C_OBJS = \
 	strchr.o \
 	strcmp.o \
 	strstr.o \
+	strspn.o \
+	strtok.o \
 	memfind.o \
 	strhex32.o \
 	strsafe.o \
 	strbeginswith.o \
 	strreplaceall.o \
 	strcasecmp.o \
-	lowerstring.o
+	lowerstring.o \
+	setlongjmp.o
 
 OBJS = $(C_OBJS)
 
