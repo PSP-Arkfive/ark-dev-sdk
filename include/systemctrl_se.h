@@ -47,73 +47,6 @@ enum swap_xo
     XO_CURRENT_X_PRIMARY = 1
 };
 
-enum vsh_bg_colors
-{
-    BG_RANDOM        = 0,
-    BG_RED         	= 1,
-    BG_LITE_RED     = 2,
-    BG_ORANGE         = 3,
-    BG_LITE_ORANGE     = 4,
-    BG_YELLOW         = 5,
-    BG_LITE_YELLOW     = 6,
-    BG_GREEN         = 7,
-    BG_LITE_GREEN     = 8,
-    BG_BLUE         = 9,
-    BG_LITE_BLUE     = 10,
-    BG_INDIGO         = 11,
-    BG_LITE_INDIGO     = 12,
-    BG_VIOLET         = 13,
-    BG_LITE_VIOLET     = 14,
-    BG_PINK         = 15,
-    BG_LITE_PINK     = 16,
-    BG_PURPLE         = 17,
-    BG_LITE_PURPLE     = 18,
-    BG_TEAL         = 19,
-    BG_LITE_TEAL     = 20,
-    BG_AQUA         = 21,
-    BG_LITE_AQUA     = 22,
-    BG_GREY         = 23,
-    BG_LITE_GREY     = 24,
-    BG_BLACK         = 25,
-    BG_LITE_BLACK     = 26,
-    BG_WHITE        = 27,
-    BG_LITE_WHITE    = 28,
-
-};
-
-enum vsh_fg_colors
-{
-    FG_RANDOM        = 0,
-    FG_WHITE         = 1,
-    FG_ORANGE         = 2,
-    FG_LITE_ORANGE     = 3,
-    FG_YELLOW         = 4,
-    FG_LITE_YELLOW     = 5,
-    FG_GREEN         = 6,
-    FG_LITE_GREEN     = 7,
-    FG_BLUE         = 8,
-    FG_LITE_BLUE     = 9,
-    FG_INDIGO         = 10,
-    FG_LITE_INDIGO     = 11,
-    FG_VIOLET         = 12,
-    FG_LITE_VIOLET     = 13,
-    FG_PINK         = 14,
-    FG_LITE_PINK     = 15,
-    FG_PURPLE         = 16,
-    FG_LITE_PURPLE     = 17,
-    FG_TEAL         = 18,
-    FG_LITE_TEAL     = 19,
-    FG_AQUA         = 20,
-    FG_LITE_AQUA     = 21,
-    FG_GREY         = 22,
-    FG_LITE_GREY     = 23,
-    FG_BLACK         = 24,
-    FG_LITE_BLACK     = 25,
-    FG_LITE_RED     = 26,
-    FG_RED         	= 27,
-    FG_LITE_WHITE     = 28,
-};
-
 enum convert_battery
 {
     NORMAL_TO_PANDORA    = 0,
@@ -121,22 +54,11 @@ enum convert_battery
     UNSUPPORTED        	= 2,
 };
 
-enum MsSpeedFlag
-{
-    MSSPEED_NONE     = 0,
-    MSSPEED_POP      = 1,
-    MSSPEED_GAME     = 2,
-    MSSPEED_VSH      = 3,
-    MSSPEED_POP_GAME = 4,
-    MSSPEED_GAME_VSH = 5,
-    MSSPEED_VSH_POP  = 6,
-    MSSPEED_ALWAYS   = 7,
-};
-
 enum InfernoCachePolicy
 {
-    CACHE_POLICY_LRU = 0,
-    CACHE_POLICY_RR = 1,
+    INFERNO_CACHE_DISABLED = 0,
+    INFERNO_CACHE_LRU = 1, // Least Recently Used
+    INFERNO_CACHE_RR = 2, // Random Replacement
 };
 
 enum umdregion
@@ -148,10 +70,52 @@ enum umdregion
     UMD_REGION_JAPAN,
 };
 
-// keep ARK's SEConfig binary compatible with PRO's
-typedef struct SEConfig
+// PRO's SEConfig
+#define SECONFIG_MAGIC_PRO ((((sctrlHENGetVersion() & 0xF)<<16) | sctrlHENGetMinorVersion()) + 0x47434554)
+typedef struct SEConfigPRO
 {
-    u32 magic;
+	int magic; // depends on pro version, calculated at runtime with above formula
+	s16 umdmode;
+	s16 vshcpuspeed;
+	s16 vshbusspeed;
+	s16 umdisocpuspeed;
+	s16 umdisobusspeed;
+	s16 fakeregion;
+	s16 usbdevice;
+	s16 usbcharge;
+	s16 machidden;
+	s16 skipgameboot;
+	s16 hidepic;
+	s16 plugvsh; 
+	s16 pluggame;
+	s16 plugpop;
+	s16 flashprot;
+	s16 skiplogo;
+	s16 useversion;
+	s16 useownupdate;
+	s16 usenodrm;
+	s16 hibblock;
+	s16 noanalog;
+	s16 oldplugin;
+	s16 htmlviewer_custom_save_location;
+	s16 hide_cfw_dirs;
+	s16 chn_iso;
+	s16 msspeed;
+	s16 slimcolor;
+	s16 iso_cache;
+	s16 iso_cache_total_size; // in MB
+	s16 iso_cache_num;
+	s16 iso_cache_policy;
+	s16 usbversion;
+	s16 language; /* -1 as autodetect */
+	s16 retail_high_memory;
+	s16 macspoofer;
+} SEConfigPRO;
+
+// ARK's SEConfig
+typedef struct SEConfigARK
+{
+    u32 magic; // ARK_CONFIG_MAGIC
     u16 iso_cache_size_kb; // in KB, automatic
     u16 iso_cache_num; // number of cache slots
     u8 iso_cache_partition;
@@ -180,6 +144,80 @@ typedef struct SEConfig
     u8 wpa2; // patch to use wpa2
     u8 force_high_memory;
     u8 custom_update;
+} SEConfigARK;
+
+// Adrenaline's SEConfig
+#define ADRENALINE_CFG_MAGIC_1 0x192EFC3C
+#define ADRENALINE_CFG_MAGIC_2 0x17BEB6AA
+typedef struct SEConfigADR{
+	int magic[2];
+	/** 0 - Disabled, 1 - Enabled */
+	u8 hide_corrupt;
+	/** 0 - Disabled, 1 - Enabled */
+	u8	skip_logo;
+	/** 0 - Disabled, 1 - Enabled */
+	u8 startup_program;
+	/** One of `SEUmdModes` */
+	u8 umd_mode;
+	/** One of `CpuBusSpeed` */
+	u8	vsh_cpu_speed;
+	/** One of `CpuBusSpeed` */
+	u8	app_cpu_speed;
+	/** One of `FakeRegionOptions` */
+	u8 fake_region;
+	/** 0 - Disabled, 1 - Enabled */
+	u8 skip_game_boot_logo;
+	/** 0 - Disabled, 1 - Enabled */
+	u8 hide_mac_addr;
+	/** 0 - Disabled, 1 - Enabled */
+	u8 hide_dlcs;
+	/** One of `HidePicsOpt` */
+	u8 hide_pic0pic1;
+	/** One of `ExtendedColors` */
+	u8 extended_colors;
+	/** 0 - Disabled, 1 - Enabled */
+	u8 use_sony_psposk;
+	/** 0 - Use, 1 - Do not use */
+	u8 no_nodrm_engine;
+	/** 0 - Use, 1 - Do not use */
+	u8 no_xmb_plugins;
+	/** 0 - Use, 1 - Do not use */
+	u8 no_game_plugins;
+	/** 0 - Use, 1 - Do not use */
+	u8 no_pops_plugins;
+	/** One of `ForceHighMemory` */
+	u8 force_high_memory;
+	/** 0 - Disabled, 1 - Enabled */
+	u8 execute_boot_bin;
+	/** One of `RecoveryColor` */
+	u8 recovery_color;
+	/** 0 - load xmbctrl, 1 - not load xmbctrl */
+	u8 no_xmbctrl;
+	/** Inferno cache type. One of `InfernoCacheConf` */
+	u8 iso_cache;
+	/** Inferno cache partition 2 or 11 (automatic) */
+	u8 iso_cache_partition;
+	/** Inferno cache size (in KB) for each cache item. One of `IsoCacheSizeConf` */
+	u8 iso_cache_size;
+	/** Number of inferno cache items. One of `IsoCacheNumberConf` */
+	u8 iso_cache_num;
+	/** Simulate UMD seek time. Zero - Off, `>0` - seek time factor, i.e. value that will be multiplied on amount of bytes to be read */
+	u8 umd_seek;
+	/** Simulate UMD seek time. Zero - Off, `>0` - seek time factor, i.e. value that will be multiplied on amount of bytes to be read */
+    u8 umd_speed;
+	/** Cache `ms0:`. 0 - Use cache, 1 - do not use cache. */
+    u8 no_ms_cache;
+	/** Use `ge_2.prx` instead of `ge.prx`. 0 - Off, 1 - On. */
+	u8 use_ge2;
+	/** Use `kermit_me_wrapper_2.prx` instead of `kermit_me_wrapper.prx`. 0- Off, 1 = On. */
+	u8 use_me2;
+} SEConfigADR;
+
+// Forward declaration
+typedef union {
+    SEConfigPRO pro;
+    SEConfigARK ark;
+    SEConfigADR adr;
 } SEConfig;
 
 /**
