@@ -18,7 +18,7 @@
 
 #include <stddef.h>
 
- char * strtok_r(char * s, const char * delim, char ** last)
+char * strtok_r(char * s, const char * delim, char ** last)
 {
     // Required Variables
     char * spanp = NULL;
