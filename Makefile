@@ -5,6 +5,7 @@ all:
 	$(MAKE) -C src/SystemCtrlForKernel
 	$(MAKE) -C src/VshCtrl
 	$(MAKE) -C src/SysclibForUser
+	$(MAKE) -C src/inferno_driver
 	$(MAKE) -C src/idsRegeneration
 	$(MAKE) -C src/idsRegeneration_driver
 	$(MAKE) -C src/libintraFont_stub
@@ -24,6 +25,7 @@ all:
 	$(Q)cp src/SystemCtrlForKernel/*.a libs
 	$(Q)cp src/VshCtrl/*.a libs
 	$(Q)cp src/SysclibForUser/*.a libs
+	$(Q)cp src/inferno_driver/*.a libs
 	$(Q)cp src/idsRegeneration/*.a libs
 	$(Q)cp src/idsRegeneration_driver/*.a libs
 	$(Q)cp src/libintraFont_stub/*.a libs
@@ -45,6 +47,7 @@ clean:
 	$(MAKE) -C src/SystemCtrlForKernel clean
 	$(MAKE) -C src/VshCtrl clean
 	$(MAKE) -C src/SysclibForUser clean
+	$(MAKE) -C src/inferno_driver clean
 	$(MAKE) -C src/idsRegeneration clean
 	$(MAKE) -C src/idsRegeneration_driver clean
 	$(MAKE) -C src/libintraFont_stub clean

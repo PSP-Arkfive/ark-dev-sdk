@@ -54,13 +54,6 @@ enum convert_battery
     UNSUPPORTED        	= 2,
 };
 
-enum InfernoCachePolicy
-{
-    INFERNO_CACHE_DISABLED = 0,
-    INFERNO_CACHE_LRU = 1, // Least Recently Used
-    INFERNO_CACHE_RR = 2, // Random Replacement
-};
-
 enum umdregion
 {
     // UMD regions
