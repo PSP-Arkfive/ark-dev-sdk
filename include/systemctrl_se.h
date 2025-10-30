@@ -63,6 +63,41 @@ enum umdregion
     UMD_REGION_JAPAN,
 };
 
+// M33's SEConfig (also used by L/ME)
+#define SECONFIG_MAGIC_M33 0x47434553
+typedef struct SEConfigM33
+{
+	int magic; /* 0x47434553 *///ABEC
+	int hidecorrupt;//abf0
+	int	skiplogo;//
+	int umdactivatedplaincheck;//hide mac addr
+	int gamekernel150;
+	int executebootbin;//datac00
+	int startupprog;
+	int umdmode;
+	int useisofsonumdinserted;
+	int	vshcpuspeed; //dataAC10
+	int	vshbusspeed; 
+	int	umdisocpuspeed; 
+	int	umdisobusspeed; 
+	int fakeregion;//dataAC20
+	int freeumdregion;//executeopnssmp
+	int	hardresetHB; //data
+	int usbdevice;
+	int novshmenu;//dataAC30
+	int usbcharge;
+	int netupdate;
+	int hidepng;
+	int plugvsh;//
+	int pluggame;
+	int plugpop;
+	int versiontxt;
+	int fastms;//
+	int uncc;
+	int unccc;
+	int nuc;
+} SEConfigM33;
+
 // PRO's SEConfig
 #define SECONFIG_MAGIC_PRO ((((sctrlHENGetVersion() & 0xF)<<16) | sctrlHENGetMinorVersion()) + 0x47434554)
 typedef struct SEConfigPRO
@@ -105,43 +140,9 @@ typedef struct SEConfigPRO
 	s16 macspoofer;
 } SEConfigPRO;
 
-// ARK's SEConfig
-typedef struct SEConfigARK
-{
-    u32 magic; // ARK_CONFIG_MAGIC
-    u16 iso_cache_size_kb; // in KB, automatic
-    u16 iso_cache_num; // number of cache slots
-    u8 iso_cache_partition;
-    u8 iso_cache_type; // 0 = no cache, 1 = LRU, 2 = RR
-    u8 umdseek;
-    u8 umdspeed;
-    u8 cpubus_clock;
-    u8 disable_pause;
-    u8 hidedlc;
-    u8 umdregion;
-    u8 vshregion;
-    u8 usbdevice;
-    u8 usbcharge;
-    u8 hidemac;
-    u8 noanalog;
-    u8 qaflags; // enable QA flags patch
-    u8 launcher_mode;
-    u8 hidepics;
-    u8 usbdevice_rdonly;
-    u8 skiplogos;
-    u8 noumd;
-    u8 hibblock;
-    u8 oldplugin;
-    u8 msspeed;
-    u8 noled; // always false
-    u8 wpa2; // patch to use wpa2
-    u8 force_high_memory;
-    u8 custom_update;
-} SEConfigARK;
-
 // Adrenaline's SEConfig
-#define ADRENALINE_CFG_MAGIC_1 0x192EFC3C
-#define ADRENALINE_CFG_MAGIC_2 0x17BEB6AA
+#define SECONFIG_MAGIC_ADR1 0x192EFC3C
+#define SECONFIG_MAGIC_ADR2 0x17BEB6AA
 typedef struct SEConfigADR{
 	int magic[2];
 	/** 0 - Disabled, 1 - Enabled */
@@ -206,11 +207,46 @@ typedef struct SEConfigADR{
 	u8 use_me2;
 } SEConfigADR;
 
+// ARK's SEConfig
+typedef struct SEConfigARK
+{
+    u32 magic; // ARK_CONFIG_MAGIC
+    u16 iso_cache_size_kb; // in KB, automatic
+    u16 iso_cache_num; // number of cache slots
+    u8 iso_cache_partition;
+    u8 iso_cache_type; // 0 = no cache, 1 = LRU, 2 = RR
+    u8 umdseek;
+    u8 umdspeed;
+    u8 cpubus_clock;
+    u8 disable_pause;
+    u8 hidedlc;
+    u8 umdregion;
+    u8 vshregion;
+    u8 usbdevice;
+    u8 usbcharge;
+    u8 hidemac;
+    u8 noanalog;
+    u8 qaflags; // enable QA flags patch
+    u8 launcher_mode;
+    u8 hidepics;
+    u8 usbdevice_rdonly;
+    u8 skiplogos;
+    u8 noumd;
+    u8 hibblock;
+    u8 oldplugin;
+    u8 msspeed;
+    u8 noled; // always false
+    u8 wpa2; // patch to use wpa2
+    u8 force_high_memory;
+    u8 custom_update;
+} SEConfigARK;
+
 // Forward declaration
 typedef union {
+    SEConfigM33 m33;
     SEConfigPRO pro;
-    SEConfigARK ark;
     SEConfigADR adr;
+    SEConfigARK ark;
 } SEConfig;
 
 /**
