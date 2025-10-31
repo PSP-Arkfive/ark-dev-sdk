@@ -1,3 +1,8 @@
+.PHONY: all install clean
+
+PSPSDK = $(shell psp-config --pspsdk-path)
+PSPDEV = $(shell psp-config --pspdev-path)
+ARKSDK = $(PSPDEV)/share/ark-dev-sdk
 
 all:
 	$(MAKE) -C src/KUBridge
@@ -38,6 +43,11 @@ all:
 	$(Q)cp src/mini2d/*.a libs
 	$(Q)cp src/iplsdk/*.a libs
 	$(Q)cp src/iplsdk/include/*.h include/iplsdk
+
+install: all
+	$(Q)cp -r include/* $(PSPSDK)/include/
+	$(Q)cp -r libs/* $(PSPSDK)/lib/
+	$(Q)cp -r build-tools $(ARKSDK)/
 
 clean:
 	$(Q)rm -rf libs
