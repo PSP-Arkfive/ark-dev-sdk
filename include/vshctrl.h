@@ -3,6 +3,8 @@
 
 #include <pspctrl.h>
 
+#include <systemctrl_se.h>
+
 #define SENSE_KEY (PSP_CTRL_CIRCLE|PSP_CTRL_TRIANGLE|PSP_CTRL_CROSS|PSP_CTRL_SQUARE|PSP_CTRL_START|PSP_CTRL_SELECT)
 
 #define ALL_ALLOW    (PSP_CTRL_UP|PSP_CTRL_RIGHT|PSP_CTRL_DOWN|PSP_CTRL_LEFT)
@@ -12,7 +14,6 @@
 #define ALL_CTRL     (ALL_ALLOW|ALL_BUTTON|ALL_TRIGGER|ALL_FUNCTION)
 #define FORCE_LOAD   (PSP_CTRL_SELECT|ALL_TRIGGER)
 
-typedef struct SEConfig SEConfig;
 
 /**
  * This api is for vsh menu, xmb control or any other vsh/xmb plugin.
