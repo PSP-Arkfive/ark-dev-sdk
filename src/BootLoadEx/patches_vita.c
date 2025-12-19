@@ -5,9 +5,6 @@
 #include "bootloadex.h"
 #include "pspbtcnf.h"
 
-int redirect_flash = 0;
-
-int (*pspemuLfatOpenExtra)(BootFile*) = NULL;
 int (*pspemuLfatOpen)(BootFile* filename, u32 a1, u32 a2, u32 a3, u32 t0) = NULL;
 int (*SetMemoryPartitionTable)(void *sysmem_config, SceSysmemPartTable *table) = NULL;
 
@@ -30,7 +27,7 @@ void relocateFlashFile(BootFile* file){
 int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
 {
     char* p = file->name;
-    if (pspemuLfatOpenExtra && pspemuLfatOpenExtra(file) == 0){
+    if (extra_io && extra_io->vita_io.pspemuLfatOpenExtra(file) == 0){
         return 0;
     }
     else if (strcmp(p, REBOOT_MODULE) == 0){
@@ -107,7 +104,7 @@ int loadParamsPatched(int a0) {
 }
 
 // patch reboot on ps vita
-void patchRebootBufferVita(){
+void patchBootVita(){
 
     if (is_payloadex){
         *(u32 *)0x89FF0000 = 0x200;
@@ -117,6 +114,8 @@ void patchRebootBufferVita(){
     // hijack UnpackBootConfig to insert modules at runtime
     _sw(0x27A40004, UnpackBootConfigArg); // addiu $a0, $sp, 4
     _sw(JAL(UnpackBootConfigVita), UnpackBootConfigCall); // Hook UnpackBootConfig
+
+    int redirect_flash = (extra_io && extra_io->vita_io.redirect_flash);
 
     for (u32 addr = REBOOT_TEXT; addr<reboot_end; addr+=4){
         u32 data = _lw(addr);

@@ -5,6 +5,16 @@
 
 #define REBOOT_MODULE "/rtm.prx"
 
+typedef enum {
+    FLASH_BOOT,
+    MS_BOOT
+} BootStorage;
+
+typedef enum {
+    REBOOTEX,
+    PAYLOADEX
+} BootType;
+
 typedef struct {
     char *name;
     void *buffer;
@@ -78,12 +88,17 @@ typedef struct
 } PSP_Header;
 
 
-typedef struct
-{
-    int (*FatMount)();
-    int (*FatOpen)(const char*);
-    int (*FatRead)(void*, int);
-    int (*FatClose)();
+typedef union {
+    struct {
+        int (*FatMount)();
+        int (*FatOpen)(const char*);
+        int (*FatRead)(void*, u32);
+        int (*FatClose)();
+    } psp_io;
+    struct {
+        int redirect_flash;
+        int (*pspemuLfatOpenExtra)(BootFile*);
+    } vita_io;
 } ExtraIoFuncs;
 
 extern RebootConfigARK* reboot_conf;
@@ -119,18 +134,16 @@ extern u32 UnpackBootConfigArg;
 u32 FindImportRange(char *libname, u32 nid, u32 lower, u32 higher);
 
 // BootLoadEx functions
-void findRebootFunctions();
-void checkRebootConfig();
+void bootConfig(BootStorage storage, BootType type, ExtraIoFuncs* iofuncs);
+void findBootFunctions();
 u32 loadCoreModuleStartCommon(u32 entry);
 extern void patchRebootBuffer();
 
 // PSP specific functions
-void patchRebootBufferPSP();
+void patchBootPSP();
 
 // Vita specific functions
-extern int redirect_flash;
-void patchRebootBufferVita();
-extern int (*pspemuLfatOpenExtra)(BootFile*);
+void patchBootVita();
 int pspemuLfatOpenExtraEPSP(BootFile* file);
 int pspemuLfatOpenExtraEPSX(BootFile* file);
 int pspemuLfatOpenExtraVPSP(BootFile* file);

@@ -3,6 +3,7 @@
 #include <cfwmacros.h>
 #include <systemctrl.h>
 #include <systemctrl_se.h>
+#include <colordebugger.h>
 
 #include "bootloadex.h"
 #include "pspbtcnf.h"
@@ -46,13 +47,13 @@ int file_exists(const char *path)
     int ret;
 
     if (extra_io)
-        ret = extra_io->FatOpen(path);
+        ret = extra_io->psp_io.FatOpen(path);
     else
         ret = sceBootLfatOpen(path);
 
     if(ret >= 0) {
         if (extra_io)
-            extra_io->FatClose(path);
+            extra_io->psp_io.FatClose(path);
         else
             sceBootLfatClose();
         return 1;
@@ -69,7 +70,7 @@ int loadcoreModuleStartPSP(void * arg1, void * arg2, void * arg3, int (* start)(
 }
 
 // patch reboot on psp
-void patchRebootBufferPSP(){
+void patchBootPSP(){
 
     _sw(0x27A40004, UnpackBootConfigArg); // addiu $a0, $sp, 4
     _sw(JAL(UnpackBootConfigPatchedPSP), UnpackBootConfigCall); // Hook UnpackBootConfig
@@ -382,7 +383,7 @@ char path[128];
 
 int _sceBootLfatMount()
 {
-    return extra_io->FatMount();
+    return extra_io->psp_io.FatMount();
 }
 
 int _sceBootLfatRead(char * buffer, int length)
@@ -405,7 +406,7 @@ int _sceBootLfatRead(char * buffer, int length)
     }
 
     if (extra_io)
-        return extra_io->FatRead(buffer, length);
+        return extra_io->psp_io.FatRead(buffer, length);
     
     //forward to original function
     return sceBootLfatRead(buffer, length);
@@ -434,7 +435,7 @@ int _sceBootLfatOpen(char * filename)
                 memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
         }
 
-        return extra_io->FatOpen(path);
+        return extra_io->psp_io.FatOpen(path);
     }
     else {
         // patch to allow custom boot
@@ -469,7 +470,7 @@ int _sceBootLfatClose(void)
     }
     
     if (extra_io)
-        return extra_io->FatClose();
+        return extra_io->psp_io.FatClose();
     
     //forward to original function
     return sceBootLfatClose();

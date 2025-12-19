@@ -191,7 +191,7 @@ void flushCache(void)
 }
 
 // Common rebootex patches for PSP and Vita
-void findRebootFunctions(){
+void findBootFunctions(){
     register void (* Icache)(void) = NULL;
     register void (* Dcache)(void) = NULL;
     // find functions
@@ -208,26 +208,22 @@ void findRebootFunctions(){
             Icache = (void*)a;
         }
         else if (data == 0x8FA40004){ // UnpackBootConfig
-            if (is_msipl){
-                if (_lw(addr-8) == 0x8FA50008){
-                    UnpackBootConfigArg = addr;
-                    u32 a = addr-8;
-                    do { a+=4; } while (_lw(a) != 0x24060001);
-                    UnpackBootConfig = (void*)K_EXTRACT_CALL(a-4);
-                    UnpackBootConfigCall = a-4;
-                }
+            if (_lw(addr+8) == 0x8FA50008) {
+                UnpackBootConfigArg = addr;
+                UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+4);
+                UnpackBootConfigCall = addr+4;
             }
-            else {
-                if (_lw(addr+8) == 0x8FA50008) {
-                    UnpackBootConfigArg = addr;
-                    UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+4);
-                    UnpackBootConfigCall = addr+4;
-                }
-                else if (_lw(addr+4) == 0x8FA50008) {
-                    UnpackBootConfigArg = addr;
-                    UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+8);
-                    UnpackBootConfigCall = addr+8;
-                }
+            else if (_lw(addr+4) == 0x8FA50008) {
+                UnpackBootConfigArg = addr;
+                UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+8);
+                UnpackBootConfigCall = addr+8;
+            }
+            else if (_lw(addr-8) == 0x8FA50008){
+                UnpackBootConfigArg = addr;
+                u32 a = addr-8;
+                do { a+=4; } while (_lw(a) != 0x24060001);
+                UnpackBootConfig = (void*)K_EXTRACT_CALL(a-4);
+                UnpackBootConfigCall = a-4;
             }
         }
         else if ((data == _lw(addr+4)) && (data & 0xFC000000) == 0xAC000000){ // Patch ~PSP header check
@@ -246,7 +242,11 @@ void findRebootFunctions(){
     Dcache();
 }
 
-void checkRebootConfig(){
+void bootConfig(BootStorage storage, BootType type, ExtraIoFuncs* iofuncs){
+    is_msipl = storage;
+    is_payloadex = type;
+    extra_io = iofuncs;
+
     if (IS_ARK_CONFIG(reboot_conf)){
         // fix MODE_NP9660 (Galaxy driver no longer exists, redirect to either inferno or normal)
         if (reboot_conf->iso_mode == MODE_NP9660){
