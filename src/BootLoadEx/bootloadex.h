@@ -78,11 +78,10 @@ typedef struct
 } PSP_Header;
 
 
-typedef struct
-{
+typedef struct {
     int (*FatMount)();
     int (*FatOpen)(const char*);
-    int (*FatRead)(void*, int);
+    int (*FatRead)(void*, u32);
     int (*FatClose)();
 } ExtraIoFuncs;
 
