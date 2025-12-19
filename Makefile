@@ -21,6 +21,7 @@ all:
 	$(MAKE) -C src/colordebugger
 	$(MAKE) -C src/screenprinter
 	$(MAKE) -C src/mini2d
+	$(MAKE) -C src/BootLoadEx
 	$(MAKE) -C src/iplsdk
 	$(Q)mkdir -p libs
 	$(Q)mkdir -p include/iplsdk
@@ -41,6 +42,8 @@ all:
 	$(Q)cp src/colordebugger/*.a libs
 	$(Q)cp src/screenprinter/*.a libs
 	$(Q)cp src/mini2d/*.a libs
+	$(Q)cp src/BootLoadEx/*.a libs
+	$(Q)cp src/BootLoadEx/*.h include/
 	$(Q)cp src/iplsdk/*.a libs
 	$(Q)cp src/iplsdk/include/*.h include/iplsdk
 
@@ -68,4 +71,5 @@ clean:
 	$(MAKE) -C src/colordebugger clean
 	$(MAKE) -C src/screenprinter clean
 	$(MAKE) -C src/mini2d clean
+	$(MAKE) -C src/BootLoadEx clean
 	$(MAKE) -C src/iplsdk clean
