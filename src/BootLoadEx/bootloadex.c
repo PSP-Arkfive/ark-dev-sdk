@@ -207,25 +207,6 @@ void findBootFunctions(){
             do {a-=4;} while (_lw(a) != 0x40088000);
             Icache = (void*)a;
         }
-        else if (data == 0x8FA50008 && _lw(addr+8) == 0x8FA40004 && boot_type == TYPE_REBOOTEX){ // UnpackBootConfig
-            UnpackBootConfigArg = addr+8;
-            u32 a = addr;
-            do { a+=4; } while (_lw(a) != 0x24060001);
-            UnpackBootConfig = (void*)K_EXTRACT_CALL(a-4);
-            UnpackBootConfigCall = a-4;
-        }
-        else if (data == 0x8FA40004 && boot_type == TYPE_PAYLOADEX){ // UnpackBootConfig
-            if (_lw(addr+8) == 0x8FA50008) {
-                UnpackBootConfigArg = addr;
-                UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+4);
-                UnpackBootConfigCall = addr+4;
-            }
-            else if (_lw(addr+4) == 0x8FA50008) {
-                UnpackBootConfigArg = addr;
-                UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+8);
-                UnpackBootConfigCall = addr+8;
-            }
-        }
         else if ((data == _lw(addr+4)) && (data & 0xFC000000) == 0xAC000000){ // Patch ~PSP header check
             // Returns size of the buffer on loading whatever modules
             _sw(0xAFA50000, addr+4); // sw a1, 0(sp)
@@ -234,6 +215,31 @@ void findBootFunctions(){
         else if (strcmp("ApplyPspRelSection", (char*)addr) == 0 || strcmp("StopBoot", (char*)addr) == 0){
             reboot_end = (addr & -0x4); // found end of reboot buffer
             break;
+        }
+        else {
+            if (boot_type == TYPE_REBOOTEX){
+                if (data == 0x8FA50008 && _lw(addr+8) == 0x8FA40004){ // UnpackBootConfig
+                    UnpackBootConfigArg = addr+8;
+                    u32 a = addr;
+                    do { a+=4; } while (_lw(a) != 0x24060001);
+                    UnpackBootConfig = (void*)K_EXTRACT_CALL(a-4);
+                    UnpackBootConfigCall = a-4;
+                }
+            }
+            else if (boot_type == TYPE_PAYLOADEX){
+                if (data == 0x8FA40004){ // UnpackBootConfig
+                    if (_lw(addr+8) == 0x8FA50008) {
+                        UnpackBootConfigArg = addr;
+                        UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+4);
+                        UnpackBootConfigCall = addr+4;
+                    }
+                    else if (_lw(addr+4) == 0x8FA50008) {
+                        UnpackBootConfigArg = addr;
+                        UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+8);
+                        UnpackBootConfigCall = addr+8;
+                    }
+                }
+            }
         }
     }
     sceRebootIcacheInvalidateAll = Icache;

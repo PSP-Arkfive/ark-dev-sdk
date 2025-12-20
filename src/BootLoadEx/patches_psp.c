@@ -100,29 +100,35 @@ void patchBootPSP(){
             } while (insMask != 0x04400000 && insMask != 0x04420000);
             _sw(NOP, a); // Killing Branch Check bltz/bltzl ...
         }
-        else if (data == 0x34650001 && boot_type == TYPE_REBOOTEX){ // rebootexcheck2
-            _sw(NOP, addr-4); // Killing Branch Check bltz ...
-            patches--;
-        }
-        else if (data == 0x00903021 && _lw(addr+4) == 0x00D6282B && boot_type == TYPE_REBOOTEX){ // rebootexcheck3 and rebootexcheck4
-            u32 a = addr;
-            do {a-=4;} while (_lw(a) != NOP);
-            _sw(NOP, a-4); // Killing Branch Check beqz
-            _sw(NOP, addr+8); // Killing Branch Check bltz ...
-            patches--;
-        }
-        else if (data == 0x25AC003F && boot_type == TYPE_PAYLOADEX){ // payloadexcheck2
-            _sw(NOP, addr-44); // Killing Branch Check bltz ...
-            patches--;
-        }
-        else if (data == 0x01F7702B && boot_type == TYPE_PAYLOADEX){ // rebootexcheck3 and rebootexcheck4
-            _sw(NOP, addr-12); // Killing Branch Check bltz
-            _sw(NOP, addr+4); // Killing Branch Check beqz ...
-            patches--;
-        }
         else if (data == 0x27BDFFE0 && _lw(addr+4) == 0x3C028861 && boot_storage == MS_BOOT) { // nand enc
             MAKE_DUMMY_FUNCTION_RETURN_0(addr);
             patches--;
+        }
+        else {
+            if (boot_type == TYPE_REBOOTEX){
+                if (data == 0x34650001){ // rebootexcheck2
+                    _sw(NOP, addr-4); // Killing Branch Check bltz ...
+                    patches--;
+                }
+                else if (data == 0x00903021 && _lw(addr+4) == 0x00D6282B){ // rebootexcheck3 and rebootexcheck4
+                    u32 a = addr;
+                    do {a-=4;} while (_lw(a) != NOP);
+                    _sw(NOP, a-4); // Killing Branch Check beqz
+                    _sw(NOP, addr+8); // Killing Branch Check bltz ...
+                    patches--;
+                }
+            }
+            else if (boot_type == TYPE_PAYLOADEX){
+                if (data == 0x25AC003F){ // payloadexcheck2
+                    _sw(NOP, addr-44); // Killing Branch Check bltz ...
+                    patches--;
+                }
+                else if (data == 0x01F7702B){ // rebootexcheck3 and rebootexcheck4
+                    _sw(NOP, addr-12); // Killing Branch Check bltz
+                    _sw(NOP, addr+4); // Killing Branch Check beqz ...
+                    patches--;
+                }
+            }
         }
     }
 
