@@ -1,7 +1,6 @@
 #include <string.h>
 
 #include <cfwmacros.h>
-#include <colordebugger.h>
 
 #include "bootloadex.h"
 #include "pspbtcnf.h"
@@ -29,7 +28,6 @@ int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
 {
     char* p = file->name;
     if (extra_io && extra_io->vita_io.pspemuLfatOpenExtra(file) == 0){
-        colorDebug(0xFF00);
         return 0;
     }
     else if (strcmp(p, REBOOT_MODULE) == 0){

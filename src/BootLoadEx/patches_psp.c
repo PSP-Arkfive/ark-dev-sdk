@@ -3,7 +3,6 @@
 #include <cfwmacros.h>
 #include <systemctrl.h>
 #include <systemctrl_se.h>
-#include <colordebugger.h>
 
 #include "bootloadex.h"
 #include "pspbtcnf.h"
