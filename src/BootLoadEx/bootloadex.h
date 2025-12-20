@@ -88,27 +88,28 @@ typedef struct
 } PSP_Header;
 
 
-typedef union {
-    struct {
-        int (*FatMount)();
-        int (*FatOpen)(const char*);
-        int (*FatRead)(void*, u32);
-        int (*FatClose)();
-    } psp_io;
-    struct {
-        int redirect_flash;
-        int (*pspemuLfatOpenExtra)(BootFile*);
-    } vita_io;
-} ExtraIoFuncs;
+typedef struct {
+    BootType boot_type;
+    BootStorage boot_storage;
+    union {
+        struct {
+            int (*FatMount)();
+            int (*FatOpen)(const char*);
+            int (*FatRead)(void*, u32);
+            int (*FatClose)();
+        } psp_io;
+        struct {
+            int redirect_flash;
+            int (*pspemuLfatOpenExtra)(BootFile*);
+        } vita_io;
+    } extra_io;
+} BootLoadExConfig;
 
+extern BootLoadExConfig* ble_config;
 extern RebootConfigARK* reboot_conf;
 extern ARKConfig* ark_config;
 
-extern BootStorage boot_storage;
-extern BootType boot_type;
 extern u32 reboot_end;
-
-extern ExtraIoFuncs* extra_io;
 
 // sceReboot Main Function
 extern int (* sceReboot)(int, int, int, int, int, int, int);
@@ -134,7 +135,7 @@ extern u32 UnpackBootConfigArg;
 u32 FindImportRange(char *libname, u32 nid, u32 lower, u32 higher);
 
 // BootLoadEx functions
-void bootConfig(BootStorage storage, BootType type, ExtraIoFuncs* iofuncs);
+void configureBoot(BootLoadExConfig*);
 void findBootFunctions();
 u32 loadCoreModuleStartCommon(u32 entry);
 extern void patchRebootBuffer();

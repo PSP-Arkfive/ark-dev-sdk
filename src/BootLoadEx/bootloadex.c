@@ -23,12 +23,9 @@
 
 #include "bootloadex.h"
 
+BootLoadExConfig* ble_config;
 RebootConfigARK* reboot_conf = (RebootConfigARK*)REBOOTEX_CONFIG;
 ARKConfig* ark_config = (ARKConfig*)ARK_CONFIG;
-ExtraIoFuncs* extra_io = NULL;
-
-BootStorage boot_storage = 0;
-BootType boot_type = 0;
 
 // sceReboot Main Function
 int (* sceReboot)(int, int, int, int, int, int, int) = (void *)(REBOOT_TEXT);
@@ -96,7 +93,7 @@ int PRXDecryptPatched(PSP_Header* prx, unsigned int size, unsigned int * newsize
 
 int CheckExecFilePatched(unsigned char * addr, void * arg2)
 {
-    if (boot_storage == FLASH_BOOT){
+    if (ble_config->boot_storage == FLASH_BOOT){
         //scan structure
         //6.31 kernel modules use type 3 PRX... 0xd4~0x10C is zero padded
         int pos = 0; for(; pos < 0x38; pos++)
@@ -217,7 +214,7 @@ void findBootFunctions(){
             break;
         }
         else {
-            if (boot_type == TYPE_REBOOTEX){
+            if (ble_config->boot_type == TYPE_REBOOTEX){
                 if (data == 0x8FA50008 && _lw(addr+8) == 0x8FA40004){ // UnpackBootConfig
                     UnpackBootConfigArg = addr+8;
                     u32 a = addr;
@@ -226,7 +223,7 @@ void findBootFunctions(){
                     UnpackBootConfigCall = a-4;
                 }
             }
-            else if (boot_type == TYPE_PAYLOADEX){
+            else if (ble_config->boot_type == TYPE_PAYLOADEX){
                 if (data == 0x8FA40004){ // UnpackBootConfig
                     if (_lw(addr+8) == 0x8FA50008) {
                         UnpackBootConfigArg = addr;
@@ -248,11 +245,9 @@ void findBootFunctions(){
     Dcache();
 }
 
-void bootConfig(BootStorage storage, BootType type, ExtraIoFuncs* iofuncs){
-    boot_storage = storage;
-    boot_type = type;
-    extra_io = iofuncs;
-
+void configureBoot(BootLoadExConfig* config){
+    ble_config = config;
+    
     if (IS_ARK_CONFIG(reboot_conf)){
         // fix MODE_NP9660 (Galaxy driver no longer exists, redirect to either inferno or normal)
         if (reboot_conf->iso_mode == MODE_NP9660){

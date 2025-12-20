@@ -45,14 +45,14 @@ int file_exists(const char *path)
 {
     int ret;
 
-    if (boot_storage == MS_BOOT && extra_io)
-        ret = extra_io->psp_io.FatOpen(path);
+    if (ble_config->boot_storage == MS_BOOT)
+        ret = ble_config->extra_io.psp_io.FatOpen(path);
     else
         ret = sceBootLfatOpen(path);
 
     if (ret >= 0) {
-        if (boot_storage == MS_BOOT && extra_io)
-            extra_io->psp_io.FatClose(path);
+        if (ble_config->boot_storage == MS_BOOT)
+            ble_config->extra_io.psp_io.FatClose(path);
         else
             sceBootLfatClose();
         return 1;
@@ -75,7 +75,7 @@ void patchBootPSP(){
     _sw(JAL(UnpackBootConfigPatchedPSP), UnpackBootConfigCall); // Hook UnpackBootConfig
 
     // make sure we read as little ram as possible
-    int patches = (boot_storage == MS_BOOT)? 6:5;
+    int patches = (ble_config->boot_storage == MS_BOOT)? 6:5;
     
     for (u32 addr = REBOOT_TEXT; addr<reboot_end && patches; addr+=4){
         u32 data = _lw(addr);
@@ -100,12 +100,12 @@ void patchBootPSP(){
             } while (insMask != 0x04400000 && insMask != 0x04420000);
             _sw(NOP, a); // Killing Branch Check bltz/bltzl ...
         }
-        else if (data == 0x27BDFFE0 && _lw(addr+4) == 0x3C028861 && boot_storage == MS_BOOT) { // nand enc
+        else if (data == 0x27BDFFE0 && _lw(addr+4) == 0x3C028861 && ble_config->boot_storage == MS_BOOT) { // nand enc
             MAKE_DUMMY_FUNCTION_RETURN_0(addr);
             patches--;
         }
         else {
-            if (boot_type == TYPE_REBOOTEX){
+            if (ble_config->boot_type == TYPE_REBOOTEX){
                 if (data == 0x34650001){ // rebootexcheck2
                     _sw(NOP, addr-4); // Killing Branch Check bltz ...
                     patches--;
@@ -118,7 +118,7 @@ void patchBootPSP(){
                     patches--;
                 }
             }
-            else if (boot_type == TYPE_PAYLOADEX){
+            else if (ble_config->boot_type == TYPE_PAYLOADEX){
                 if (data == 0x25AC003F){ // payloadexcheck2
                     _sw(NOP, addr-44); // Killing Branch Check bltz ...
                     patches--;
@@ -366,7 +366,7 @@ int UnpackBootConfigPatchedPSP(char **p_buffer, int length)
         if (newsize > 0) result = newsize;
     }
 
-    if (boot_storage == MS_BOOT){
+    if (ble_config->boot_storage == MS_BOOT){
         // Insert tmctrl
         newsize = AddPRX(buffer, "/kd/lfatfs.prx", PATH_TMCTRL+sizeof(PATH_FLASH0)-2, 0x000000EF);
         if (newsize > 0) result = newsize;
@@ -385,7 +385,7 @@ char path[128];
 
 int _sceBootLfatMount()
 {
-    return extra_io->psp_io.FatMount();
+    return ble_config->extra_io.psp_io.FatMount();
 }
 
 int _sceBootLfatRead(char * buffer, int length)
@@ -407,8 +407,8 @@ int _sceBootLfatRead(char * buffer, int length)
         return min;
     }
 
-    if (boot_storage == MS_BOOT && extra_io)
-        return extra_io->psp_io.FatRead(buffer, length);
+    if (ble_config->boot_storage == MS_BOOT)
+        return ble_config->extra_io.psp_io.FatRead(buffer, length);
     
     //forward to original function
     return sceBootLfatRead(buffer, length);
@@ -428,16 +428,16 @@ int _sceBootLfatOpen(char * filename)
         return 0;
     }
 
-    if (boot_storage == MS_BOOT && extra_io){
+    if (ble_config->boot_storage == MS_BOOT){
         strcpy(path, "/TM/DCARK");
         strcat(path, filename);
 
-        if (boot_type == TYPE_PAYLOADEX){
+        if (ble_config->boot_type == TYPE_PAYLOADEX){
             if (memcmp(filename+4, "pspbtcnf", 8) == 0)
                 memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
         }
 
-        return extra_io->psp_io.FatOpen(path);
+        return ble_config->extra_io.psp_io.FatOpen(path);
     }
     else {
         // patch to allow custom boot
@@ -471,8 +471,8 @@ int _sceBootLfatClose(void)
         return 0;
     }
     
-    if (boot_storage == MS_BOOT && extra_io)
-        return extra_io->psp_io.FatClose();
+    if (ble_config->boot_storage == MS_BOOT)
+        return ble_config->extra_io.psp_io.FatClose();
     
     //forward to original function
     return sceBootLfatClose();
@@ -489,7 +489,7 @@ void patchRebootIoPSP(){
     for (u32 addr = REBOOT_TEXT; addr<reboot_end && patches; addr+=4){
         u32 data = _lw(addr);
         if (data == 0x8E840000 || data == 0x8EA40000){
-            if (boot_storage == MS_BOOT && extra_io){
+            if (ble_config->boot_storage == MS_BOOT){
                 int found = 0;
                 for (int i=8; !found; i+=4) {
                     if (IS_JAL(_lw(addr-i))) {

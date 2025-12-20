@@ -27,7 +27,7 @@ void relocateFlashFile(BootFile* file){
 int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
 {
     char* p = file->name;
-    if (extra_io && extra_io->vita_io.pspemuLfatOpenExtra(file) == 0){
+    if (ble_config->extra_io.vita_io.pspemuLfatOpenExtra(file) == 0){
         return 0;
     }
     else if (strcmp(p, REBOOT_MODULE) == 0){
@@ -106,7 +106,7 @@ int loadParamsPatched(int a0) {
 // patch reboot on ps vita
 void patchBootVita(){
 
-    if (boot_type == TYPE_PAYLOADEX){
+    if (ble_config->boot_type == TYPE_PAYLOADEX){
         *(u32 *)0x89FF0000 = 0x200;
 	    *(u32 *)0x89FF0004 = 0x2;
     }
@@ -115,7 +115,7 @@ void patchBootVita(){
     _sw(0x27A40004, UnpackBootConfigArg); // addiu $a0, $sp, 4
     _sw(JAL(UnpackBootConfigVita), UnpackBootConfigCall); // Hook UnpackBootConfig
 
-    int redirect_flash = (extra_io && extra_io->vita_io.redirect_flash);
+    int redirect_flash = ble_config->extra_io.vita_io.redirect_flash;
 
     for (u32 addr = REBOOT_TEXT; addr<reboot_end; addr+=4){
         u32 data = _lw(addr);
@@ -137,11 +137,11 @@ void patchBootVita(){
             _sb(0xA0, addr); // Link Filesystem Buffer to 0x8BA00000
         }
         // Find sceBoot
-		else if (data == 0x27BD01C0 && boot_type == TYPE_PAYLOADEX) {
+		else if (data == 0x27BD01C0 && ble_config->boot_type == TYPE_PAYLOADEX) {
             sceReboot = (void *)(addr + 4);
 		}
         // Don't load pspemu params
-		else if (data == 0x240500CF && boot_type == TYPE_PAYLOADEX) {
+		else if (data == 0x240500CF && ble_config->boot_type == TYPE_PAYLOADEX) {
 			MAKE_CALL(addr + 4, loadParamsPatched);
 		}
     }
