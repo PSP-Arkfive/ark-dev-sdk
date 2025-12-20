@@ -32,4 +32,4 @@ LDFLAGS=-nodefaultlibs
 
 LIBDIR =
 
-include ../beauty_stub.mak
+include ../../build-tools/beauty_stub.mak

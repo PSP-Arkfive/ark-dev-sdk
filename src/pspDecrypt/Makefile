@@ -1,15 +1,17 @@
 
-TARGET=libpspav_stub.a
+TARGET=libpspDecrypt.a
 
 all: $(TARGET)
-STUBSRC = libpspav.S
+STUBSRC = libpspDecrypt.S
 OBJS = \
-	libpspav_0000.o \
-	libpspav_0001.o \
-	libpspav_0002.o \
-	libpspav_0003.o \
-	libpspav_0004.o \
-	libpspav_0005.o \
+	libpspDecrypt_0000.o \
+	libpspDecrypt_0001.o \
+	libpspDecrypt_0002.o \
+	libpspDecrypt_0003.o \
+	libpspDecrypt_0004.o \
+	libpspDecrypt_0005.o \
+	libpspDecrypt_0006.o \
+	libpspDecrypt_0007.o \
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 

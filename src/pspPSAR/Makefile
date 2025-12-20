@@ -1,15 +1,13 @@
 
-TARGET=libpspav_stub.a
+TARGET=libpspPSAR.a
 
 all: $(TARGET)
-STUBSRC = libpspav.S
+STUBSRC = libpspPSAR.S
 OBJS = \
-	libpspav_0000.o \
-	libpspav_0001.o \
-	libpspav_0002.o \
-	libpspav_0003.o \
-	libpspav_0004.o \
-	libpspav_0005.o \
+	libpspPSAR_0000.o \
+	libpspPSAR_0001.o \
+	libpspPSAR_0002.o \
+	libpspPSAR_0003.o \
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 
