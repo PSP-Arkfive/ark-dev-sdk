@@ -11,8 +11,8 @@ typedef enum {
 } BootStorage;
 
 typedef enum {
-    REBOOTEX,
-    PAYLOADEX
+    TYPE_REBOOTEX,
+    TYPE_PAYLOADEX
 } BootType;
 
 typedef struct {
@@ -104,8 +104,8 @@ typedef union {
 extern RebootConfigARK* reboot_conf;
 extern ARKConfig* ark_config;
 
-extern int is_msipl;
-extern int is_payloadex;
+extern BootStorage boot_storage;
+extern BootType boot_type;
 extern u32 reboot_end;
 
 extern ExtraIoFuncs* extra_io;
@@ -120,7 +120,7 @@ extern void (* sceRebootIcacheInvalidateAll)(void);
 extern void (* sceRebootDacheWritebackInvalidateAll)(void);
 
 // Sony PRX Decrypter Function Pointer
-extern int (* SonyPRXDecrypt)(void *, unsigned int, unsigned int *);
+extern int (* origPRXDecrypt)(void *, unsigned int, unsigned int *);
 extern int (* origCheckExecFile)(unsigned char * addr, void * arg2);
 extern int (* extraPRXDecrypt)(void *, unsigned int, unsigned int *);
 extern int (* extraCheckExec)(unsigned char * addr, void * arg2);

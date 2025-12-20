@@ -11,8 +11,8 @@ typedef enum {
 } BootStorage;
 
 typedef enum {
-    REBOOTEX,
-    PAYLOADEX
+    TYPE_REBOOTEX,
+    TYPE_PAYLOADEX
 } BootType;
 
 typedef struct {
@@ -104,8 +104,8 @@ typedef union {
 extern RebootConfigARK* reboot_conf;
 extern ARKConfig* ark_config;
 
-extern int is_msipl;
-extern int is_payloadex;
+extern BootStorage boot_storage;
+extern BootType boot_type;
 extern u32 reboot_end;
 
 extern ExtraIoFuncs* extra_io;

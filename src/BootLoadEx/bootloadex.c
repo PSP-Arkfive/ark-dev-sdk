@@ -27,8 +27,8 @@ RebootConfigARK* reboot_conf = (RebootConfigARK*)REBOOTEX_CONFIG;
 ARKConfig* ark_config = (ARKConfig*)ARK_CONFIG;
 ExtraIoFuncs* extra_io = NULL;
 
-int is_msipl = 0;
-int is_payloadex = 0;
+BootStorage boot_storage = 0;
+BootType boot_type = 0;
 
 // sceReboot Main Function
 int (* sceReboot)(int, int, int, int, int, int, int) = (void *)(REBOOT_TEXT);
@@ -40,7 +40,7 @@ void (* sceRebootIcacheInvalidateAll)(void) = NULL;
 void (* sceRebootDacheWritebackInvalidateAll)(void) = NULL;
 
 // Sony PRX Decrypter Function Pointer
-int (* SonyPRXDecrypt)(void *, unsigned int, unsigned int *) = NULL;
+int (* origPRXDecrypt)(void *, unsigned int, unsigned int *) = NULL;
 int (* origCheckExecFile)(unsigned char * addr, void * arg2) = NULL;
 int (* extraPRXDecrypt)(void *, unsigned int, unsigned int *) = NULL;
 int (* extraCheckExec)(unsigned char * addr, void * arg2) = NULL;
@@ -67,7 +67,7 @@ int (* sceBootLfatClose)(void) = NULL;
 
 
 // Custom PRX Support
-int ARKPRXDecrypt(PSP_Header* prx, unsigned int size, unsigned int * newsize)
+int PRXDecryptPatched(PSP_Header* prx, unsigned int size, unsigned int * newsize)
 {
     // Custom Packed PRX File
     if ( (_lb((u32)prx + 0x150) == 0x1F && _lb((u32)prx + 0x151) == 0x8B) // GZIP
@@ -90,13 +90,13 @@ int ARKPRXDecrypt(PSP_Header* prx, unsigned int size, unsigned int * newsize)
     }
     
     // Decrypt Sony PRX Files
-    return SonyPRXDecrypt(prx, size, newsize);
+    return origPRXDecrypt(prx, size, newsize);
 }
 
 
 int CheckExecFilePatched(unsigned char * addr, void * arg2)
 {
-    if (is_msipl){
+    if (boot_storage == FLASH_BOOT){
         //scan structure
         //6.31 kernel modules use type 3 PRX... 0xd4~0x10C is zero padded
         int pos = 0; for(; pos < 0x38; pos++)
@@ -119,13 +119,13 @@ int CheckExecFilePatched(unsigned char * addr, void * arg2)
 }
 
 void unPatchLoadCorePRXDecrypt(){
-    u32 decrypt_call = JAL(ARKPRXDecrypt);
+    u32 decrypt_call = JAL(PRXDecryptPatched);
     u32 text_addr = loadcore_text;
     u32 top_addr = text_addr+0x8000;
 
     for (u32 addr = text_addr; addr<top_addr; addr+=4) {
         if (_lw(addr) == decrypt_call){
-            _sw(JAL(SonyPRXDecrypt), addr);
+            _sw(JAL(origPRXDecrypt), addr);
         }
     }
 
@@ -151,10 +151,10 @@ u32 loadCoreModuleStartCommon(u32 module_start){
     u32 top_addr = text_addr+0x8000; // read 32KB at most (more than enough to scan loadcore)
     
     // Fetch Original Decrypt Function Stub
-    SonyPRXDecrypt = (void *)FindImportRange("memlmd", 0xEF73E85B, text_addr, top_addr);
+    origPRXDecrypt = (void *)FindImportRange("memlmd", 0xEF73E85B, text_addr, top_addr);
     origCheckExecFile = (void *)FindImportRange("memlmd", 0x6192F715, text_addr, top_addr);
 
-    u32 decrypt_call = JAL(SonyPRXDecrypt);
+    u32 decrypt_call = JAL(origPRXDecrypt);
     u32 check_call = JAL(origCheckExecFile);
 
     int devkit_patched = 0;
@@ -163,7 +163,7 @@ u32 loadCoreModuleStartCommon(u32 module_start){
     for (u32 addr = text_addr; addr<top_addr; addr+=4){
         u32 data = _lw(addr);
         if (data == decrypt_call){
-            _sw(JAL(ARKPRXDecrypt), addr);
+            _sw(JAL(PRXDecryptPatched), addr);
         }
         else if (data == check_call){
             _sw(JAL(CheckExecFilePatched), addr);
@@ -207,7 +207,14 @@ void findBootFunctions(){
             do {a-=4;} while (_lw(a) != 0x40088000);
             Icache = (void*)a;
         }
-        else if (data == 0x8FA40004){ // UnpackBootConfig
+        else if (data == 0x8FA50008 && _lw(addr+8) == 0x8FA40004 && boot_type == TYPE_REBOOTEX){ // UnpackBootConfig
+            UnpackBootConfigArg = addr+8;
+            u32 a = addr;
+            do { a+=4; } while (_lw(a) != 0x24060001);
+            UnpackBootConfig = (void*)K_EXTRACT_CALL(a-4);
+            UnpackBootConfigCall = a-4;
+        }
+        else if (data == 0x8FA40004 && boot_type == TYPE_PAYLOADEX){ // UnpackBootConfig
             if (_lw(addr+8) == 0x8FA50008) {
                 UnpackBootConfigArg = addr;
                 UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+4);
@@ -217,13 +224,6 @@ void findBootFunctions(){
                 UnpackBootConfigArg = addr;
                 UnpackBootConfig = (void*)K_EXTRACT_CALL(addr+8);
                 UnpackBootConfigCall = addr+8;
-            }
-            else if (_lw(addr-8) == 0x8FA50008){
-                UnpackBootConfigArg = addr;
-                u32 a = addr-8;
-                do { a+=4; } while (_lw(a) != 0x24060001);
-                UnpackBootConfig = (void*)K_EXTRACT_CALL(a-4);
-                UnpackBootConfigCall = a-4;
             }
         }
         else if ((data == _lw(addr+4)) && (data & 0xFC000000) == 0xAC000000){ // Patch ~PSP header check
@@ -243,8 +243,8 @@ void findBootFunctions(){
 }
 
 void bootConfig(BootStorage storage, BootType type, ExtraIoFuncs* iofuncs){
-    is_msipl = storage;
-    is_payloadex = type;
+    boot_storage = storage;
+    boot_type = type;
     extra_io = iofuncs;
 
     if (IS_ARK_CONFIG(reboot_conf)){

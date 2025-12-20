@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include <cfwmacros.h>
+#include <colordebugger.h>
 
 #include "bootloadex.h"
 #include "pspbtcnf.h"
@@ -28,6 +29,7 @@ int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
 {
     char* p = file->name;
     if (extra_io && extra_io->vita_io.pspemuLfatOpenExtra(file) == 0){
+        colorDebug(0xFF00);
         return 0;
     }
     else if (strcmp(p, REBOOT_MODULE) == 0){
@@ -106,7 +108,7 @@ int loadParamsPatched(int a0) {
 // patch reboot on ps vita
 void patchBootVita(){
 
-    if (is_payloadex){
+    if (boot_type == TYPE_PAYLOADEX){
         *(u32 *)0x89FF0000 = 0x200;
 	    *(u32 *)0x89FF0004 = 0x2;
     }
@@ -137,11 +139,11 @@ void patchBootVita(){
             _sb(0xA0, addr); // Link Filesystem Buffer to 0x8BA00000
         }
         // Find sceBoot
-		else if (data == 0x27BD01C0 && is_payloadex) {
+		else if (data == 0x27BD01C0 && boot_type == TYPE_PAYLOADEX) {
             sceReboot = (void *)(addr + 4);
 		}
         // Don't load pspemu params
-		else if (data == 0x240500CF && is_payloadex) {
+		else if (data == 0x240500CF && boot_type == TYPE_PAYLOADEX) {
 			MAKE_CALL(addr + 4, loadParamsPatched);
 		}
     }
