@@ -6,8 +6,10 @@ C_OBJS = \
 	scanner.o \
 	pspbtcnf.o \
 	patches_psp.o \
-	patches_psp_ark.o \
 	patches_vita.o \
+	patches_psp_ark.o \
+	patches_psp_pro.o \
+	patches_psp_lme.o \
 	patches_vita_epsp.o \
 	patches_vita_epsx.o \
 	patches_vita_vpsp.o \

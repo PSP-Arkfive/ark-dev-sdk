@@ -23,6 +23,7 @@
 
 #include "bootloadex.h"
 
+int psp_model = PSP_1000;
 BootLoadExConfig* ble_config;
 RebootConfigARK* reboot_conf = (RebootConfigARK*)REBOOTEX_CONFIG;
 ARKConfig* ark_config = (ARKConfig*)ARK_CONFIG;

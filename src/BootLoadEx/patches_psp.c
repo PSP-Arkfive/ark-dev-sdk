@@ -170,12 +170,17 @@ int _sceBootLfatOpen(char * filename)
         return 0;
     }
 
+    int is_btcnf = (strncmp(filename+4, "pspbtcnf", 8) == 0);
+    if (is_btcnf && filename[12] == '_'){
+        psp_model = (10*(filename[13]-'0') + (filename[14]-'0')) - 1;
+    }
+
     if (ble_config->boot_storage == MS_BOOT){
         strcpy(path, "/TM/DCARK");
         strcat(path, filename);
 
         if (ble_config->boot_type == TYPE_PAYLOADEX){
-            if (memcmp(filename+4, "pspbtcnf", 8) == 0)
+            if (is_btcnf)
                 memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
         }
 
@@ -183,7 +188,7 @@ int _sceBootLfatOpen(char * filename)
     }
     else {
         // patch to allow custom boot
-        if (strncmp(filename+4, "pspbtcnf", 8) == 0){
+        if (is_btcnf){
             int res = -1;
             // check for custom btcnf
             filename[6] = 't'; // pstbtcnf.bin

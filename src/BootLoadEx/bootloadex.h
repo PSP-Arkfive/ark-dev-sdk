@@ -114,6 +114,7 @@ extern BootLoadExConfig* ble_config;
 extern RebootConfigARK* reboot_conf;
 extern ARKConfig* ark_config;
 
+extern int psp_model;
 extern u32 reboot_end;
 
 //io flags
@@ -129,17 +130,17 @@ extern int (* sceBootLfatClose)(void);
 // sceReboot Main Function
 extern int (* sceReboot)(int, int, int, int, int, int, int);
 
-// Instruction Cache Invalidator
+// Cache functions
 extern void (* sceRebootIcacheInvalidateAll)(void);
-
-// Data Cache Invalidator
 extern void (* sceRebootDacheWritebackInvalidateAll)(void);
 
-// Sony PRX Decrypter Function Pointer
+// PRX Decrypter Function
 extern int (* origPRXDecrypt)(void *, unsigned int, unsigned int *);
 extern int (* origCheckExecFile)(unsigned char * addr, void * arg2);
 extern int (* extraPRXDecrypt)(void *, unsigned int, unsigned int *);
 extern int (* extraCheckExec)(unsigned char * addr, void * arg2);
+void unPatchLoadCorePRXDecrypt();
+void unPatchLoadCoreCheckExec();
 
 // UnpackBootConfig
 extern int (* UnpackBootConfig)(char * buffer, int length);
