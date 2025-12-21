@@ -152,7 +152,8 @@ typedef struct ARKConfig{
     unsigned char recovery; // run ARK in recovery mode (disables settings, plugins and autoboots RECOVERY.PBP)
 } ARKConfig;
 
-// macros for device checking
+// macros for checkig stuff
+#define IS_ARK_CONFIG(c) (*((u32*)c) == ARK_CONFIG_MAGIC)
 #define IS_PSP(_arkconfigptr_) ((_arkconfigptr_->exec_mode&DEV_MASK)==PSP_ORIG)
 #define IS_VITA(_arkconfigptr_) ((_arkconfigptr_->exec_mode&DEV_MASK)==PS_VITA)
 #define IS_VITA_ADR(_arkconfigptr_) (_arkconfigptr_->exec_mode==PSV_ADR)

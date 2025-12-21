@@ -5,7 +5,7 @@
 #include "bootloadex.h"
 
 
-int pspemuLfatOpenExtraEPSP(BootFile* file)
+int pspemuLfatOpenArkEPSP(BootFile* file)
 {
     char* p = file->name;
     if (strcmp(p, "pspbtcnf.bin") == 0){

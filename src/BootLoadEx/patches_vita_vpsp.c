@@ -5,6 +5,7 @@
 
 #include "bootloadex.h"
 
+
 FlashBackupList* flash_files = (FlashBackupList*)(0x08800100);
 
 int findArkFlashFile(BootFile* file, const char* path){
@@ -23,7 +24,7 @@ int findArkFlashFile(BootFile* file, const char* path){
     return -1;
 }
 
-int pspemuLfatOpenExtraVPSP(BootFile* file){
+int pspemuLfatOpenArkVPSP(BootFile* file){
 
     int ret = -1;
     char* p = file->name;

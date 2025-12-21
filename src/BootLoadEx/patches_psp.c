@@ -133,16 +133,16 @@ int _sceBootLfatMount()
 int _sceBootLfatRead(char * buffer, int length)
 {
     //load on reboot module
-    if(rebootmodule_open && p_rmod != NULL && size_rmod > 0)
+    if (rebootmodule_open)
     {
         int min;
 
         //copy load on reboot module
-        min = size_rmod < length ? size_rmod : length;
+        min = ble_config->rtm_mod.size < length ? ble_config->rtm_mod.size : length;
         if (min > 0){
-            memcpy(buffer, (void*)p_rmod, min);
-            p_rmod += min;
-            size_rmod -= min;
+            memcpy(buffer, (void*)ble_config->rtm_mod.buffer, min);
+            ble_config->rtm_mod.buffer += min;
+            ble_config->rtm_mod.size -= min;
         }
 
         //set filesize
@@ -159,18 +159,17 @@ int _sceBootLfatRead(char * buffer, int length)
 int _sceBootLfatOpen(char * filename)
 {
     //load on reboot module open
-    if(strcmp(filename, REBOOT_MODULE) == 0)
+    if(strcmp(filename, REBOOT_MODULE) == 0 && ble_config->rtm_mod.buffer != NULL && ble_config->rtm_mod.size > 0)
     {
         //mark for read
         rebootmodule_open = 1;
-        p_rmod = reboot_conf->rtm_mod.buffer;
-        size_rmod = reboot_conf->rtm_mod.size;
 
         //return success
         return 0;
     }
 
     int is_btcnf = (strncmp(filename+4, "pspbtcnf", 8) == 0);
+    
     if (is_btcnf && filename[12] == '_'){
         psp_model = (10*(filename[13]-'0') + (filename[14]-'0')) - 1;
     }
@@ -179,8 +178,7 @@ int _sceBootLfatOpen(char * filename)
         strcpy(path, ble_config->extra_io.psp_io.tm_path);
         strcat(path, filename);
 
-        if (ble_config->boot_type == TYPE_PAYLOADEX){
-            if (is_btcnf)
+        if (ble_config->boot_type == TYPE_PAYLOADEX && is_btcnf){
                 memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
         }
 
@@ -205,14 +203,12 @@ int _sceBootLfatOpen(char * filename)
 int _sceBootLfatClose(void)
 {
     //reboot module close
-    if(rebootmodule_open && p_rmod != NULL && size_rmod == 0)
+    if (rebootmodule_open)
     {
         //mark as closed
         rebootmodule_open = 0;
-        p_rmod = NULL;
-        size_rmod = 0;
-        reboot_conf->rtm_mod.buffer = NULL;
-        reboot_conf->rtm_mod.size = 0;
+        ble_config->rtm_mod.buffer = NULL;
+        ble_config->rtm_mod.size = 0;
 
         //return success
         return 0;

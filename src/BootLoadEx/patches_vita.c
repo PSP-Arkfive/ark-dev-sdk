@@ -31,11 +31,11 @@ int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
         return 0;
     }
     else if (strcmp(p, REBOOT_MODULE) == 0){
-        file->buffer = reboot_conf->rtm_mod.buffer;
-        file->size = reboot_conf->rtm_mod.size;
+        file->buffer = ble_config->rtm_mod.buffer;
+        file->size = ble_config->rtm_mod.size;
         relocateFlashFile(file);
-        reboot_conf->rtm_mod.buffer = NULL;
-        reboot_conf->rtm_mod.size = 0;
+        ble_config->rtm_mod.buffer = NULL;
+        ble_config->rtm_mod.size = 0;
         return 0;
     }
     pspemuLfatOpen(file, a1, a2, a3, t0);
@@ -44,10 +44,10 @@ int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
 
 int UnpackBootConfigVita(char **p_buffer, int length){
     int res = (*UnpackBootConfig)(*p_buffer, length);
-    if(reboot_conf->rtm_mod.before && reboot_conf->rtm_mod.buffer && reboot_conf->rtm_mod.size)
+    if(ble_config->rtm_mod.before && ble_config->rtm_mod.buffer && ble_config->rtm_mod.size)
     {
         //add reboot prx entry
-        res = AddPRX(*p_buffer, reboot_conf->rtm_mod.before, REBOOT_MODULE, reboot_conf->rtm_mod.flags);
+        res = AddPRX(*p_buffer, ble_config->rtm_mod.before, REBOOT_MODULE, ble_config->rtm_mod.flags);
     }
     return res;
 }

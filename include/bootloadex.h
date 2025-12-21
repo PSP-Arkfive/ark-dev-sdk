@@ -158,7 +158,7 @@ extern void patchRebootBuffer();
 
 // PSP specific functions
 void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int));
-int UnpackBootConfigPSP_ARK(char **p_buffer, int length);
+int UnpackBootConfigArkPSP(char **p_buffer, int length);
 int file_exists(const char *path);
 int is_fatms371(void);
 int patch_bootconf_fatms371(char *buffer, int length);
@@ -167,9 +167,9 @@ void patchBootIoPSP();
 // Vita specific functions
 void patchBootVita();
 void relocateFlashFile(BootFile* file);
-int pspemuLfatOpenExtraEPSP(BootFile* file);
-int pspemuLfatOpenExtraEPSX(BootFile* file);
-int pspemuLfatOpenExtraVPSP(BootFile* file);
+int pspemuLfatOpenArkEPSP(BootFile* file);
+int pspemuLfatOpenArkEPSX(BootFile* file);
+int pspemuLfatOpenArkVPSP(BootFile* file);
 
 void flushCache();
 

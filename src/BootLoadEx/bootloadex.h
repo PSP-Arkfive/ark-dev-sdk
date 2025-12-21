@@ -1,8 +1,9 @@
-#ifndef REBOOTEX_H
-#define REBOOTEX_H
+#ifndef _BOOTLOADEX_H_
+#define _BOOTLOADEX_H_
 
 #include "rebootconfig.h"
 
+#define PATH_FLASH0 "flash0:/"
 #define REBOOT_MODULE "/rtm.prx"
 
 typedef enum {
@@ -91,7 +92,7 @@ typedef struct
 typedef struct {
     BootType boot_type;
     BootStorage boot_storage;
-    union {
+    union { // IO operations
         struct {
             char* tm_path;
             int (*FatMount)();
@@ -104,6 +105,12 @@ typedef struct {
             int (*pspemuLfatOpenExtra)(BootFile*);
         } vita_io;
     } extra_io;
+    struct { // runtime module, gets injected into boot sequence during reboot
+        char *before;
+        void *buffer;
+        u32 size;
+        u32 flags;
+    } rtm_mod;
 } BootLoadExConfig;
 
 // fatms371
@@ -112,8 +119,6 @@ typedef struct {
 
 
 extern BootLoadExConfig* ble_config;
-extern RebootConfigARK* reboot_conf;
-extern ARKConfig* ark_config;
 
 extern int psp_model;
 extern u32 reboot_end;
@@ -148,6 +153,15 @@ extern int (* UnpackBootConfig)(char * buffer, int length);
 extern u32 UnpackBootConfigCall;
 extern u32 UnpackBootConfigArg;
 
+// pspbtcnf functions
+int SearchPrx(char *buffer, const char *modname);
+int AddPRXNoCopyName(char * buffer, const char * insertbefore, int prxname_offset, u32 flags);
+int AddPRX(char * buffer, const char * insertbefore, const char * prxname, u32 flags);
+int RemovePrx(char *buffer, const char *prxname, u32 flags);
+int MovePrx(char * buffer, const char * insertbefore, const char * prxname, u32 flags);
+int ModifyPrxFlag(char *buffer, const char* modname, u32 flags);
+int GetPrxFlag(char *buffer, const char* modname, u32 *flags);
+
 // Scanner functions
 u32 FindImportRange(char *libname, u32 nid, u32 lower, u32 higher);
 
@@ -159,7 +173,6 @@ extern void patchRebootBuffer();
 
 // PSP specific functions
 void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int));
-int UnpackBootConfigPSP_ARK(char **p_buffer, int length);
 int file_exists(const char *path);
 int is_fatms371(void);
 int patch_bootconf_fatms371(char *buffer, int length);
@@ -168,9 +181,15 @@ void patchBootIoPSP();
 // Vita specific functions
 void patchBootVita();
 void relocateFlashFile(BootFile* file);
-int pspemuLfatOpenExtraEPSP(BootFile* file);
-int pspemuLfatOpenExtraEPSX(BootFile* file);
-int pspemuLfatOpenExtraVPSP(BootFile* file);
+
+// ARK specific functions
+extern RebootConfigARK* reboot_conf;
+extern ARKConfig* ark_config;
+void checkArkRebootConfig();
+int UnpackBootConfigArkPSP(char **p_buffer, int length);
+int pspemuLfatOpenArkEPSP(BootFile* file);
+int pspemuLfatOpenArkEPSX(BootFile* file);
+int pspemuLfatOpenArkVPSP(BootFile* file);
 
 void flushCache();
 

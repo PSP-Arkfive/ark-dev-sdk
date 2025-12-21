@@ -25,8 +25,6 @@
 
 int psp_model = PSP_1000;
 BootLoadExConfig* ble_config;
-RebootConfigARK* reboot_conf = (RebootConfigARK*)REBOOTEX_CONFIG;
-ARKConfig* ark_config = (ARKConfig*)ARK_CONFIG;
 
 // sceReboot Main Function
 int (* sceReboot)(int, int, int, int, int, int, int) = (void *)(REBOOT_TEXT);
@@ -53,10 +51,6 @@ u32 loadcore_text = 0;
 //io flags
 int rebootmodule_set = 0;
 int rebootmodule_open = 0;
-char *p_rmod = NULL;
-int size_rmod = 0;
-void* rtm_buf = NULL;
-int rtm_size = 0;
 
 //io functions
 int (* sceBootLfatOpen)(const char * filename) = NULL;
@@ -248,18 +242,4 @@ void findBootFunctions(){
 
 void configureBoot(BootLoadExConfig* config){
     ble_config = config;
-    
-    if (IS_ARK_CONFIG(reboot_conf)){
-        // fix MODE_NP9660 (Galaxy driver no longer exists, redirect to either inferno or normal)
-        if (reboot_conf->iso_mode == MODE_NP9660){
-            if (reboot_conf->iso_path[0] == 0){
-                // no ISO -> normal mode
-                reboot_conf->iso_mode = MODE_UMD;
-            }
-            else{
-                // attempting to load an ISO with NP9660 is no longer possible, use inferno instead
-                reboot_conf->iso_mode = MODE_INFERNO;
-            }
-        }
-    }
 }

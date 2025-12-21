@@ -159,7 +159,7 @@ int patch_bootconf_updaterumd(char *buffer, int length)
     return result;
 }
 
-int UnpackBootConfigPSP_ARK(char **p_buffer, int length)
+int UnpackBootConfigArkPSP(char **p_buffer, int length)
 {
     int result = length;
     int newsize;
@@ -192,34 +192,36 @@ int UnpackBootConfigPSP_ARK(char **p_buffer, int length)
     newsize = patch_bootconf_pops(buffer, result);
     if (newsize > 0) result = newsize;
 
-    // Insert Inferno
-    if (IS_ARK_CONFIG(reboot_conf)){
-        switch(reboot_conf->iso_mode) {
-            default:
-                break;
-            case MODE_VSHUMD:
-                newsize = patch_bootconf_vshumd(buffer, result);
-                if (newsize > 0) result = newsize;
-                break;
-            case MODE_UPDATERUMD:
-                newsize = patch_bootconf_updaterumd(buffer, result);
-                if (newsize > 0) result = newsize;
-                break;
-            case MODE_MARCH33:
-            case MODE_INFERNO:
-                reboot_conf->iso_mode = MODE_INFERNO;
-                newsize = patch_bootconf_inferno(buffer, result);
-                if (newsize > 0) result = newsize;
-                break;
-        }
-        //reboot variable set
-        if(reboot_conf->rtm_mod.before && reboot_conf->rtm_mod.buffer && reboot_conf->rtm_mod.size)
-        {
-            //add reboot prx entry
-            newsize = AddPRX(buffer, reboot_conf->rtm_mod.before, REBOOT_MODULE, reboot_conf->rtm_mod.flags);
-            if(newsize > 0){
-                result = newsize;
-            }
+    // initialize ARK reboot config
+    checkArkRebootConfig();
+
+    // Configure boot mode
+    switch(reboot_conf->iso_mode) {
+        default:
+            break;
+        case MODE_VSHUMD:
+            newsize = patch_bootconf_vshumd(buffer, result);
+            if (newsize > 0) result = newsize;
+            break;
+        case MODE_UPDATERUMD:
+            newsize = patch_bootconf_updaterumd(buffer, result);
+            if (newsize > 0) result = newsize;
+            break;
+        case MODE_MARCH33:
+        case MODE_INFERNO:
+            reboot_conf->iso_mode = MODE_INFERNO;
+            newsize = patch_bootconf_inferno(buffer, result);
+            if (newsize > 0) result = newsize;
+            break;
+    }
+
+    //reboot variable set
+    if(reboot_conf->rtm_mod.before && reboot_conf->rtm_mod.buffer && reboot_conf->rtm_mod.size)
+    {
+        //add reboot prx entry
+        newsize = AddPRX(buffer, reboot_conf->rtm_mod.before, REBOOT_MODULE, reboot_conf->rtm_mod.flags);
+        if(newsize > 0){
+            result = newsize;
         }
     }
 

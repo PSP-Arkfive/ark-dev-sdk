@@ -7,6 +7,7 @@ C_OBJS = \
 	pspbtcnf.o \
 	patches_psp.o \
 	patches_vita.o \
+	bootloadex_ark.o \
 	patches_psp_ark.o \
 	patches_vita_epsp.o \
 	patches_vita_epsx.o \
