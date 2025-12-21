@@ -16,12 +16,14 @@
  */
 
 
-int strcmp(const char *a, const char *b)
+unsigned int strnlen(const char * text, unsigned int maxlen)
 {
-    while(*a && *b && *a == *b)
-    {
-        a++, b++;
-    }
-
-    return *a - *b;
+    // String Length
+    unsigned int length = 0;
+    
+    // Count Characters
+    while (text[length] != 0 && length<maxlen) length++;
+    
+    // Return String Length
+    return length;
 }

@@ -39,22 +39,3 @@ char *strcpy(char *to, const char *from)
     
     return oto;
 }
-
-// Concatenates string s + append
-char *strcat(char *s, const char *append)
-{
-    char *pRet = s;
-    while(*s)
-    {
-        s++;
-    }
-
-    while(*append)
-    {
-        *s++ = *append++;
-    }
-
-    *s = 0;
-
-    return pRet;
-}

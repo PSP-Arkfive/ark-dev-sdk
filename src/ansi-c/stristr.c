@@ -1,3 +1,6 @@
+extern int tolower(int s);
+extern char *strstr(const char *str1, const char *str2);
+extern char *strncpy(char *to, const char *from, unsigned int n);
 
 char *stristr(const char *str1, const char *str2) {
     #define MAXLEN 256

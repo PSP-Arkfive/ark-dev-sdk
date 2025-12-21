@@ -14,14 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with PRO CFW. If not, see <http://www.gnu.org/licenses/ .
  */
+ 
 
+typedef unsigned int size_t;
 
-int strcmp(const char *a, const char *b)
+extern size_t strnlen(const char *s, size_t len);
+
+// Copy String Buffer
+char *strncpy(char *to, const char *from, unsigned int n)
 {
-    while(*a && *b && *a == *b)
+    char *oto = to;
+    
+    // Position
+    unsigned int position = 0;
+    
+    // Copy Bytes
+    while(from[position] != 0 && n)
     {
-        a++, b++;
-    }
+        // Copy Byte
+        to[position] = from[position];
+        
+        // Change Position
+        position++;
 
-    return *a - *b;
+        // decrease counter
+        n--;
+    }
+    
+    // Terminate String
+    to[position] = 0;
+    
+    return oto;
 }

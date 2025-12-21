@@ -17,19 +17,18 @@
 
 extern int strlen(char*);
 
-// Inverse Needle Search in Haystack
-int strspn(char * str1, char * str2)
+// Search Needle in Haystack
+int strcspn(char * str1, char * str2)
 {
     // Iterate Symbols from Haystack
     unsigned int i = 0;
     for(; i < strlen(str1); i++)
        {
         // Iterate Symbols from Needle
-        unsigned int j = 0;
-        for(; j < strlen(str2); j++)
+        unsigned int j = 0; for(; j < strlen(str2); j++)
            {
-            // Mismatch found
-            if(str1[i] != str2[j]) break;
+            // Match found
+            if(str1[i] == str2[j]) break;
         }
     }
     

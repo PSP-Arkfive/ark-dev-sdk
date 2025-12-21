@@ -19,51 +19,7 @@
 typedef unsigned int size_t;
 
 extern size_t strnlen(const char *s, size_t len);
-
-// Copy String Buffer
-char *strncpy(char *to, const char *from, unsigned int n)
-{
-    char *oto = to;
-    
-    // Position
-    unsigned int position = 0;
-    
-    // Copy Bytes
-    while(from[position] != 0 && n)
-    {
-        // Copy Byte
-        to[position] = from[position];
-        
-        // Change Position
-        position++;
-
-        // decrease counter
-        n--;
-    }
-    
-    // Terminate String
-    to[position] = 0;
-    
-    return oto;
-}
-
-char * strncat(char *dst, const char *src, size_t n)
-{
-    if (n != 0) {
-        char *d = dst;
-        const char *s = src;
-
-        while (*d != 0)
-            d++;
-        do {
-            if ((*d = *s++) == 0)
-                break;
-            d++;
-        } while (--n != 0);
-        *d = 0;
-    }
-    return (dst);
-}
+extern char * strncat(char *dst, const char *src, size_t n);
 
 size_t strncat_s(char *strDest, size_t numberOfElements, const char *strSource, size_t count)
 {
@@ -84,17 +40,3 @@ size_t strncat_s(char *strDest, size_t numberOfElements, const char *strSource, 
 
     return strnlen(strDest, numberOfElements);
 }
-
-size_t strncpy_s(char *strDest, size_t numberOfElements, const char *strSource, size_t count)
-{
-    if (!strDest || !strSource || numberOfElements == 0) {
-        return 0;
-    }
-
-    strncpy(strDest, strSource, numberOfElements < count ?
-            numberOfElements : count);
-    strDest[numberOfElements - 1] = '\0';
-
-    return strnlen(strDest, numberOfElements);
-}
-

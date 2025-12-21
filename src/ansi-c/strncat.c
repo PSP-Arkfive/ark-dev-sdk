@@ -14,14 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with PRO CFW. If not, see <http://www.gnu.org/licenses/ .
  */
+ 
 
+typedef unsigned int size_t;
 
-int strcmp(const char *a, const char *b)
+char * strncat(char *dst, const char *src, size_t n)
 {
-    while(*a && *b && *a == *b)
-    {
-        a++, b++;
-    }
+    if (n != 0) {
+        char *d = dst;
+        const char *s = src;
 
-    return *a - *b;
+        while (*d != 0)
+            d++;
+        do {
+            if ((*d = *s++) == 0)
+                break;
+            d++;
+        } while (--n != 0);
+        *d = 0;
+    }
+    return (dst);
 }

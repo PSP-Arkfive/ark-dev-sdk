@@ -16,12 +16,15 @@
  */
 
 
-int strcmp(const char *a, const char *b)
+int strncmp(const char *a, const char *b, unsigned int count)
 {
-    while(*a && *b && *a == *b)
+    while(count>0 && *a && *b && *a == *b)
     {
         a++, b++;
+        count--;
     }
+
+    if (count == 0) return 0;
 
     return *a - *b;
 }

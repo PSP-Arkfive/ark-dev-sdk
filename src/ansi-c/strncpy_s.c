@@ -14,14 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with PRO CFW. If not, see <http://www.gnu.org/licenses/ .
  */
+ 
 
+typedef unsigned int size_t;
 
-int strcmp(const char *a, const char *b)
+extern size_t strnlen(const char *s, size_t len);
+extern char *strncpy(char *to, const char *from, unsigned int n);
+
+size_t strncpy_s(char *strDest, size_t numberOfElements, const char *strSource, size_t count)
 {
-    while(*a && *b && *a == *b)
-    {
-        a++, b++;
+    if (!strDest || !strSource || numberOfElements == 0) {
+        return 0;
     }
 
-    return *a - *b;
+    strncpy(strDest, strSource, numberOfElements < count ?
+            numberOfElements : count);
+    strDest[numberOfElements - 1] = '\0';
+
+    return strnlen(strDest, numberOfElements);
 }
+

@@ -6,18 +6,29 @@ C_OBJS = \
 	memcpy.o \
 	memset.o \
 	strcpy.o \
+	strcat.o \
 	strlen.o \
+	strnlen.o \
 	strchr.o \
+	strrchr.o \
 	strcmp.o \
+	strncmp.o \
 	strstr.o \
+	stristr.o \
 	strspn.o \
+	strcspn.o \
 	strtok.o \
-	memfind.o \
+	memfindsz.o \
+	memfindu32.o \
 	strhex32.o \
-	strsafe.o \
+	strncpy.o \
+	strncat.o \
+	strncat_s.o \
+	strncpy_s.o \
 	strbeginswith.o \
 	strreplaceall.o \
 	strcasecmp.o \
+	tolower.o \
 	lowerstring.o \
 	setlongjmp.o
 

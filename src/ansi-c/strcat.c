@@ -16,12 +16,21 @@
  */
 
 
-int strcmp(const char *a, const char *b)
+// Concatenates string s + append
+char *strcat(char *s, const char *append)
 {
-    while(*a && *b && *a == *b)
+    char *pRet = s;
+    while(*s)
     {
-        a++, b++;
+        s++;
     }
 
-    return *a - *b;
+    while(*append)
+    {
+        *s++ = *append++;
+    }
+
+    *s = 0;
+
+    return pRet;
 }

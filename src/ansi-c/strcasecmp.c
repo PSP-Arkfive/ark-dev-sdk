@@ -1,12 +1,6 @@
 #include <stdlib.h>
 
-int tolower(int s)
-{
-    if((s >= 'A') && (s <= 'Z'))
-        s = 'a' + (s - 'A');
-
-    return s;
-}
+extern int tolower(int s);
 
 int strncasecmp(const char *s1, const char *s2, size_t n)
 {
