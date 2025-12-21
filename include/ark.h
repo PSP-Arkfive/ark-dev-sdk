@@ -63,6 +63,7 @@ extern "C" {
 #define ARK_RECOVERY "RECOVERY.PBP" // recovery app
 #define RECOVERY_PRX "RECOVERY.PRX" // Classic Recovery
 #define FLASH0_ARK "FLASH0.ARK" // ARK flash0 package
+#define CIPL_ARK "CIPL.ARK" // ARK cIPL package
 #define VSH_MENU "VSHMENU.PRX" // ARK VSH Menu for XMB
 #define XMBCTRL_PRX "XMBCTRL.PRX" // XMB Control
 #define IDSREG_PRX "IDSREG.PRX" // idsRegeneration
