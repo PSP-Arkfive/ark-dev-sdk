@@ -1,0 +1,243 @@
+#include <string.h>
+
+#include <cfwmacros.h>
+#include <systemctrl.h>
+#include <systemctrl_se.h>
+
+#include "bootloadex.h"
+#include "pspbtcnf.h"
+
+// ARK files
+#define PATH_SYSTEMCTRL PATH_FLASH0 "kd/ark_systemctrl.prx"
+#define PATH_PSPCOMPAT PATH_FLASH0 "kd/ark_pspcompat.prx"
+#define PATH_VITACOMPAT PATH_FLASH0 "kd/ark_vitacompat.prx"
+#define PATH_VITAPOPS PATH_FLASH0 "kd/ark_vitapops.prx"
+#define PATH_VSHCTRL PATH_FLASH0 "kd/ark_vshctrl.prx"
+#define PATH_STARGATE PATH_FLASH0 "kd/ark_stargate.prx"
+#define PATH_INFERNO PATH_FLASH0 "kd/ark_inferno.prx"
+#define PATH_POPCORN PATH_FLASH0 "kd/ark_popcorn.prx"
+#define PATH_TMCTRL PATH_FLASH0 "tmctrl.prx"
+
+// pspbtcnf patches
+
+int patch_bootconf_vsh(char *buffer, int length)
+{
+
+    int newsize, result;
+
+    result = length;
+
+    newsize = AddPRX(buffer, "/kd/vshbridge.prx", PATH_VSHCTRL+sizeof(PATH_FLASH0)-2, VSH_RUNLEVEL );
+    if (newsize > 0) result = newsize;
+
+    newsize = AddPRX(buffer, "/kd/vshbridge_tool.prx", PATH_VSHCTRL+sizeof(PATH_FLASH0)-2, VSH_RUNLEVEL );
+    if (newsize > 0){
+        ark_config->exec_mode = PSP_TOOL;
+        result = newsize;
+    }
+
+    return result;
+}
+
+int patch_bootconf_pops(char *buffer, int length)
+{
+    int newsize, result;
+
+    result = length;
+    newsize = AddPRX(buffer, "/kd/usersystemlib.prx", PATH_POPCORN+sizeof(PATH_FLASH0)-2, POPS_RUNLEVEL);
+
+    if (newsize > 0) result = newsize;
+
+    return result;
+}
+
+struct add_module {
+    char *prxname;
+    char *insertbefore;
+    u32 flags;
+};
+
+struct del_module {
+    char *prxname;
+    u32 flags;
+};
+
+static struct add_module inferno_add_mods[] = {
+    { "/kd/mgr.prx", "/kd/amctrl.prx", GAME_RUNLEVEL },
+    { PATH_INFERNO+sizeof(PATH_FLASH0)-2, "/kd/utility.prx", GAME_RUNLEVEL },
+    { PATH_INFERNO+sizeof(PATH_FLASH0)-2, "/kd/isofs.prx", UMDEMU_RUNLEVEL },
+    { "/kd/isofs.prx", "/kd/utility.prx", GAME_RUNLEVEL },
+};
+
+static struct del_module inferno_del_mods[] = {
+    { "/kd/mediaman.prx", GAME_RUNLEVEL },
+    { "/kd/ata.prx", GAME_RUNLEVEL },
+    { "/kd/umdman.prx", GAME_RUNLEVEL },
+    { "/kd/umdcache.prx", GAME_RUNLEVEL },
+    { "/kd/umd9660.prx", GAME_RUNLEVEL },
+    { "/kd/np9660.prx", UMDEMU_RUNLEVEL },
+};
+
+int patch_bootconf_inferno(char *buffer, int length)
+{
+    int newsize, result;
+
+    result = length;
+
+    int i; for(i=0; i<NELEMS(inferno_del_mods); ++i) {
+        RemovePrx(buffer, inferno_del_mods[i].prxname, inferno_del_mods[i].flags);
+    }
+
+    for(i=0; i<NELEMS(inferno_add_mods); ++i) {
+        newsize = MovePrx(buffer, inferno_add_mods[i].insertbefore, inferno_add_mods[i].prxname, inferno_add_mods[i].flags);
+
+        if (newsize > 0) result = newsize;
+    }
+
+    return result;
+}
+
+static struct add_module vshumd_add_mods[] = {
+    { "/kd/isofs.prx", "/kd/utility.prx", VSH_RUNLEVEL },
+    { PATH_INFERNO+sizeof(PATH_FLASH0)-2, "/kd/chnnlsv.prx", VSH_RUNLEVEL },
+};
+
+static struct del_module vshumd_del_mods[] = {
+    { "/kd/mediaman.prx", VSH_RUNLEVEL },
+    { "/kd/ata.prx", VSH_RUNLEVEL },
+    { "/kd/umdman.prx", VSH_RUNLEVEL },
+    { "/kd/umd9660.prx", VSH_RUNLEVEL },
+};
+
+int patch_bootconf_vshumd(char *buffer, int length)
+{
+    int newsize, result;
+
+    result = length;
+
+    int i; for(i=0; i<NELEMS(vshumd_del_mods); ++i) {
+        RemovePrx(buffer, vshumd_del_mods[i].prxname, vshumd_del_mods[i].flags);
+    }
+    
+    for(i=0; i<NELEMS(vshumd_add_mods); ++i) {
+        newsize = MovePrx(buffer, vshumd_add_mods[i].insertbefore, vshumd_add_mods[i].prxname, vshumd_add_mods[i].flags);
+
+        if (newsize > 0) result = newsize;
+    }
+
+    return result;
+}
+
+static struct add_module updaterumd_add_mods[] = {
+    { "/kd/isofs.prx", "/kd/utility.prx", UPDATER_RUNLEVEL },
+    { PATH_INFERNO+sizeof(PATH_FLASH0)-2, "/kd/chnnlsv.prx", UPDATER_RUNLEVEL },
+};
+
+static struct del_module updaterumd_del_mods[] = {
+    { "/kd/mediaman.prx", UPDATER_RUNLEVEL },
+    { "/kd/ata.prx", UPDATER_RUNLEVEL },
+    { "/kd/umdman.prx", UPDATER_RUNLEVEL },
+    { "/kd/umd9660.prx", UPDATER_RUNLEVEL },
+};
+
+int patch_bootconf_updaterumd(char *buffer, int length)
+{
+    int newsize, result;
+
+    result = length;
+
+    int i; for(i=0; i<NELEMS(updaterumd_del_mods); ++i) {
+        RemovePrx(buffer, updaterumd_del_mods[i].prxname, updaterumd_del_mods[i].flags);
+    }
+    
+    for(i=0; i<NELEMS(updaterumd_add_mods); ++i) {
+        newsize = MovePrx(buffer, updaterumd_add_mods[i].insertbefore, updaterumd_add_mods[i].prxname, updaterumd_add_mods[i].flags);
+
+        if (newsize > 0) result = newsize;
+    }
+
+    return result;
+}
+
+int UnpackBootConfigPSP_ARK(char **p_buffer, int length)
+{
+    int result = length;
+    int newsize;
+    char *buffer;
+
+    result = (*UnpackBootConfig)(*p_buffer, length);
+    buffer = (void*)BOOTCONFIG_TEMP_BUFFER;
+    memcpy(buffer, *p_buffer, length);
+    *p_buffer = buffer;
+
+    // Insert SystemControl
+    newsize = AddPRX(buffer, "/kd/init.prx", PATH_SYSTEMCTRL+sizeof(PATH_FLASH0)-2, 0x000000EF);
+    if (newsize > 0) result = newsize;
+    
+    // Insert compat layer
+    newsize = AddPRX(buffer, "/kd/init.prx", PATH_PSPCOMPAT+sizeof(PATH_FLASH0)-2, 0x000000EF);
+    if (newsize > 0) result = newsize;
+    
+    // Insert Stargate No-DRM Engine
+    newsize = AddPRX(buffer, "/kd/me_wrapper.prx", PATH_STARGATE+sizeof(PATH_FLASH0)-2, GAME_RUNLEVEL | UMDEMU_RUNLEVEL);
+    if (newsize > 0) result = newsize;
+    
+    // Insert VSHControl
+    if (SearchPrx(buffer, "/vsh/module/vshmain.prx") >= 0) {
+        newsize = patch_bootconf_vsh(buffer, result);
+        if (newsize > 0) result = newsize;
+    }
+
+    // Insert Popcorn
+    newsize = patch_bootconf_pops(buffer, result);
+    if (newsize > 0) result = newsize;
+
+    // Insert Inferno
+    if (IS_ARK_CONFIG(reboot_conf)){
+        switch(reboot_conf->iso_mode) {
+            default:
+                break;
+            case MODE_VSHUMD:
+                newsize = patch_bootconf_vshumd(buffer, result);
+                if (newsize > 0) result = newsize;
+                break;
+            case MODE_UPDATERUMD:
+                newsize = patch_bootconf_updaterumd(buffer, result);
+                if (newsize > 0) result = newsize;
+                break;
+            case MODE_MARCH33:
+            case MODE_INFERNO:
+                reboot_conf->iso_mode = MODE_INFERNO;
+                newsize = patch_bootconf_inferno(buffer, result);
+                if (newsize > 0) result = newsize;
+                break;
+        }
+        //reboot variable set
+        if(reboot_conf->rtm_mod.before && reboot_conf->rtm_mod.buffer && reboot_conf->rtm_mod.size)
+        {
+            //add reboot prx entry
+            newsize = AddPRX(buffer, reboot_conf->rtm_mod.before, REBOOT_MODULE, reboot_conf->rtm_mod.flags);
+            if(newsize > 0){
+                result = newsize;
+            }
+        }
+    }
+
+    if(!ark_config->recovery && is_fatms371())
+    {
+        newsize = patch_bootconf_fatms371(buffer, length);
+        if (newsize > 0) result = newsize;
+    }
+
+    if (ble_config->boot_storage == MS_BOOT){
+        // Insert tmctrl
+        newsize = AddPRX(buffer, "/kd/lfatfs.prx", PATH_TMCTRL+sizeof(PATH_FLASH0)-2, 0x000000EF);
+        if (newsize > 0) result = newsize;
+
+        // Remove lfatfs
+        newsize = RemovePrx(buffer, "/kd/lfatfs.prx", 0x000000EF);
+        if (newsize > 0) result = newsize;
+    }
+    
+    return result;
+}

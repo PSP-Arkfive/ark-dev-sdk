@@ -105,11 +105,26 @@ typedef struct {
     } extra_io;
 } BootLoadExConfig;
 
+// fatms371
+#define PATH_FATMS_HELPER PATH_FLASH0 "kd/_fatmshlp.prx"
+#define PATH_FATMS_371 PATH_FLASH0 "kd/_fatms371.prx"
+
+
 extern BootLoadExConfig* ble_config;
 extern RebootConfigARK* reboot_conf;
 extern ARKConfig* ark_config;
 
 extern u32 reboot_end;
+
+//io flags
+extern int rebootmodule_open;
+extern char *p_rmod;
+extern int size_rmod;
+
+//io functions
+extern int (* sceBootLfatOpen)(const char * filename);
+extern int (* sceBootLfatRead)(char * buffer, int length);
+extern int (* sceBootLfatClose)(void);
 
 // sceReboot Main Function
 extern int (* sceReboot)(int, int, int, int, int, int, int);
@@ -141,7 +156,10 @@ u32 loadCoreModuleStartCommon(u32 entry);
 extern void patchRebootBuffer();
 
 // PSP specific functions
-void patchBootPSP();
+void patchBootPSP(void* UnpackBootConfigPatchedPSP);
+int UnpackBootConfigPSP_ARK(char **p_buffer, int length);
+int is_fatms371(void);
+int patch_bootconf_fatms371(char *buffer, int length);
 
 // Vita specific functions
 void patchBootVita();
