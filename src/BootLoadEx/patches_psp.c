@@ -8,10 +8,6 @@
 #include "pspbtcnf.h"
 
 
-void patchRebootIoPSP();
-
-int UnpackBootConfigPatchedPSP(char **p_buffer, int length);
-
 int file_exists(const char *path)
 {
     int ret;
