@@ -29,7 +29,7 @@ int file_exists(const char *path)
 }
 
 int loadcoreModuleStartPSP(void * arg1, void * arg2, void * arg3, int (* start)(void *, void *, void *)){
-    loadCoreModuleStartCommon((u32)start);
+    loadCoreModuleStartPatched((u32)start);
 
     flushCache();
     return start(arg1, arg2, arg3);

@@ -142,7 +142,7 @@ void unPatchLoadCoreCheckExec(){
 
 }
 
-u32 loadCoreModuleStartCommon(u32 module_start){
+u32 loadCoreModuleStartPatched(u32 module_start){
 
     // Calculate Text Address and size
     u32 text_addr = module_start-0xAF8;

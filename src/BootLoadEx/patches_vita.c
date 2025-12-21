@@ -11,7 +11,7 @@ int (*SetMemoryPartitionTable)(void *sysmem_config, SceSysmemPartTable *table) =
 // Load Core module_start Hook
 int loadcoreModuleStartVita(unsigned int args, void* argp, int (* start)(SceSize, void *))
 {
-    loadCoreModuleStartCommon((u32)start);
+    loadCoreModuleStartPatched((u32)start);
     flushCache();
     return start(args, argp);
 }
