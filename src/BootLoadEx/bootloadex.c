@@ -27,7 +27,7 @@ int psp_model = PSP_1000;
 u32 reboot_end = REBOOT_TEXT+0x20000; // 128KB at most
 u32 loadcore_text = 0;
 BootLoadExConfig* ble_config;
-BootFileList* boot_files = (BootFileList*)FILE_BOOT_LIST_ADDR;
+BootFileList* boot_files = (BootFileList*)BOOT_FILE_LIST_ADDR;
 
 // sceBoot Main Function
 int (* sceBoot)(int, int, int, int, int, int, int) = (void *)(REBOOT_TEXT);

@@ -33,7 +33,7 @@ typedef struct {
     int nfiles;
     char bootfile[100][64]; // list of boot files
 } BootFileList;
-#define FILE_BOOT_LIST_ADDR 0x08800100
+#define BOOT_FILE_LIST_ADDR 0x08800100
 
 typedef struct {
     u32 addr;
