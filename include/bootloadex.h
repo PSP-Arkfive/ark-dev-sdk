@@ -157,7 +157,7 @@ u32 loadCoreModuleStartCommon(u32 entry);
 extern void patchRebootBuffer();
 
 // PSP specific functions
-void patchBootPSP(void* UnpackBootConfigPatchedPSP);
+void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int));
 int UnpackBootConfigPSP_ARK(char **p_buffer, int length);
 int file_exists(const char *path);
 int is_fatms371(void);

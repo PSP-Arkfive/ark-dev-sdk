@@ -36,7 +36,7 @@ int loadcoreModuleStartPSP(void * arg1, void * arg2, void * arg3, int (* start)(
 }
 
 // patch boot on psp
-void patchBootPSP(void* UnpackBootConfigPatchedPSP){
+void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int)){
 
     _sw(0x27A40004, UnpackBootConfigArg); // addiu $a0, $sp, 4
     _sw(JAL(UnpackBootConfigPatchedPSP), UnpackBootConfigCall); // Hook UnpackBootConfig
