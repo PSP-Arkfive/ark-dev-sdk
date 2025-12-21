@@ -176,7 +176,7 @@ int _sceBootLfatOpen(char * filename)
     }
 
     if (ble_config->boot_storage == MS_BOOT){
-        strcpy(path, "/TM/DCARK");
+        strcpy(path, ble_config->extra_io.psp_io.tm_path);
         strcat(path, filename);
 
         if (ble_config->boot_type == TYPE_PAYLOADEX){

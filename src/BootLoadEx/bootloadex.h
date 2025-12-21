@@ -93,6 +93,7 @@ typedef struct {
     BootStorage boot_storage;
     union {
         struct {
+            char* tm_path;
             int (*FatMount)();
             int (*FatOpen)(const char*);
             int (*FatRead)(void*, u32);
