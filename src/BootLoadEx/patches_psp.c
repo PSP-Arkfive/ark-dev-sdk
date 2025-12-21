@@ -99,7 +99,7 @@ void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int)){
         }
     }
 
-    patchRebootIoPSP();
+    patchBootIoPSP();
 
     // Flush Cache
     flushCache();
@@ -225,7 +225,7 @@ int _sceBootLfatClose(void)
     return sceBootLfatClose();
 }
 
-void patchRebootIoPSP(){
+void patchBootIoPSP(){
     int patches = 3;
     for (u32 addr = REBOOT_TEXT; addr<reboot_end && patches; addr+=4){
         u32 data = _lw(addr);

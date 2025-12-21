@@ -162,7 +162,7 @@ int UnpackBootConfigPSP_ARK(char **p_buffer, int length);
 int file_exists(const char *path);
 int is_fatms371(void);
 int patch_bootconf_fatms371(char *buffer, int length);
-void patchRebootIoPSP();
+void patchBootIoPSP();
 
 // Vita specific functions
 void patchBootVita();
