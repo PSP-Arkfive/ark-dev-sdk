@@ -127,11 +127,6 @@ extern BootFileList* boot_files;
 // rtm module io flag
 extern int rebootmodule_open;
 
-//PSP IO functions
-extern int (* sceBootLfatOpen)(const char * filename);
-extern int (* sceBootLfatRead)(char * buffer, int length);
-extern int (* sceBootLfatClose)(void);
-
 // sceReboot Main Function
 extern int (* sceReboot)(int, int, int, int, int, int, int);
 
@@ -169,6 +164,11 @@ void configureBoot(BootLoadExConfig*);
 void findBootFunctions();
 u32 loadCoreModuleStartPatched(u32 entry);
 extern void patchRebootBuffer();
+
+// PSP IO functions
+extern int (* sceBootLfatOpen)(const char * filename);
+extern int (* sceBootLfatRead)(char * buffer, int length);
+extern int (* sceBootLfatClose)(void);
 
 // PSP specific functions
 void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int));

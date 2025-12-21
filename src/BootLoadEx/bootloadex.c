@@ -49,14 +49,8 @@ u32 UnpackBootConfigArg = 0;
 u32 reboot_end = REBOOT_TEXT+0x20000; // 128KB at most
 u32 loadcore_text = 0;
 
-//io flags
-int rebootmodule_set = 0;
+// rtm module flag
 int rebootmodule_open = 0;
-
-//io functions
-int (* sceBootLfatOpen)(const char * filename) = NULL;
-int (* sceBootLfatRead)(char * buffer, int length) = NULL;
-int (* sceBootLfatClose)(void) = NULL;
 
 
 // Custom PRX Support

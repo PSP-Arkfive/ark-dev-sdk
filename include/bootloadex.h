@@ -119,13 +119,6 @@ extern u32 reboot_end;
 
 //io flags
 extern int rebootmodule_open;
-extern char *p_rmod;
-extern int size_rmod;
-
-//io functions
-extern int (* sceBootLfatOpen)(const char * filename);
-extern int (* sceBootLfatRead)(char * buffer, int length);
-extern int (* sceBootLfatClose)(void);
 
 // sceReboot Main Function
 extern int (* sceReboot)(int, int, int, int, int, int, int);

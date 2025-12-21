@@ -7,6 +7,11 @@
 #include "bootloadex.h"
 #include "pspbtcnf.h"
 
+//io functions
+int (* sceBootLfatOpen)(const char * filename) = NULL;
+int (* sceBootLfatRead)(char * buffer, int length) = NULL;
+int (* sceBootLfatClose)(void) = NULL;
+
 
 int file_exists(const char *path)
 {
