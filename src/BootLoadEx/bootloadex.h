@@ -116,6 +116,9 @@ typedef struct {
     int (*extraCheckExecFile)(unsigned char *, void *);
 } BootLoadExConfig;
 
+#define OE_TAG_PRO 0xC01DB15D
+#define OE_TAG_LME 0xC6BA41D3
+
 // fatms371
 #define PATH_FATMS_HELPER PATH_FLASH0 "kd/_fatmshlp.prx"
 #define PATH_FATMS_371 PATH_FLASH0 "kd/_fatms371.prx"

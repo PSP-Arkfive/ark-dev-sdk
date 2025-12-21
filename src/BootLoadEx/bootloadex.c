@@ -56,8 +56,8 @@ int PRXDecryptPatched(PSP_Header* prx, unsigned int size, unsigned int * newsize
 {
     // Custom Packed PRX File
     if ( (_lb((u32)prx + 0x150) == 0x1F && _lb((u32)prx + 0x151) == 0x8B) // GZIP
-            || prx->oe_tag == 0xC01DB15D // PRO-type PRX
-            || prx->oe_tag == 0xC6BA41D3 // ME-type PRX
+            || prx->oe_tag == OE_TAG_PRO // PRO-type PRX
+            || prx->oe_tag == OE_TAG_LME // ME-type PRX
     ){
 
         if (prx->oe_tag == 0xC6BA41D3 && ble_config->extraPRXDecrypt){ // decrypt ME firmware file
