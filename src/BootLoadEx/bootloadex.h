@@ -112,6 +112,8 @@ typedef struct {
         u32 size;
         u32 flags;
     } rtm_mod;
+    int (*extraPRXDecrypt)(void *, unsigned int, unsigned int *);
+    int (*extraCheckExecFile)(unsigned char *, void *);
 } BootLoadExConfig;
 
 // fatms371
@@ -121,24 +123,23 @@ typedef struct {
 
 extern int psp_model;
 extern u32 reboot_end;
+extern u32 loadcore_text;
 extern BootLoadExConfig* ble_config;
 extern BootFileList* boot_files;
 
 // rtm module io flag
 extern int rebootmodule_open;
 
-// sceReboot Main Function
-extern int (* sceReboot)(int, int, int, int, int, int, int);
+// sceBoot Main Function
+extern int (* sceBoot)(int, int, int, int, int, int, int);
 
 // Cache functions
-extern void (* sceRebootIcacheInvalidateAll)(void);
-extern void (* sceRebootDacheWritebackInvalidateAll)(void);
+extern void (* sceBootIcacheInvalidateAll)(void);
+extern void (* sceBootDacheWritebackInvalidateAll)(void);
 
 // PRX Decrypter Function
 extern int (* origPRXDecrypt)(void *, unsigned int, unsigned int *);
 extern int (* origCheckExecFile)(unsigned char * addr, void * arg2);
-extern int (* extraPRXDecrypt)(void *, unsigned int, unsigned int *);
-extern int (* extraCheckExec)(unsigned char * addr, void * arg2);
 void unPatchLoadCorePRXDecrypt();
 void unPatchLoadCoreCheckExec();
 

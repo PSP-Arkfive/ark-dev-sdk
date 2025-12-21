@@ -145,7 +145,7 @@ void patchBootVita(){
             if (ble_config->boot_type == TYPE_PAYLOADEX){
                 // Find sceBoot
                 if (data == 0x27BD01C0) {
-                    sceReboot = (void *)(addr + 4);
+                    sceBoot = (void *)(addr + 4);
                 }
                 // Don't load pspemu params
                 else if (data == 0x240500CF) {

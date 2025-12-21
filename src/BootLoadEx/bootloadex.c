@@ -24,30 +24,28 @@
 #include "bootloadex.h"
 
 int psp_model = PSP_1000;
+u32 reboot_end = REBOOT_TEXT+0x20000; // 128KB at most
+u32 loadcore_text = 0;
 BootLoadExConfig* ble_config;
 BootFileList* boot_files = (BootFileList*)FILE_BOOT_LIST_ADDR;
 
-// sceReboot Main Function
-int (* sceReboot)(int, int, int, int, int, int, int) = (void *)(REBOOT_TEXT);
+// sceBoot Main Function
+int (* sceBoot)(int, int, int, int, int, int, int) = (void *)(REBOOT_TEXT);
 
 // Instruction Cache Invalidator
-void (* sceRebootIcacheInvalidateAll)(void) = NULL;
+void (* sceBootIcacheInvalidateAll)(void) = NULL;
 
 // Data Cache Invalidator
-void (* sceRebootDacheWritebackInvalidateAll)(void) = NULL;
+void (* sceBootDacheWritebackInvalidateAll)(void) = NULL;
 
 // Sony PRX Decrypter Function Pointer
 int (* origPRXDecrypt)(void *, unsigned int, unsigned int *) = NULL;
 int (* origCheckExecFile)(unsigned char * addr, void * arg2) = NULL;
-int (* extraPRXDecrypt)(void *, unsigned int, unsigned int *) = NULL;
-int (* extraCheckExec)(unsigned char * addr, void * arg2) = NULL;
 
 // UnpackBootConfig
 int (* UnpackBootConfig)(char * buffer, int length) = NULL;
 u32 UnpackBootConfigCall = 0;
 u32 UnpackBootConfigArg = 0;
-u32 reboot_end = REBOOT_TEXT+0x20000; // 128KB at most
-u32 loadcore_text = 0;
 
 // rtm module flag
 int rebootmodule_open = 0;
@@ -62,8 +60,8 @@ int PRXDecryptPatched(PSP_Header* prx, unsigned int size, unsigned int * newsize
             || prx->oe_tag == 0xC6BA41D3 // ME-type PRX
     ){
 
-        if (prx->oe_tag == 0xC6BA41D3 && extraPRXDecrypt){ // decrypt ME firmware file
-            extraPRXDecrypt(prx, size, newsize);
+        if (prx->oe_tag == 0xC6BA41D3 && ble_config->extraPRXDecrypt){ // decrypt ME firmware file
+            ble_config->extraPRXDecrypt(prx, size, newsize);
         }
 
         // Read GZIP Size
@@ -97,8 +95,8 @@ int CheckExecFilePatched(unsigned char * addr, void * arg2)
         }
     }
 
-    if (extraCheckExec){
-        extraCheckExec(addr, arg2);
+    if (ble_config->extraCheckExecFile){
+        ble_config->extraCheckExecFile(addr, arg2);
     }
 
     //return success
@@ -172,9 +170,9 @@ u32 loadCoreModuleStartPatched(u32 module_start){
 void flushCache(void)
 {
     // Invalidate Data Cache
-    sceRebootDacheWritebackInvalidateAll();
+    sceBootDacheWritebackInvalidateAll();
     // Invalidate Instruction Cache
-    sceRebootIcacheInvalidateAll();
+    sceBootIcacheInvalidateAll();
 }
 
 // Common rebootex patches for PSP and Vita
@@ -184,12 +182,12 @@ void findBootFunctions(){
     // find functions
     for (u32 addr = REBOOT_TEXT; addr<reboot_end; addr+=4){
         u32 data = _lw(addr);
-        if (data == 0xBD01FFC0){ // sceRebootDacheWritebackInvalidateAll
+        if (data == 0xBD01FFC0){ // sceBootDacheWritebackInvalidateAll
             u32 a = addr;
             do {a-=4;} while (_lw(a) != 0x40088000);
             Dcache = (void*)a;
         }
-        else if (data == 0xBD14FFC0){ // sceRebootIcacheInvalidateAll
+        else if (data == 0xBD14FFC0){ // sceBootIcacheInvalidateAll
             u32 a = addr;
             do {a-=4;} while (_lw(a) != 0x40088000);
             Icache = (void*)a;
@@ -229,8 +227,8 @@ void findBootFunctions(){
             }
         }
     }
-    sceRebootIcacheInvalidateAll = Icache;
-    sceRebootDacheWritebackInvalidateAll = Dcache;
+    sceBootIcacheInvalidateAll = Icache;
+    sceBootDacheWritebackInvalidateAll = Dcache;
     Icache();
     Dcache();
 }
