@@ -25,6 +25,7 @@
 
 int psp_model = PSP_1000;
 BootLoadExConfig* ble_config;
+BootFileList* boot_files = (BootFileList*)FILE_BOOT_LIST_ADDR;
 
 // sceReboot Main Function
 int (* sceReboot)(int, int, int, int, int, int, int) = (void *)(REBOOT_TEXT);

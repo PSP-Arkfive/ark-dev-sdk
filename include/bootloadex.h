@@ -31,7 +31,7 @@ typedef struct{
 typedef struct {
     int nfiles;
     char bootfile[100][64]; // list of boot files
-} FlashBackupList;
+} BootFileList;
 
 typedef struct {
     u32 addr;

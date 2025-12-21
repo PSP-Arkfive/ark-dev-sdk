@@ -10,8 +10,11 @@
 RebootConfigARK* reboot_conf = (RebootConfigARK*)REBOOTEX_CONFIG;
 ARKConfig* ark_config = (ARKConfig*)ARK_CONFIG;
 
-void checkArkRebootConfig(){
+void initArkRebootConfig(BootLoadExConfig* ble_config){
     if (IS_ARK_CONFIG(reboot_conf)){
+        // copy rtm module information
+        memcpy(&ble_config->rtm_mod, &reboot_conf->rtm_mod, sizeof(ble_config->rtm_mod));
+
         // fix MODE_NP9660 (Galaxy driver no longer exists, redirect to either inferno or normal)
         if (reboot_conf->iso_mode == MODE_NP9660){
             if (reboot_conf->iso_path[0] == 0){

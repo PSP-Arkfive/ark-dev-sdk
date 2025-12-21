@@ -193,7 +193,7 @@ int UnpackBootConfigArkPSP(char **p_buffer, int length)
     if (newsize > 0) result = newsize;
 
     // initialize ARK reboot config
-    checkArkRebootConfig();
+    initArkRebootConfig(ble_config);
 
     // Configure boot mode
     switch(reboot_conf->iso_mode) {

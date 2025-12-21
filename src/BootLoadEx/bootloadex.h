@@ -32,7 +32,8 @@ typedef struct{
 typedef struct {
     int nfiles;
     char bootfile[100][64]; // list of boot files
-} FlashBackupList;
+} BootFileList;
+#define FILE_BOOT_LIST_ADDR 0x08800100
 
 typedef struct {
     u32 addr;
@@ -118,17 +119,15 @@ typedef struct {
 #define PATH_FATMS_371 PATH_FLASH0 "kd/_fatms371.prx"
 
 
-extern BootLoadExConfig* ble_config;
-
 extern int psp_model;
 extern u32 reboot_end;
+extern BootLoadExConfig* ble_config;
+extern BootFileList* boot_files;
 
-//io flags
+// rtm module io flag
 extern int rebootmodule_open;
-extern char *p_rmod;
-extern int size_rmod;
 
-//io functions
+//PSP IO functions
 extern int (* sceBootLfatOpen)(const char * filename);
 extern int (* sceBootLfatRead)(char * buffer, int length);
 extern int (* sceBootLfatClose)(void);
@@ -185,7 +184,7 @@ void relocateFlashFile(BootFile* file);
 // ARK specific functions
 extern RebootConfigARK* reboot_conf;
 extern ARKConfig* ark_config;
-void checkArkRebootConfig();
+void initArkRebootConfig(BootLoadExConfig*);
 int UnpackBootConfigArkPSP(char **p_buffer, int length);
 int pspemuLfatOpenArkEPSP(BootFile* file);
 int pspemuLfatOpenArkEPSX(BootFile* file);

@@ -6,8 +6,6 @@
 #include "bootloadex.h"
 
 
-FlashBackupList* flash_files = (FlashBackupList*)(0x08800100);
-
 int findArkFlashFile(BootFile* file, const char* path){
     u32 nfiles = *(u32*)(ARK_FLASH);
     ArkFlashFile* cur = (ArkFlashFile*)((size_t)(ARK_FLASH)+4);
@@ -25,12 +23,12 @@ int findArkFlashFile(BootFile* file, const char* path){
 }
 
 int pspemuLfatOpenArkVPSP(BootFile* file){
-
+    
     int ret = -1;
     char* p = file->name;
     
     if (strcmp(p, "pspbtcnf.bin") == 0){
-        flash_files->nfiles = 0;
+        boot_files->nfiles = 0;
         p[2] = 'v'; // custom btcnf for PS Vita
         switch(reboot_conf->iso_mode) {
             case MODE_MARCH33:
@@ -58,6 +56,5 @@ int pspemuLfatOpenArkVPSP(BootFile* file){
         }
     }
 
-    strcpy((char*)&(flash_files->bootfile[flash_files->nfiles++]), p);
     return ret;
 }

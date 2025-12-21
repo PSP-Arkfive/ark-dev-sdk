@@ -158,6 +158,10 @@ int _sceBootLfatRead(char * buffer, int length)
 
 int _sceBootLfatOpen(char * filename)
 {
+
+    // add file to boot list
+    strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), filename);
+
     //load on reboot module open
     if(strcmp(filename, REBOOT_MODULE) == 0 && ble_config->rtm_mod.buffer != NULL && ble_config->rtm_mod.size > 0)
     {
