@@ -136,14 +136,18 @@ void patchBootVita(){
         else if ((data & 0x0000FFFF) == 0x8B00 && redirect_flash){
             _sb(0xA0, addr); // Link Filesystem Buffer to 0x8BA00000
         }
-        // Find sceBoot
-		else if (data == 0x27BD01C0 && ble_config->boot_type == TYPE_PAYLOADEX) {
-            sceReboot = (void *)(addr + 4);
-		}
-        // Don't load pspemu params
-		else if (data == 0x240500CF && ble_config->boot_type == TYPE_PAYLOADEX) {
-			MAKE_CALL(addr + 4, loadParamsPatched);
-		}
+        else {
+            if (ble_config->boot_type == TYPE_PAYLOADEX){
+                // Find sceBoot
+                if (data == 0x27BD01C0) {
+                    sceReboot = (void *)(addr + 4);
+                }
+                // Don't load pspemu params
+                else if (data == 0x240500CF) {
+                    MAKE_CALL(addr + 4, loadParamsPatched);
+                }
+            }
+        }
     }
     // Flush Cache
     flushCache();

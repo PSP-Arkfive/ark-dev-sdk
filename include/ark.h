@@ -47,7 +47,7 @@ extern "C" {
 #define ARK_FLASH 0x8BA00000 // ark's flash ramfs on vita
 #define BOOT_KEY_BUFFER (KERNEL_BASE + 0xFB0000) // controller input in payloadex (cIPL)
 #define ARK_BIN_MAX_SIZE 0x8000 // max size of ARK4.BIN
-#define MAX_FLASH0_SIZE 0x32000 // max size of FLASH0.ARK
+#define MAX_FLASH0_SIZE 0x40000 // max size of FLASH0.ARK
 #define USER_SIZE (24 * 1024 * 1024) // user partition size
 #define KERNEL_SIZE (4 * 1024 * 1024) // kernel partition size
 #define VITA_FLASH_SIZE 0x01000000 // vita flash ramfs size

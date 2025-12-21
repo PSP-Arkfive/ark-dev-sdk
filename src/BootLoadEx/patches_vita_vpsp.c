@@ -7,8 +7,6 @@
 
 FlashBackupList* flash_files = (FlashBackupList*)(0x08800100);
 
-extern void relocateFlashFile(BootFile* file);
-
 int findArkFlashFile(BootFile* file, const char* path){
     u32 nfiles = *(u32*)(ARK_FLASH);
     ArkFlashFile* cur = (ArkFlashFile*)((size_t)(ARK_FLASH)+4);
@@ -48,6 +46,8 @@ int pspemuLfatOpenExtraVPSP(BootFile* file){
         }
         if (ret == 0){
             relocateFlashFile(file);
+        }
+        else {
         }
     }
     else if (strncmp(p, "/kd/ark_", 8) == 0){ // ARK module

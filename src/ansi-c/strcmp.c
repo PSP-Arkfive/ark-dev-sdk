@@ -34,5 +34,7 @@ int strncmp(const char *a, const char *b, unsigned int count)
         count--;
     }
 
+    if (count == 0) return 0;
+
     return *a - *b;
 }

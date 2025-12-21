@@ -145,7 +145,7 @@ void unPatchLoadCoreCheckExec(){
 u32 loadCoreModuleStartPatched(u32 module_start){
 
     // Calculate Text Address and size
-    u32 text_addr = module_start-0xAF8;
+    u32 text_addr = module_start-0xAF8; // this calculation is exact, but due to dynamic patching it doesn't matter anymore
     u32 top_addr = text_addr+0x8000; // read 32KB at most (more than enough to scan loadcore)
     
     // Fetch Original Decrypt Function Stub

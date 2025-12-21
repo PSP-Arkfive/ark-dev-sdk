@@ -166,6 +166,7 @@ void patchBootIoPSP();
 
 // Vita specific functions
 void patchBootVita();
+void relocateFlashFile(BootFile* file);
 int pspemuLfatOpenExtraEPSP(BootFile* file);
 int pspemuLfatOpenExtraEPSX(BootFile* file);
 int pspemuLfatOpenExtraVPSP(BootFile* file);
