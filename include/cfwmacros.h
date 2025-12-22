@@ -18,6 +18,8 @@
 #ifndef _MACROS_H_
 #define _MACROS_H_
 
+#define FLASH0_PATH "flash0:/"
+#define FLASH1_PATH "flash1:/"
 #define USER_BASE 0x08800000 // user partition (p2)
 #define KERNEL_BASE 0x88000000 // kernel partition (p1)
 #define GAME_TEXT (USER_BASE + 0x4000) // game's main elf load address

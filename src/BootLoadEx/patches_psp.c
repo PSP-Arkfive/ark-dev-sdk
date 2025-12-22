@@ -120,9 +120,9 @@ int patch_bootconf_fatms371(char *buffer, int length)
 {
     int newsize;
 
-    newsize = AddPRX(buffer, "/kd/fatms.prx", PATH_FATMS_HELPER+sizeof(PATH_FLASH0)-2, 0xEF & ~VSH_RUNLEVEL);
+    newsize = AddPRX(buffer, "/kd/fatms.prx", PATH_FATMS_HELPER+sizeof(FLASH0_PATH)-2, 0xEF & ~VSH_RUNLEVEL);
     RemovePrx(buffer, "/kd/fatms.prx", 0xEF & ~VSH_RUNLEVEL);
-    newsize = AddPRX(buffer, "/kd/wlan.prx", PATH_FATMS_371+sizeof(PATH_FLASH0)-2, 0xEF & ~VSH_RUNLEVEL);
+    newsize = AddPRX(buffer, "/kd/wlan.prx", PATH_FATMS_371+sizeof(FLASH0_PATH)-2, 0xEF & ~VSH_RUNLEVEL);
 
     return newsize;
 }

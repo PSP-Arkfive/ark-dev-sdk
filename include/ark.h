@@ -40,8 +40,6 @@ extern "C" {
 #define FAKE_UID 0x0B00B500
 
 // Paths and other global strings
-#define FLASH0_PATH "flash0:/"
-#define FLASH1_PATH "flash1:/"
 #define VBOOT_PBP "VBOOT.PBP" // default launcher
 #define ARK_XMENU "XBOOT.PBP" // PS1 launcher
 #define ARK_RECOVERY "RECOVERY.PBP" // recovery app

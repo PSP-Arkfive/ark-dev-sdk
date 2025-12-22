@@ -7,8 +7,6 @@
 #define REBOOTEX_TEXT (KERNEL_BASE + 0xFC0000) // rebootex load address
 #define LOADER_TEXT (0x040EC000) // cIPL load address
 #define MAINBIN_TEXT (0x04000000) // IPL load address
-
-#define PATH_FLASH0 "flash0:/"
 #define REBOOT_MODULE "/rtm.prx"
 
 typedef enum {
@@ -119,8 +117,8 @@ typedef struct {
 #define OE_TAG_LME 0xC6BA41D3
 
 // fatms371
-#define PATH_FATMS_HELPER PATH_FLASH0 "kd/_fatmshlp.prx"
-#define PATH_FATMS_371 PATH_FLASH0 "kd/_fatms371.prx"
+#define PATH_FATMS_HELPER FLASH0_PATH "kd/_fatmshlp.prx"
+#define PATH_FATMS_371 FLASH0_PATH "kd/_fatms371.prx"
 
 
 extern int psp_model;
