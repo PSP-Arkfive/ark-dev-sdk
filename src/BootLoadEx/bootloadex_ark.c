@@ -12,7 +12,7 @@ RebootConfigARK* reboot_conf = (RebootConfigARK*)REBOOTEX_CONFIG;
 ARKConfig* ark_config = (ARKConfig*)ARK_CONFIG;
 
 void initArkRebootConfig(BootLoadExConfig* ble_config){
-    if (IS_ARK_CONFIG(reboot_conf)){
+    if (ble_config->boot_type == TYPE_REBOOTEX && IS_ARK_CONFIG(reboot_conf)){
         // copy rtm module information
         memcpy(&ble_config->rtm_mod, &reboot_conf->rtm_mod, sizeof(ble_config->rtm_mod));
 
@@ -27,9 +27,5 @@ void initArkRebootConfig(BootLoadExConfig* ble_config){
                 reboot_conf->iso_mode = MODE_INFERNO;
             }
         }
-    }
-    else {
-        memset(reboot_conf, 0, sizeof(RebootConfigARK));
-        reboot_conf->magic = ARK_CONFIG_MAGIC;
     }
 }
