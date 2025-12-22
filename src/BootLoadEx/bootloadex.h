@@ -3,6 +3,8 @@
 
 #include <pspsdk.h>
 
+#include <cfwmacros.h>
+
 #define REBOOT_TEXT (KERNEL_BASE + 0x600000) // reboot.bin load address
 #define REBOOTEX_TEXT (KERNEL_BASE + 0xFC0000) // rebootex load address
 #define LOADER_TEXT (0x040EC000) // cIPL load address
