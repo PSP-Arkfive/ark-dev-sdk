@@ -1,7 +1,12 @@
 #ifndef _BOOTLOADEX_H_
 #define _BOOTLOADEX_H_
 
-#include "rebootconfig.h"
+#include <pspsdk.h>
+
+#define REBOOT_TEXT (KERNEL_BASE + 0x600000) // reboot.bin load address
+#define REBOOTEX_TEXT (KERNEL_BASE + 0xFC0000) // rebootex load address
+#define LOADER_TEXT (0x040EC000) // cIPL load address
+#define MAINBIN_TEXT (0x04000000) // IPL load address
 
 #define PATH_FLASH0 "flash0:/"
 #define REBOOT_MODULE "/rtm.prx"
@@ -21,12 +26,6 @@ typedef struct {
     void *buffer;
     u32 size;
 } BootFile;
-
-typedef struct{
-    u8 filesize[4];
-    char namelen;
-    char name[1];
-} ArkFlashFile;
 
 // Sony flash0 files
 typedef struct {
@@ -184,15 +183,6 @@ void patchBootIoPSP();
 // Vita specific functions
 void patchBootVita();
 void relocateFlashFile(BootFile* file);
-
-// ARK specific functions
-extern RebootConfigARK* reboot_conf;
-extern ARKConfig* ark_config;
-void initArkRebootConfig(BootLoadExConfig*);
-int UnpackBootConfigArkPSP(char **p_buffer, int length);
-int pspemuLfatOpenArkEPSP(BootFile* file);
-int pspemuLfatOpenArkEPSX(BootFile* file);
-int pspemuLfatOpenArkVPSP(BootFile* file);
 
 void flushCache();
 

@@ -1,7 +1,7 @@
 #include <string.h>
 
-#include "bootloadex.h"
-#include "pspbtcnf.h"
+#include <bootloadex.h>
+#include <pspbtcnf.h>
 
 // Non-standard strcpy, using the standard version doesn't work for some reason (???)
 int my_strcpy(char* dest, const char* orig){

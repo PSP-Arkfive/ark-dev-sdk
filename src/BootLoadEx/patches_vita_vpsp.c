@@ -4,11 +4,12 @@
 #include <systemctrl_se.h>
 
 #include "bootloadex.h"
+#include "bootloadex_ark.h"
 
 
 int findArkFlashFile(BootFile* file, const char* path){
-    u32 nfiles = *(u32*)(ARK_FLASH);
-    ArkFlashFile* cur = (ArkFlashFile*)((size_t)(ARK_FLASH)+4);
+    u32 nfiles = *(u32*)(VITA_FLASH_ARK);
+    ArkFlashFile* cur = (ArkFlashFile*)((size_t)(VITA_FLASH_ARK)+4);
 
     for (int i=0; i<nfiles; i++){
         size_t filesize = (cur->filesize[0]) + (cur->filesize[1]<<8) + (cur->filesize[2]<<16) + (cur->filesize[3]<<24);

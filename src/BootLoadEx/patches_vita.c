@@ -1,9 +1,9 @@
 #include <string.h>
 
+#include <ark.h>
 #include <cfwmacros.h>
-
-#include "bootloadex.h"
-#include "pspbtcnf.h"
+#include <bootloadex.h>
+#include <pspbtcnf.h>
 
 int (*pspemuLfatOpen)(BootFile* filename, u32 a1, u32 a2, u32 a3, u32 t0) = NULL;
 int (*SetMemoryPartitionTable)(void *sysmem_config, SceSysmemPartTable *table) = NULL;
@@ -17,7 +17,7 @@ int loadcoreModuleStartVita(unsigned int args, void* argp, int (* start)(SceSize
 }
 
 void relocateFlashFile(BootFile* file){
-    static u8* curbuf = (u8*)PTR_ALIGN_64(ARK_FLASH+MAX_FLASH0_SIZE);
+    static u8* curbuf = (u8*)PTR_ALIGN_64(VITA_FLASH_ARK+MAX_FLASH0_SIZE);
     memcpy((void *)curbuf, file->buffer, file->size);
     file->buffer = (void *)curbuf;
     curbuf += file->size + 64;

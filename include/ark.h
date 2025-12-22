@@ -34,25 +34,9 @@ extern "C" {
 #define ARK_PATH_SIZE 128
 #define ARK_CONFIG 0x08800010 // ARK Runtime configuration backup address
 #define ARK_CONFIG_MAGIC 0xB00B1E55 // generic magic number
-#define USER_BASE 0x08800000 // user partition (p2)
-#define KERNEL_BASE 0x88000000 // kernel partition (p1)
-#define GAME_TEXT (USER_BASE + 0x4000) // game's main elf load address
-#define SYSMEM_TEXT KERNEL_BASE // sysmem.prx load address (start of kernel ram)
-#define REBOOT_TEXT (KERNEL_BASE + 0x600000) // reboot.bin load address
-#define REBOOTEX_TEXT (KERNEL_BASE + 0xFC0000) // rebootex load address
-#define LOADER_TEXT (0x040EC000) // cIPL load address
-#define MAINBIN_TEXT (0x04000000) // IPL load address
-#define EXTRA_RAM 0x8A000000 // extra RAM (on 2k+ or vita)
-#define FLASH_SONY 0x8B000000 // flash ramfs on vita
-#define ARK_FLASH 0x8BA00000 // ark's flash ramfs on vita
-#define BOOT_KEY_BUFFER (KERNEL_BASE + 0xFB0000) // controller input in payloadex (cIPL)
+#define VITA_FLASH_ARK 0x8BA00000 // ark's flash ramfs on vita
 #define ARK_BIN_MAX_SIZE 0x8000 // max size of ARK4.BIN
 #define MAX_FLASH0_SIZE 0x40000 // max size of FLASH0.ARK
-#define USER_SIZE (24 * 1024 * 1024) // user partition size
-#define KERNEL_SIZE (4 * 1024 * 1024) // kernel partition size
-#define VITA_FLASH_SIZE 0x01000000 // vita flash ramfs size
-#define EXTRA_RAM_SIZE (32 * 1024 * 1024) // size of extra ram (2k+)
-#define MAX_HIGH_MEMSIZE 55 // max ram that can be given to user
 #define FAKE_UID 0x0B00B500
 
 // Paths and other global strings

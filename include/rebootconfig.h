@@ -22,7 +22,6 @@
 #include <ark.h>
 
 #define REBOOTEX_MAX_SIZE 0x5000
-#define BTCNF_MAGIC 0x0F803001
 #define BOOTCONFIG_TEMP_BUFFER 0x88FB0200
 
 // PROCFW Reboot Buffer Configuration Address

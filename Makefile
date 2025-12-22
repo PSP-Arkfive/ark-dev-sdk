@@ -53,7 +53,7 @@ all:
 	$(Q)cp src/screenprinter/*.a libs
 	$(Q)cp src/mini2d/*.a libs
 	$(Q)cp src/BootLoadEx/*.a libs
-	$(Q)cp src/BootLoadEx/*.h include/
+	$(Q)cp src/BootLoadEx/bootloadex*.h include/
 	$(Q)cp src/iplsdk/*.a libs
 	$(Q)cp src/iplsdk/include/*.h include/iplsdk
 
@@ -65,6 +65,7 @@ install: all
 clean:
 	$(Q)rm -rf libs
 	$(Q)rm -rf include/iplsdk
+	$(Q)rm -f include/bootloadex*.h
 	$(MAKE) -C src/KUBridge clean
 	$(MAKE) -C src/SystemCtrlForUser clean
 	$(MAKE) -C src/SystemCtrlForKernel clean

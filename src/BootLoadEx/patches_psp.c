@@ -1,11 +1,11 @@
 #include <string.h>
 
+#include <ark.h>
 #include <cfwmacros.h>
 #include <systemctrl.h>
 #include <systemctrl_se.h>
-
-#include "bootloadex.h"
-#include "pspbtcnf.h"
+#include <bootloadex.h>
+#include <pspbtcnf.h>
 
 //io functions
 int (* sceBootLfatOpen)(const char * filename) = NULL;

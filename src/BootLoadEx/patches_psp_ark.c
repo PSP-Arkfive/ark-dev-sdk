@@ -1,11 +1,13 @@
 #include <string.h>
 
+#include <ark.h>
 #include <cfwmacros.h>
 #include <systemctrl.h>
 #include <systemctrl_se.h>
-
-#include "bootloadex.h"
-#include "pspbtcnf.h"
+#include <pspbtcnf.h>
+#include <bootloadex.h>
+#include <bootloadex_ark.h>
+#include <rebootconfig.h>
 
 // ARK files
 #define PATH_SYSTEMCTRL PATH_FLASH0 "kd/ark_systemctrl.prx"

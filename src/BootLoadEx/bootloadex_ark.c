@@ -1,11 +1,12 @@
 #include <string.h>
 
+#include <ark.h>
 #include <cfwmacros.h>
 #include <systemctrl.h>
 #include <systemctrl_se.h>
-
-#include "bootloadex.h"
-#include "pspbtcnf.h"
+#include <bootloadex.h>
+#include <pspbtcnf.h>
+#include <rebootconfig.h>
 
 RebootConfigARK* reboot_conf = (RebootConfigARK*)REBOOTEX_CONFIG;
 ARKConfig* ark_config = (ARKConfig*)ARK_CONFIG;

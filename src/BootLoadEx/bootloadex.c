@@ -17,11 +17,12 @@
 
 #include <string.h>
 
+#include <ark.h>
 #include <cfwmacros.h>
 #include <systemctrl.h>
 #include <systemctrl_se.h>
-
-#include "bootloadex.h"
+#include <bootloadex.h>
+#include <rebootconfig.h>
 
 int psp_model = PSP_1000;
 u32 reboot_end = REBOOT_TEXT+0x20000; // 128KB at most

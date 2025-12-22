@@ -3,6 +3,7 @@
 #include <systemctrl_se.h>
 
 #include "bootloadex.h"
+#include "bootloadex_ark.h"
 
 
 int pspemuLfatOpenArkEPSP(BootFile* file)

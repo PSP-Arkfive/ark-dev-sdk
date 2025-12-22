@@ -1,8 +1,7 @@
 #ifndef PSPBTCNF_H
 #define PSPBTCNF_H
 
-#define PATH_FLASH0 "flash0:/"
-
+#define BTCNF_MAGIC 0x0F803001
 
 typedef struct _btcnf_header
 {
@@ -38,13 +37,5 @@ enum {
     UMDEMU_RUNLEVEL  =     0x40,
     MLNAPP_RUNLEVEL  =     0x80,
 };
-
-int SearchPrx(char *buffer, const char *modname);
-int AddPRXNoCopyName(char * buffer, const char * insertbefore, int prxname_offset, u32 flags);
-int AddPRX(char * buffer, const char * insertbefore, const char * prxname, u32 flags);
-int RemovePrx(char *buffer, const char *prxname, u32 flags);
-int MovePrx(char * buffer, const char * insertbefore, const char * prxname, u32 flags);
-int ModifyPrxFlag(char *buffer, const char* modname, u32 flags);
-int GetPrxFlag(char *buffer, const char* modname, u32 *flags);
 
 #endif
