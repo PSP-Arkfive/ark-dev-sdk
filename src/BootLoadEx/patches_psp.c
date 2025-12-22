@@ -7,6 +7,9 @@
 #include <bootloadex.h>
 #include <pspbtcnf.h>
 
+// Time Machine module
+#define PATH_TMCTRL FLASH0_PATH "tmctrl.prx"
+
 //io functions
 int (* sceBootLfatOpen)(const char * filename) = NULL;
 int (* sceBootLfatRead)(char * buffer, int length) = NULL;
@@ -40,77 +43,6 @@ int loadcoreModuleStartPSP(void * arg1, void * arg2, void * arg3, int (* start)(
     return start(arg1, arg2, arg3);
 }
 
-// patch boot on psp
-void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int)){
-
-    _sw(0x27A40004, UnpackBootConfigArg); // addiu $a0, $sp, 4
-    _sw(JAL(UnpackBootConfigPatchedPSP), UnpackBootConfigCall); // Hook UnpackBootConfig
-
-    // make sure we read as little ram as possible
-    int patches = (ble_config->boot_storage == MS_BOOT)? 6:5;
-    
-    for (u32 addr = REBOOT_TEXT; addr<reboot_end && patches; addr+=4){
-        u32 data = _lw(addr);
-        if (data == 0x02A0E821 || data == 0x0280E821){ // found loadcore jump on PSP
-            _sw(0x3821 | ((_lw(addr-4) & 0x3E00000) >> 5), addr-4); // ADDU $a3 $zero <reg>
-            _sw(JUMP(loadcoreModuleStartPSP), addr);
-            _sw(data, addr + 4);
-            patches--;
-            addr += 4;
-        }
-        else if (data == 0x2C860040 || data == 0x2C850040){ // kdebug patch
-            _sw(0x03E00008, addr-4); // make it return 1
-            _sw(0x24020001, addr); // rebootexcheck1
-            patches--;
-        }
-        else if (data == 0x24D90001 || data == 0x256A0001){  // rebootexcheck5
-            u32 a = addr;
-            u32 insMask;
-            do {
-                a-=4;
-                insMask = _lw(a) & 0xFFFF0000;
-            } while (insMask != 0x04400000 && insMask != 0x04420000);
-            _sw(NOP, a); // Killing Branch Check bltz/bltzl ...
-        }
-        else if (data == 0x27BDFFE0 && _lw(addr+4) == 0x3C028861 && ble_config->boot_storage == MS_BOOT) { // nand enc
-            MAKE_DUMMY_FUNCTION_RETURN_0(addr);
-            patches--;
-        }
-        else {
-            if (ble_config->boot_type == TYPE_REBOOTEX){
-                if (data == 0x34650001){ // rebootexcheck2
-                    _sw(NOP, addr-4); // Killing Branch Check bltz ...
-                    patches--;
-                }
-                else if (data == 0x00903021 && _lw(addr+4) == 0x00D6282B){ // rebootexcheck3 and rebootexcheck4
-                    u32 a = addr;
-                    do {a-=4;} while (_lw(a) != NOP);
-                    _sw(NOP, a-4); // Killing Branch Check beqz
-                    _sw(NOP, addr+8); // Killing Branch Check bltz ...
-                    patches--;
-                }
-            }
-            else if (ble_config->boot_type == TYPE_PAYLOADEX){
-                if (data == 0x25AC003F){ // payloadexcheck2
-                    _sw(NOP, addr-44); // Killing Branch Check bltz ...
-                    patches--;
-                }
-                else if (data == 0x01F7702B){ // rebootexcheck3 and rebootexcheck4
-                    _sw(NOP, addr-12); // Killing Branch Check bltz
-                    _sw(NOP, addr+4); // Killing Branch Check beqz ...
-                    patches--;
-                }
-            }
-        }
-    }
-
-    patchBootIoPSP();
-
-    // Flush Cache
-    flushCache();
-}
-
-
 int is_fatms371(void)
 {
     return file_exists(PATH_FATMS_HELPER + sizeof("flash0:") - 1) && file_exists(PATH_FATMS_371 + sizeof("flash0:") - 1);
@@ -119,12 +51,33 @@ int is_fatms371(void)
 int patch_bootconf_fatms371(char *buffer, int length)
 {
     int newsize;
+    int result = length;
 
     newsize = AddPRX(buffer, "/kd/fatms.prx", PATH_FATMS_HELPER+sizeof(FLASH0_PATH)-2, 0xEF & ~VSH_RUNLEVEL);
-    RemovePrx(buffer, "/kd/fatms.prx", 0xEF & ~VSH_RUNLEVEL);
-    newsize = AddPRX(buffer, "/kd/wlan.prx", PATH_FATMS_371+sizeof(FLASH0_PATH)-2, 0xEF & ~VSH_RUNLEVEL);
+    if (newsize > 0) result = newsize;
 
-    return newsize;
+    RemovePrx(buffer, "/kd/fatms.prx", 0xEF & ~VSH_RUNLEVEL);
+    
+    newsize = AddPRX(buffer, "/kd/wlan.prx", PATH_FATMS_371+sizeof(FLASH0_PATH)-2, 0xEF & ~VSH_RUNLEVEL);
+    if (newsize > 0) result = newsize;
+
+    return result;
+}
+
+int patch_bootconf_timemachine(char *buffer, int length)
+{
+    int newsize;
+    int result = length;
+
+    // Insert tmctrl
+    newsize = AddPRX(buffer, "/kd/lfatfs.prx", PATH_TMCTRL+sizeof(FLASH0_PATH)-2, 0x000000EF);
+    if (newsize > 0) result = newsize;
+
+    // Remove lfatfs
+    newsize = RemovePrx(buffer, "/kd/lfatfs.prx", 0x000000EF);
+    if (newsize > 0) result = newsize;
+
+    return result;
 }
 
 // IO Patches
@@ -168,7 +121,7 @@ int _sceBootLfatOpen(char * filename)
     strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), filename);
 
     //load on reboot module open
-    if(strcmp(filename, REBOOT_MODULE) == 0 && ble_config->rtm_mod.buffer != NULL && ble_config->rtm_mod.size > 0)
+    if(strcmp(filename, REBOOT_MODULE) == 0)
     {
         //mark for read
         rebootmodule_open = 1;
@@ -188,7 +141,7 @@ int _sceBootLfatOpen(char * filename)
         strcat(path, filename);
 
         if (ble_config->boot_type == TYPE_PAYLOADEX && is_btcnf){
-                memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
+            memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
         }
 
         return ble_config->extra_io.psp_io.FatOpen(path);
@@ -261,6 +214,76 @@ void patchBootIoPSP(){
             patches--;
         }
     }
+    // Flush Cache
+    flushCache();
+}
+
+// patch boot on psp
+void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int)){
+
+    _sw(0x27A40004, UnpackBootConfigArg); // addiu $a0, $sp, 4
+    _sw(JAL(UnpackBootConfigPatchedPSP), UnpackBootConfigCall); // Hook UnpackBootConfig
+
+    // make sure we read as little ram as possible
+    int patches = (ble_config->boot_storage == MS_BOOT)? 6:5;
+    
+    for (u32 addr = REBOOT_TEXT; addr<reboot_end && patches; addr+=4){
+        u32 data = _lw(addr);
+        if (data == 0x02A0E821 || data == 0x0280E821){ // found loadcore jump on PSP
+            _sw(0x3821 | ((_lw(addr-4) & 0x3E00000) >> 5), addr-4); // ADDU $a3 $zero <reg>
+            _sw(JUMP(loadcoreModuleStartPSP), addr);
+            _sw(data, addr + 4);
+            patches--;
+            addr += 4;
+        }
+        else if (data == 0x2C860040 || data == 0x2C850040){ // kdebug patch
+            _sw(0x03E00008, addr-4); // make it return 1
+            _sw(0x24020001, addr); // rebootexcheck1
+            patches--;
+        }
+        else if (data == 0x24D90001 || data == 0x256A0001){  // rebootexcheck5
+            u32 a = addr;
+            u32 insMask;
+            do {
+                a-=4;
+                insMask = _lw(a) & 0xFFFF0000;
+            } while (insMask != 0x04400000 && insMask != 0x04420000);
+            _sw(NOP, a); // Killing Branch Check bltz/bltzl ...
+        }
+        else if (data == 0x27BDFFE0 && _lw(addr+4) == 0x3C028861 && ble_config->boot_storage == MS_BOOT) { // nand enc
+            MAKE_DUMMY_FUNCTION_RETURN_0(addr);
+            patches--;
+        }
+        else {
+            if (ble_config->boot_type == TYPE_REBOOTEX){
+                if (data == 0x34650001){ // rebootexcheck2
+                    _sw(NOP, addr-4); // Killing Branch Check bltz ...
+                    patches--;
+                }
+                else if (data == 0x00903021 && _lw(addr+4) == 0x00D6282B){ // rebootexcheck3 and rebootexcheck4
+                    u32 a = addr;
+                    do {a-=4;} while (_lw(a) != NOP);
+                    _sw(NOP, a-4); // Killing Branch Check beqz
+                    _sw(NOP, addr+8); // Killing Branch Check bltz ...
+                    patches--;
+                }
+            }
+            else if (ble_config->boot_type == TYPE_PAYLOADEX){
+                if (data == 0x25AC003F){ // payloadexcheck2
+                    _sw(NOP, addr-44); // Killing Branch Check bltz ...
+                    patches--;
+                }
+                else if (data == 0x01F7702B){ // rebootexcheck3 and rebootexcheck4
+                    _sw(NOP, addr-12); // Killing Branch Check bltz
+                    _sw(NOP, addr+4); // Killing Branch Check beqz ...
+                    patches--;
+                }
+            }
+        }
+    }
+
+    patchBootIoPSP();
+
     // Flush Cache
     flushCache();
 }

@@ -18,7 +18,6 @@
 #define PATH_STARGATE FLASH0_PATH "kd/ark_stargate.prx"
 #define PATH_INFERNO FLASH0_PATH "kd/ark_inferno.prx"
 #define PATH_POPCORN FLASH0_PATH "kd/ark_popcorn.prx"
-#define PATH_TMCTRL FLASH0_PATH "tmctrl.prx"
 
 // pspbtcnf patches
 
@@ -234,12 +233,7 @@ int UnpackBootConfigArkPSP(char **p_buffer, int length)
     }
 
     if (ble_config->boot_storage == MS_BOOT){
-        // Insert tmctrl
-        newsize = AddPRX(buffer, "/kd/lfatfs.prx", PATH_TMCTRL+sizeof(FLASH0_PATH)-2, 0x000000EF);
-        if (newsize > 0) result = newsize;
-
-        // Remove lfatfs
-        newsize = RemovePrx(buffer, "/kd/lfatfs.prx", 0x000000EF);
+        newsize = patch_bootconf_timemachine(buffer, length);
         if (newsize > 0) result = newsize;
     }
     

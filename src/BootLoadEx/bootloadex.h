@@ -178,7 +178,7 @@ void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int));
 int file_exists(const char *path);
 int is_fatms371(void);
 int patch_bootconf_fatms371(char *buffer, int length);
-void patchBootIoPSP();
+int patch_bootconf_timemachine(char *buffer, int length);
 
 // Vita specific functions
 void patchBootVita();
