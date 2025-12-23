@@ -99,6 +99,7 @@ typedef struct {
             int (*FatOpen)(const char*);
             int (*FatRead)(void*, u32);
             int (*FatClose)();
+            void (*btcnfPathHandler)(char* path);
         } psp_io;
         struct {
             int redirect_flash;

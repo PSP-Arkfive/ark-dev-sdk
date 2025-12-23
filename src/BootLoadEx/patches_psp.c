@@ -130,18 +130,23 @@ int _sceBootLfatOpen(char * filename)
         return 0;
     }
 
-    int is_btcnf = (strncmp(filename+4, "pspbtcnf", 8) == 0);
+    int is_btcnf = (memcmp(filename+4, "pspbtcnf", 8) == 0);
     
-    if (is_btcnf && filename[12] == '_'){
-        psp_model = (10*(filename[13]-'0') + (filename[14]-'0')) - 1;
+    if (is_btcnf){
+        if (filename[12] == '_'){
+            psp_model = (10*(filename[13]-'0') + (filename[14]-'0')) - 1;
+        }
+        if (ble_config->extra_io.psp_io.btcnfPathHandler){
+            ble_config->extra_io.psp_io.btcnfPathHandler(filename);
+        }
     }
 
     if (ble_config->boot_storage == MS_BOOT){
         strcpy(path, ble_config->extra_io.psp_io.tm_path);
         strcat(path, filename);
 
-        if (ble_config->boot_type == TYPE_PAYLOADEX && is_btcnf){
-            memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
+        if (is_btcnf && ble_config->boot_type == TYPE_PAYLOADEX){
+            strcpy(&path[strlen(path) - 4], "_dc.bin");
         }
 
         return ble_config->extra_io.psp_io.FatOpen(path);
@@ -249,6 +254,7 @@ void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int)){
                 insMask = _lw(a) & 0xFFFF0000;
             } while (insMask != 0x04400000 && insMask != 0x04420000);
             _sw(NOP, a); // Killing Branch Check bltz/bltzl ...
+            //patches--; // TODO: ???
         }
         else if (data == 0x27BDFFE0 && _lw(addr+4) == 0x3C028861 && ble_config->boot_storage == MS_BOOT) { // nand enc
             MAKE_DUMMY_FUNCTION_RETURN_0(addr);
