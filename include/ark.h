@@ -57,11 +57,11 @@ extern "C" {
 #define VLF_PRX "VLF.PRX" // PNG library
 #define INTRAFONT_PRX "INTRAFON.PRX" // PNG library
 #define UNARCHIVE_PRX "UNARCH.PRX" // Unzip/Unrar PRX library
-#define RECOVERY_PRX_FLASH "flash0:/vsh/module/ark_recovery.prx" // Classic Recovery flash0 path
-#define IDSREG_PRX_FLASH "flash0:/kd/ark_idsreg.prx" // idsRegeneration flash0 path
 #define XMBCTRL_PRX_FLASH "flash0:/kd/ark_xmbctrl.prx" // XMB Control flash0 path
-#define USBDEV_PRX_FLASH "flash0:/vsh/module/ark_usbdev.prx" // USBDEV flash0 path
+#define USBDEV_PRX_FLASH "flash0:/kd/usbdevice.prx" // USBDEV flash0 path
+#define IDSREG_PRX_FLASH "flash0:/kd/idsregeneration.prx" // idsRegeneration flash0 path
 #define VSH_MENU_FLASH "flash0:/vsh/module/ark_satelite.prx" // VSH Menu flash0 path
+#define RECOVERY_PRX_FLASH "flash0:/vsh/module/ark_recovery.prx" // Classic Recovery flash0 path
 #define H_FILE "H.BIN" // user exploit binloader
 #define K_FILE "K.BIN" // kernel exploit file for Live loaders
 #define UPDATER_FILE "UPDATER.TXT" // Update Server URL file
