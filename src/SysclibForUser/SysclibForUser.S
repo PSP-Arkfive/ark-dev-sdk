@@ -23,7 +23,6 @@
 #ifdef F_SysclibForUser_0005
 	IMPORT_FUNC  "SysclibForUser",0x097049BD,bcopy
 #endif
-
 #ifdef F_SysclibForUser_0006
 	IMPORT_FUNC  "SysclibForUser",0x10F3BB61,memset
 #endif
