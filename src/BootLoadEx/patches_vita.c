@@ -58,8 +58,8 @@ int UnpackBootConfigVita(char **p_buffer, int length){
     memcpy(buffer, *p_buffer, length);
     *p_buffer = buffer;
 
-    if (ble_config->extra_io.vita_io.UnpackBootConfig){
-        newsize = ble_config->extra_io.vita_io.UnpackBootConfig(buffer, length);
+    if (ble_config->UnpackBootConfig){
+        newsize = ble_config->UnpackBootConfig(buffer, length);
         if (newsize > 0) result = newsize;
     }
 

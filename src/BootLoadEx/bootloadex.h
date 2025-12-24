@@ -102,12 +102,10 @@ typedef struct {
             int (*FatRead)(void*, u32);
             int (*FatClose)();
             void (*BtcnfPathHandler)(char* path);
-            int (*UnpackBootConfig)(char*, int);
         } psp_io;
         struct {
             int redirect_flash;
             int (*pspemuLfatOpenExtra)(BootFile*);
-            int (*UnpackBootConfig)(char*, int);
         } vita_io;
     } extra_io;
     struct { // runtime module, gets injected into boot sequence during reboot
@@ -118,6 +116,7 @@ typedef struct {
     } rtm_mod;
     int (*extraPRXDecrypt)(void *, unsigned int, unsigned int *);
     int (*extraCheckExecFile)(unsigned char *, void *);
+    int (*UnpackBootConfig)(char*, int);
 } BootLoadExConfig;
 
 #define OE_TAG_PRO 0xC01DB15D
