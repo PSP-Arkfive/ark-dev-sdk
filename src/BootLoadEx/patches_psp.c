@@ -134,8 +134,8 @@ int _sceBootLfatOpen(char * filename)
         if (filename[12] == '_'){
             psp_model = (10*(filename[13]-'0') + (filename[14]-'0')) - 1;
         }
-        if (ble_config->extra_io.psp_io.btcnfPathHandler){
-            ble_config->extra_io.psp_io.btcnfPathHandler(filename);
+        if (ble_config->extra_io.psp_io.BtcnfPathHandler){
+            ble_config->extra_io.psp_io.BtcnfPathHandler(filename);
         }
     }
 
@@ -221,7 +221,7 @@ void patchBootIoPSP(){
     flushCache();
 }
 
-int UnpackBootConfigPatchedPSP(char **p_buffer, int length){
+int UnpackBootConfigPSP(char **p_buffer, int length){
 
     int result = length;
     int newsize;
@@ -232,8 +232,10 @@ int UnpackBootConfigPatchedPSP(char **p_buffer, int length){
     memcpy(buffer, *p_buffer, length);
     *p_buffer = buffer;
 
-    newsize = ble_config->extra_io.psp_io.UnpackBootConfig(buffer, length);
-    if (newsize > 0) result = newsize;
+    if (ble_config->extra_io.psp_io.UnpackBootConfig){
+        newsize = ble_config->extra_io.psp_io.UnpackBootConfig(buffer, length);
+        if (newsize > 0) result = newsize;
+    }
 
     //reboot variable set
     if (ble_config->boot_type == TYPE_REBOOTEX && ble_config->rtm_mod.before && ble_config->rtm_mod.buffer && ble_config->rtm_mod.size)
@@ -261,7 +263,7 @@ int UnpackBootConfigPatchedPSP(char **p_buffer, int length){
 void patchBootPSP(){
 
     _sw(0x27A40004, UnpackBootConfigArg); // addiu $a0, $sp, 4
-    _sw(JAL(UnpackBootConfigPatchedPSP), UnpackBootConfigCall); // Hook UnpackBootConfig
+    _sw(JAL(UnpackBootConfigPSP), UnpackBootConfigCall); // Hook UnpackBootConfig
 
     // make sure we read as little ram as possible
     int patches = (ble_config->boot_storage == MS_BOOT)? 6:5;

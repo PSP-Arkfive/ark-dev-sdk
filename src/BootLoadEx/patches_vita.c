@@ -48,13 +48,29 @@ int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
 }
 
 int UnpackBootConfigVita(char **p_buffer, int length){
-    int res = (*UnpackBootConfig)(*p_buffer, length);
-    if(ble_config->rtm_mod.before && ble_config->rtm_mod.buffer && ble_config->rtm_mod.size)
+
+    int result = length;
+    int newsize;
+    char *buffer;
+
+    result = (*UnpackBootConfig)(*p_buffer, length);
+    buffer = (void*)BOOTCONFIG_TEMP_BUFFER;
+    memcpy(buffer, *p_buffer, length);
+    *p_buffer = buffer;
+
+    if (ble_config->extra_io.vita_io.UnpackBootConfig){
+        newsize = ble_config->extra_io.vita_io.UnpackBootConfig(buffer, length);
+        if (newsize > 0) result = newsize;
+    }
+
+    if (ble_config->boot_type == TYPE_REBOOTEX && ble_config->rtm_mod.before && ble_config->rtm_mod.buffer && ble_config->rtm_mod.size)
     {
         //add reboot prx entry
-        res = AddPRX(*p_buffer, ble_config->rtm_mod.before, REBOOT_MODULE, ble_config->rtm_mod.flags);
+        newsize = AddPRX(buffer, ble_config->rtm_mod.before, REBOOT_MODULE, ble_config->rtm_mod.flags);
+        if (newsize > 0) result = newsize;
     }
-    return res;
+
+    return result;
 }
 
 //extra ram through flash0 ramfs on Vita

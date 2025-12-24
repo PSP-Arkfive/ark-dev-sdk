@@ -101,12 +101,13 @@ typedef struct {
             int (*FatOpen)(const char*);
             int (*FatRead)(void*, u32);
             int (*FatClose)();
-            void (*btcnfPathHandler)(char* path);
+            void (*BtcnfPathHandler)(char* path);
             int (*UnpackBootConfig)(char*, int);
         } psp_io;
         struct {
             int redirect_flash;
             int (*pspemuLfatOpenExtra)(BootFile*);
+            int (*UnpackBootConfig)(char*, int);
         } vita_io;
     } extra_io;
     struct { // runtime module, gets injected into boot sequence during reboot
