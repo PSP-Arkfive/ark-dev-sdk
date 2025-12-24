@@ -22,7 +22,6 @@
 #include <ark.h>
 
 #define REBOOTEX_MAX_SIZE 0x5000
-#define BOOTCONFIG_TEMP_BUFFER 0x88FB0200
 
 // PROCFW Reboot Buffer Configuration Address
 #define REBOOTEX_CONFIG (REBOOTEX_TEXT - 0x10000)

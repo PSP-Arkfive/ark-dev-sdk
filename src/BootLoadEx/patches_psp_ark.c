@@ -160,16 +160,11 @@ int patch_bootconf_updaterumd(char *buffer, int length)
     return result;
 }
 
-int UnpackBootConfigArkPSP(char **p_buffer, int length)
+int UnpackBootConfigArkPSP(char *buffer, int length)
 {
+
     int result = length;
     int newsize;
-    char *buffer;
-
-    result = (*UnpackBootConfig)(*p_buffer, length);
-    buffer = (void*)BOOTCONFIG_TEMP_BUFFER;
-    memcpy(buffer, *p_buffer, length);
-    *p_buffer = buffer;
 
     // Insert SystemControl
     newsize = AddPRX(buffer, "/kd/init.prx", PATH_SYSTEMCTRL+sizeof(FLASH0_PATH)-2, 0x000000EF);
@@ -218,26 +213,8 @@ int UnpackBootConfigArkPSP(char **p_buffer, int length)
         }
     }
 
-    //reboot variable set
-    if (ble_config->boot_type == TYPE_REBOOTEX && reboot_conf->rtm_mod.before && reboot_conf->rtm_mod.buffer && reboot_conf->rtm_mod.size)
-    {
-        //add reboot prx entry
-        newsize = AddPRX(buffer, reboot_conf->rtm_mod.before, REBOOT_MODULE, reboot_conf->rtm_mod.flags);
-        if(newsize > 0){
-            result = newsize;
-        }
-    }
-
-    if(!ark_config->recovery && is_fatms371())
-    {
-        newsize = patch_bootconf_fatms371(buffer, length);
-        if (newsize > 0) result = newsize;
-    }
-
-    if (ble_config->boot_storage == MS_BOOT){
-        newsize = patch_bootconf_timemachine(buffer, length);
-        if (newsize > 0) result = newsize;
-    }
+    // disable fatms371 mod in recovery mode
+    if (ark_config->recovery) ble_config->extra_io.psp_io.use_fatms371 = 0;
     
     return result;
 }

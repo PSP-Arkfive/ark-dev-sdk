@@ -13,7 +13,7 @@ typedef struct{
 extern RebootConfigARK* reboot_conf;
 extern ARKConfig* ark_config;
 void initArkRebootConfig(BootLoadExConfig*);
-int UnpackBootConfigArkPSP(char **p_buffer, int length);
+int UnpackBootConfigArkPSP(char *buffer, int length);
 int pspemuLfatOpenArkEPSP(BootFile* file);
 int pspemuLfatOpenArkEPSX(BootFile* file);
 int pspemuLfatOpenArkVPSP(BootFile* file);

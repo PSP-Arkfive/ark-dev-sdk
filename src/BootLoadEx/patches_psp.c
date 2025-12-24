@@ -93,10 +93,8 @@ int _sceBootLfatRead(char * buffer, int length)
     //load on reboot module
     if (rebootmodule_open)
     {
-        int min;
-
         //copy load on reboot module
-        min = ble_config->rtm_mod.size < length ? ble_config->rtm_mod.size : length;
+        int min = ble_config->rtm_mod.size < length ? ble_config->rtm_mod.size : length;
         if (min > 0){
             memcpy(buffer, (void*)ble_config->rtm_mod.buffer, min);
             ble_config->rtm_mod.buffer += min;
@@ -223,8 +221,44 @@ void patchBootIoPSP(){
     flushCache();
 }
 
+int UnpackBootConfigPatchedPSP(char **p_buffer, int length){
+
+    int result = length;
+    int newsize;
+    char *buffer;
+
+    result = (*UnpackBootConfig)(*p_buffer, length);
+    buffer = (void*)BOOTCONFIG_TEMP_BUFFER;
+    memcpy(buffer, *p_buffer, length);
+    *p_buffer = buffer;
+
+    newsize = ble_config->extra_io.psp_io.UnpackBootConfig(buffer, length);
+    if (newsize > 0) result = newsize;
+
+    //reboot variable set
+    if (ble_config->boot_type == TYPE_REBOOTEX && ble_config->rtm_mod.before && ble_config->rtm_mod.buffer && ble_config->rtm_mod.size)
+    {
+        //add reboot prx entry
+        newsize = AddPRX(buffer, ble_config->rtm_mod.before, REBOOT_MODULE, ble_config->rtm_mod.flags);
+        if (newsize > 0) result = newsize;
+    }
+
+    if (ble_config->extra_io.psp_io.use_fatms371 && is_fatms371())
+    {
+        newsize = patch_bootconf_fatms371(buffer, length);
+        if (newsize > 0) result = newsize;
+    }
+
+    if (ble_config->boot_storage == MS_BOOT){
+        newsize = patch_bootconf_timemachine(buffer, length);
+        if (newsize > 0) result = newsize;
+    }
+
+    return result;
+}
+
 // patch boot on psp
-void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int)){
+void patchBootPSP(){
 
     _sw(0x27A40004, UnpackBootConfigArg); // addiu $a0, $sp, 4
     _sw(JAL(UnpackBootConfigPatchedPSP), UnpackBootConfigCall); // Hook UnpackBootConfig

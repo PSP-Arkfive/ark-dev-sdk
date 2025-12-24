@@ -9,6 +9,7 @@
 #define REBOOTEX_TEXT (KERNEL_BASE + 0xFC0000) // rebootex load address
 #define LOADER_TEXT (0x040EC000) // cIPL load address
 #define MAINBIN_TEXT (0x04000000) // IPL load address
+#define BOOTCONFIG_TEMP_BUFFER 0x88FB0200
 #define REBOOT_MODULE "/rtm.prx"
 
 typedef enum {
@@ -94,12 +95,14 @@ typedef struct {
     BootStorage boot_storage;
     union { // IO operations
         struct {
+            int use_fatms371;
             char* tm_path;
             int (*FatMount)();
             int (*FatOpen)(const char*);
             int (*FatRead)(void*, u32);
             int (*FatClose)();
             void (*btcnfPathHandler)(char* path);
+            int (*UnpackBootConfig)(char*, int);
         } psp_io;
         struct {
             int redirect_flash;
@@ -175,7 +178,7 @@ extern int (* sceBootLfatRead)(char * buffer, int length);
 extern int (* sceBootLfatClose)(void);
 
 // PSP specific functions
-void patchBootPSP(int (*UnpackBootConfigPatchedPSP)(char**, int));
+void patchBootPSP();
 int file_exists(const char *path);
 int is_fatms371(void);
 int patch_bootconf_fatms371(char *buffer, int length);
