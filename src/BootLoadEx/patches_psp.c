@@ -38,8 +38,6 @@ int file_exists(const char *path)
 
 int loadcoreModuleStartPSP(void * arg1, void * arg2, void * arg3, int (* start)(void *, void *, void *)){
     loadCoreModuleStartPatched((u32)start);
-
-    flushCache();
     return start(arg1, arg2, arg3);
 }
 
@@ -114,7 +112,6 @@ int _sceBootLfatRead(char * buffer, int length)
 
 int _sceBootLfatOpen(char * filename)
 {
-
     // add file to boot list
     strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), filename);
 

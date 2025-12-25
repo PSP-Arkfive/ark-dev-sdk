@@ -12,7 +12,6 @@ int (*SetMemoryPartitionTable)(void *sysmem_config, SceSysmemPartTable *table) =
 int loadcoreModuleStartVita(unsigned int args, void* argp, int (* start)(SceSize, void *))
 {
     loadCoreModuleStartPatched((u32)start);
-    flushCache();
     return start(args, argp);
 }
 

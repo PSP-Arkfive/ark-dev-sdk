@@ -4,7 +4,7 @@
 #include <pspbtcnf.h>
 
 // Non-standard strcpy, using the standard version doesn't work for some reason (???)
-int my_strcpy(char* dest, const char* orig){
+static inline int my_strcpy(char* dest, const char* orig){
     int i = 0;
     do{
         dest[i] = orig[i];

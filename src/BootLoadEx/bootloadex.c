@@ -162,8 +162,9 @@ u32 loadCoreModuleStartPatched(u32 module_start){
             devkit_patched = 1;
         }
     }
-
+    
     loadcore_text = text_addr;
+    flushCache();
     return text_addr;
 }
 
