@@ -140,7 +140,7 @@ int _sceBootLfatOpen(char * filename)
         strcat(path, filename);
 
         if (is_btcnf && ble_config->boot_type == TYPE_PAYLOADEX){
-            strcpy(&path[strlen(path) - 4], "_dc.bin");
+            memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
         }
 
         return ble_config->extra_io.psp_io.FatOpen(path);
@@ -180,41 +180,6 @@ int _sceBootLfatClose(void)
     
     //forward to original function
     return sceBootLfatClose();
-}
-
-void patchBootIoPSP(){
-    int patches = 3;
-    for (u32 addr = REBOOT_TEXT; addr<reboot_end && patches; addr+=4){
-        u32 data = _lw(addr);
-        if (data == 0x8E840000 || data == 0x8EA40000){
-            if (ble_config->boot_storage == MS_BOOT){
-                int found = 0;
-                for (int i=8; !found; i+=4) {
-                    if (IS_JAL(_lw(addr-i))) {
-                        _sw(JAL(_sceBootLfatMount), addr-i);
-                        found = 1;
-                    }
-                }
-            }
-            sceBootLfatOpen = (void*)K_EXTRACT_CALL(addr-4);
-            _sw(JAL(_sceBootLfatOpen), addr-4);
-            patches--;
-        }
-        else if (data == 0xAE840004 || data == 0xAEA30004){
-            addr += 4;
-            while (!IS_JAL(_lw(addr))) { addr += 4; }
-            sceBootLfatRead = (void*)K_EXTRACT_CALL(addr);
-            _sw(JAL(_sceBootLfatRead), addr);
-            patches--;
-        }
-        else if (data == 0xAE930008 || data == 0xAEB40008){
-            sceBootLfatClose = (void*)K_EXTRACT_CALL(addr-4);
-            _sw(JAL(_sceBootLfatClose), addr-4);
-            patches--;
-        }
-    }
-    // Flush Cache
-    flushCache();
 }
 
 int UnpackBootConfigPSP(char **p_buffer, int length){
@@ -262,11 +227,37 @@ void patchBootPSP(){
     _sw(JAL(UnpackBootConfigPSP), UnpackBootConfigCall); // Hook UnpackBootConfig
 
     // make sure we read as little ram as possible
-    int patches = (ble_config->boot_storage == MS_BOOT)? 6:5;
+    int patches = (ble_config->boot_storage == MS_BOOT)? 9:8;
     
     for (u32 addr = REBOOT_TEXT; addr<reboot_end && patches; addr+=4){
         u32 data = _lw(addr);
-        if (data == 0x02A0E821 || data == 0x0280E821){ // found loadcore jump on PSP
+        if (data == 0x8E840000 || data == 0x8EA40000){ // FatOpen
+            if (ble_config->boot_storage == MS_BOOT){
+                int found = 0;
+                for (int i=8; !found; i+=4) {
+                    if (IS_JAL(_lw(addr-i))) { // FatMount
+                        _sw(JAL(_sceBootLfatMount), addr-i);
+                        found = 1;
+                    }
+                }
+            }
+            sceBootLfatOpen = (void*)K_EXTRACT_CALL(addr-4);
+            _sw(JAL(_sceBootLfatOpen), addr-4);
+            patches--;
+        }
+        else if (data == 0xAE840004 || data == 0xAEA30004){ // FatRead
+            addr += 4;
+            while (!IS_JAL(_lw(addr))) { addr += 4; }
+            sceBootLfatRead = (void*)K_EXTRACT_CALL(addr);
+            _sw(JAL(_sceBootLfatRead), addr);
+            patches--;
+        }
+        else if (data == 0xAE930008 || data == 0xAEB40008){ // FatClose
+            sceBootLfatClose = (void*)K_EXTRACT_CALL(addr-4);
+            _sw(JAL(_sceBootLfatClose), addr-4);
+            patches--;
+        }
+        else if (data == 0x02A0E821 || data == 0x0280E821){ // found loadcore jump on PSP
             _sw(0x3821 | ((_lw(addr-4) & 0x3E00000) >> 5), addr-4); // ADDU $a3 $zero <reg>
             _sw(JUMP(loadcoreModuleStartPSP), addr);
             _sw(data, addr + 4);
@@ -319,8 +310,6 @@ void patchBootPSP(){
             }
         }
     }
-
-    patchBootIoPSP();
 
     // Flush Cache
     flushCache();
