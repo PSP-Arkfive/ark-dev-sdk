@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-include(CreateStubLib.cmake)
+include(../build-tools/CreateStubLib.cmake)
 
 add_subdirectory(KUBridge)
 add_subdirectory(SystemCtrlForUser)
