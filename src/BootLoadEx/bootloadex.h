@@ -170,7 +170,7 @@ u32 FindImportRange(char *libname, u32 nid, u32 lower, u32 higher);
 void configureBoot(BootLoadExConfig*);
 void findBootFunctions();
 u32 loadCoreModuleStartPatched(u32 entry);
-extern void patchRebootBuffer();
+void patchRebootBuffer();
 
 // PSP IO functions
 extern int (* sceBootLfatOpen)(const char * filename);

@@ -213,6 +213,9 @@ int UnpackBootConfigArkPSP(char *buffer, int length)
         }
     }
 
+    if (ble_config->boot_type == TYPE_PAYLOADEX && ble_config->boot_storage == MS_BOOT)
+        ark_config->recovery = 1; // enable recovery mode in DC
+
     // disable fatms371 mod in recovery mode
     if (ark_config->recovery) ble_config->extra_io.psp_io.use_fatms371 = 0;
     

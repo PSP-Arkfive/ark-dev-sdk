@@ -11,6 +11,7 @@
 #define PATH_TMCTRL FLASH0_PATH "tmctrl.prx"
 
 //io functions
+char path[128];
 int (* sceBootLfatOpen)(const char * filename) = NULL;
 int (* sceBootLfatRead)(char * buffer, int length) = NULL;
 int (* sceBootLfatClose)(void) = NULL;
@@ -27,7 +28,7 @@ int file_exists(const char *path)
 
     if (ret >= 0) {
         if (ble_config->boot_storage == MS_BOOT)
-            ble_config->extra_io.psp_io.FatClose(path);
+            ble_config->extra_io.psp_io.FatClose();
         else
             sceBootLfatClose();
         return 1;
@@ -79,8 +80,6 @@ int patch_bootconf_timemachine(char *buffer, int length)
 }
 
 // IO Patches
-char path[128];
-
 int _sceBootLfatMount()
 {
     return ble_config->extra_io.psp_io.FatMount();
