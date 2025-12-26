@@ -115,7 +115,7 @@ int _sceBootLfatOpen(char * filename)
     strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), filename);
 
     //load on reboot module open
-    if(strcmp(filename, REBOOT_MODULE) == 0)
+    if (strcmp(filename, REBOOT_MODULE) == 0)
     {
         //mark for read
         rebootmodule_open = 1;
