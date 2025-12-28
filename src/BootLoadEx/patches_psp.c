@@ -140,7 +140,7 @@ int _sceBootLfatOpen(char * filename)
         strcat(path, filename);
 
         if (is_btcnf && ble_config->boot_type == TYPE_PAYLOADEX){
-            memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
+            strcpy(&path[strlen(path) - 4], "_dc.bin");
         }
 
         return ble_config->extra_io.psp_io.FatOpen(path);

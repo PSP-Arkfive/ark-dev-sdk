@@ -19,6 +19,10 @@
 // Concatenates string s + append
 char *strcat(char *s, const char *append)
 {
+    if (!s || !append) {
+        return 0;
+    }
+
     char *pRet = s;
     while(*s)
     {
