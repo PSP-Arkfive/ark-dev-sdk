@@ -24,6 +24,7 @@
 #include <bootloadex.h>
 #include <rebootconfig.h>
 
+
 int psp_model = PSP_1000;
 u32 reboot_end = REBOOT_TEXT+0x20000; // 128KB at most
 u32 loadcore_text = 0;
@@ -61,7 +62,7 @@ int PRXDecryptPatched(PSP_Header* prx, unsigned int size, unsigned int * newsize
             || prx->oe_tag == OE_TAG_LME // ME-type PRX
     ){
 
-        if (prx->oe_tag == 0xC6BA41D3 && ble_config->extraPRXDecrypt){ // decrypt ME firmware file
+        if (ble_config->extraPRXDecrypt){ // decrypt ME firmware file
             ble_config->extraPRXDecrypt(prx, size, newsize);
         }
 
@@ -130,7 +131,7 @@ void unPatchLoadCoreCheckExec(){
 
 }
 
-u32 loadCoreModuleStartPatched(u32 module_start){
+void patchLoadCore(u32 module_start){
 
     // Calculate Text Address and size
     u32 text_addr = module_start-0xAF8; // this calculation is exact, but due to dynamic patching it doesn't matter anymore
@@ -165,7 +166,6 @@ u32 loadCoreModuleStartPatched(u32 module_start){
     
     loadcore_text = text_addr;
     flushCache();
-    return text_addr;
 }
 
 // Invalidate Instruction and Data Cache
@@ -179,20 +179,18 @@ void flushCache(void)
 
 // Common rebootex patches for PSP and Vita
 void findBootFunctions(){
-    register void (* Icache)(void) = NULL;
-    register void (* Dcache)(void) = NULL;
     // find functions
     for (u32 addr = REBOOT_TEXT; addr<reboot_end; addr+=4){
         u32 data = _lw(addr);
         if (data == 0xBD01FFC0){ // sceBootDacheWritebackInvalidateAll
             u32 a = addr;
             do {a-=4;} while (_lw(a) != 0x40088000);
-            Dcache = (void*)a;
+            sceBootDacheWritebackInvalidateAll = (void*)a;
         }
         else if (data == 0xBD14FFC0){ // sceBootIcacheInvalidateAll
             u32 a = addr;
             do {a-=4;} while (_lw(a) != 0x40088000);
-            Icache = (void*)a;
+            sceBootIcacheInvalidateAll = (void*)a;
         }
         else if ((data == _lw(addr+4)) && (data & 0xFC000000) == 0xAC000000){ // Patch ~PSP header check
             // Returns size of the buffer on loading whatever modules
@@ -229,10 +227,7 @@ void findBootFunctions(){
             }
         }
     }
-    sceBootIcacheInvalidateAll = Icache;
-    sceBootDacheWritebackInvalidateAll = Dcache;
-    Icache();
-    Dcache();
+    flushCache();
 }
 
 void configureBoot(BootLoadExConfig* config){

@@ -3,12 +3,6 @@
 #include <pspsdk.h>
 #include <psploadcore.h>
 
-#include <cfwmacros.h>
-
-#include <rebootconfig.h>
-#include <systemctrl_se.h>
-
-#include <ark.h>
 
 int AddressInRange(u32 addr, u32 lower, u32 higher){
     return (addr >= lower && addr < higher);

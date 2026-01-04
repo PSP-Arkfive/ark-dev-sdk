@@ -7,11 +7,11 @@
 #include <bootloadex.h>
 #include <pspbtcnf.h>
 
+
 // Time Machine module
 #define PATH_TMCTRL FLASH0_PATH "tmctrl.prx"
 
 //io functions
-char path[128];
 int (* sceBootLfatOpen)(const char * filename) = NULL;
 int (* sceBootLfatRead)(char * buffer, int length) = NULL;
 int (* sceBootLfatClose)(void) = NULL;
@@ -38,7 +38,7 @@ int file_exists(const char *path)
 }
 
 int loadcoreModuleStartPSP(void * arg1, void * arg2, void * arg3, int (* start)(void *, void *, void *)){
-    loadCoreModuleStartPatched((u32)start);
+    patchLoadCore((u32)start);
     return start(arg1, arg2, arg3);
 }
 
@@ -85,30 +85,6 @@ int _sceBootLfatMount()
     return ble_config->extra_io.psp_io.FatMount();
 }
 
-int _sceBootLfatRead(char * buffer, int length)
-{
-    //load on reboot module
-    if (rebootmodule_open)
-    {
-        //copy load on reboot module
-        int min = ble_config->rtm_mod.size < length ? ble_config->rtm_mod.size : length;
-        if (min > 0){
-            memcpy(buffer, (void*)ble_config->rtm_mod.buffer, min);
-            ble_config->rtm_mod.buffer += min;
-            ble_config->rtm_mod.size -= min;
-        }
-
-        //set filesize
-        return min;
-    }
-
-    if (ble_config->boot_storage == MS_BOOT)
-        return ble_config->extra_io.psp_io.FatRead(buffer, length);
-    
-    //forward to original function
-    return sceBootLfatRead(buffer, length);
-}
-
 int _sceBootLfatOpen(char * filename)
 {
     // add file to boot list
@@ -136,13 +112,12 @@ int _sceBootLfatOpen(char * filename)
     }
 
     if (ble_config->boot_storage == MS_BOOT){
+        char path[128];
         strcpy(path, ble_config->extra_io.psp_io.tm_path);
         strcat(path, filename);
-
         if (is_btcnf && ble_config->boot_type == TYPE_PAYLOADEX){
-            strcpy(&path[strlen(path) - 4], "_dc.bin");
+            memcpy(&path[strlen(path) - 4], "_dc.bin", 8);
         }
-
         return ble_config->extra_io.psp_io.FatOpen(path);
     }
     else {
@@ -161,6 +136,30 @@ int _sceBootLfatOpen(char * filename)
     }
 }
 
+int _sceBootLfatRead(char * buffer, int length)
+{
+    //load on reboot module
+    if (rebootmodule_open)
+    {
+        //copy load on reboot module
+        int min = ble_config->rtm_mod.size < length ? ble_config->rtm_mod.size : length;
+        if (min > 0){
+            memcpy(buffer, (void*)ble_config->rtm_mod.buffer, min);
+            ble_config->rtm_mod.buffer += min;
+            ble_config->rtm_mod.size -= min;
+        }
+
+        //set filesize
+        return min;
+    }
+
+    if (ble_config->boot_storage == MS_BOOT)
+        return ble_config->extra_io.psp_io.FatRead(buffer, length);
+    
+    //forward to original function
+    return sceBootLfatRead(buffer, length);
+}
+
 int _sceBootLfatClose(void)
 {
     //reboot module close
@@ -174,7 +173,7 @@ int _sceBootLfatClose(void)
         //return success
         return 0;
     }
-    
+
     if (ble_config->boot_storage == MS_BOOT)
         return ble_config->extra_io.psp_io.FatClose();
     
@@ -277,7 +276,7 @@ void patchBootPSP(){
                 insMask = _lw(a) & 0xFFFF0000;
             } while (insMask != 0x04400000 && insMask != 0x04420000);
             _sw(NOP, a); // Killing Branch Check bltz/bltzl ...
-            //patches--; // TODO: ???
+            patches--;
         }
         else if (data == 0x27BDFFE0 && _lw(addr+4) == 0x3C028861 && ble_config->boot_storage == MS_BOOT) { // nand enc
             MAKE_DUMMY_FUNCTION_RETURN_0(addr);

@@ -169,7 +169,7 @@ u32 FindImportRange(char *libname, u32 nid, u32 lower, u32 higher);
 // BootLoadEx functions
 void configureBoot(BootLoadExConfig*);
 void findBootFunctions();
-u32 loadCoreModuleStartPatched(u32 entry);
+void patchLoadCore(u32 entry);
 void patchRebootBuffer();
 
 // PSP IO functions
