@@ -130,7 +130,6 @@ int _sceBootLfatOpen(char * filename)
             if (res >= 0) return res;
             filename[6] = 'p'; // fallback
         }
-
         //forward to original function
         return sceBootLfatOpen(filename);
     }
