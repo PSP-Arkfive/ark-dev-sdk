@@ -144,7 +144,7 @@ int _sceBootLfatRead(char * buffer, int length)
         //copy load on reboot module
         int min = ble_config->rtm_mod.size < length ? ble_config->rtm_mod.size : length;
         if (min > 0){
-            memcpy(buffer, (void*)ble_config->rtm_mod.buffer, min);
+            memcpy(buffer, ble_config->rtm_mod.buffer, min);
             ble_config->rtm_mod.buffer += min;
             ble_config->rtm_mod.size -= min;
         }

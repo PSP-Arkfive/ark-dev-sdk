@@ -53,6 +53,15 @@ u32 UnpackBootConfigArg = 0;
 int rebootmodule_open = 0;
 
 
+// Invalidate Instruction and Data Cache
+void flushCache(void)
+{
+    // Invalidate Data Cache
+    sceBootDacheWritebackInvalidateAll();
+    // Invalidate Instruction Cache
+    sceBootIcacheInvalidateAll();
+}
+
 // Custom PRX Support
 int PRXDecryptPatched(PSP_Header* prx, unsigned int size, unsigned int * newsize)
 {
@@ -166,15 +175,6 @@ void patchLoadCore(u32 module_start){
     
     loadcore_text = text_addr;
     flushCache();
-}
-
-// Invalidate Instruction and Data Cache
-void flushCache(void)
-{
-    // Invalidate Data Cache
-    sceBootDacheWritebackInvalidateAll();
-    // Invalidate Instruction Cache
-    sceBootIcacheInvalidateAll();
 }
 
 // Common rebootex patches for PSP and Vita
