@@ -17,12 +17,13 @@ typedef u32 Color;
 #define G(color) ((u8)(color >> 8 & 0xFF))
 #define R(color) ((u8)(color & 0xFF))
 
-#define CLEAR_COLOR 0x00000000
-#define WHITE_COLOR 0x00FFFFFF
-#define BLACK_COLOR 0xFF000000
-#define GRAY_COLOR  0xFFCCCCCC
-#define RED_COLOR   0x000000FF
-#define GREEN_COLOR 0xFF00FF00
+#define CLEAR_COLOR  0x00000000
+#define WHITE_COLOR  0x00FFFFFF
+#define BLACK_COLOR  0xFF000000
+#define GRAY_COLOR   0xFFCCCCCC
+#define RED_COLOR    0x000000FF
+#define GREEN_COLOR  0xFF00FF00
+#define YELLOW_COLOR 0x00FFFF00
 
 typedef struct
 {
