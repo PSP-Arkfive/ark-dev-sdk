@@ -1,5 +1,5 @@
 
-TARGET=libpspPSAR.a
+TARGET=libpsppsar.a
 
 all: $(TARGET)
 STUBSRC = libpspPSAR.S

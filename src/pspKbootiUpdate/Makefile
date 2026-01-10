@@ -1,5 +1,5 @@
 
-TARGET=libpspKbootiUpdate.a
+TARGET=libpspkbootiupdate.a
 
 all: $(TARGET)
 STUBSRC = libpspKbootiUpdate.S

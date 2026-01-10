@@ -1,5 +1,5 @@
 
-TARGET=libpspIplUpdate.a
+TARGET=libpspiplupdate.a
 
 all: $(TARGET)
 STUBSRC = libpspIplUpdate.S
