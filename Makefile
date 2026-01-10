@@ -22,6 +22,7 @@ all:
 	$(MAKE) -C src/libintraFont_stub
 	$(MAKE) -C src/libpspav_stub
 	$(MAKE) -C src/libpspftp_stub
+	$(MAKE) -C src/libpng_stub
 	$(MAKE) -C src/guglue
 	$(MAKE) -C src/ansi-c
 	$(MAKE) -C src/colordebugger
@@ -50,6 +51,7 @@ all:
 	$(Q)cp src/libintraFont_stub/*.a libs
 	$(Q)cp src/libpspav_stub/*.a libs
 	$(Q)cp src/libpspftp_stub/*.a libs
+	$(Q)cp src/libpng_stub/*.a libs
 	$(Q)cp src/guglue/*.a libs
 	$(Q)cp src/ansi-c/*.a libs
 	$(Q)cp src/colordebugger/*.a libs
@@ -88,6 +90,7 @@ clean:
 	$(MAKE) -C src/libintraFont_stub clean
 	$(MAKE) -C src/libpspav_stub clean
 	$(MAKE) -C src/libpspftp_stub clean
+	$(MAKE) -C src/libpng_stub clean
 	$(MAKE) -C src/guglue clean
 	$(MAKE) -C src/ansi-c clean
 	$(MAKE) -C src/colordebugger clean
