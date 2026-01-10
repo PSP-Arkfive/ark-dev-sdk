@@ -1,4 +1,4 @@
-TARGET=libidsRegeneration.a
+TARGET=libidsregeneration.a
 
 all: $(TARGET)
 STUBSRC = idsRegeneration.S

@@ -1,4 +1,4 @@
-TARGET=libidsRegeneration_driver.a
+TARGET=libidsregeneration_driver.a
 
 all: $(TARGET)
 STUBSRC = idsRegeneration_driver.S
