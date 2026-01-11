@@ -25,7 +25,7 @@ STRIP    = psp-strip
 
 # Add in PSPSDK includes and libraries.
 INCDIR   := $(INCDIR) . $(PSPSDK)/include ../common/
-LIBDIR   := $(LIBDIR) . $(PSPSDK)/lib $(ARKROOT)/libs
+LIBDIR   := $(LIBDIR) . $(PSPSDK)/lib
 
 CFLAGS   := $(addprefix -I,$(INCDIR)) $(CFLAGS)
 CXXFLAGS := $(CFLAGS) $(CXXFLAGS)

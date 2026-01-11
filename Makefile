@@ -31,6 +31,7 @@ all:
 	$(MAKE) -C src/LibPspExploit
 	$(MAKE) -C src/BootLoadEx
 	$(MAKE) -C src/iplsdk
+	$(MAKE) -C src/microlz
 	$(Q)mkdir -p libs
 	$(Q)mkdir -p include/iplsdk
 	$(Q)cp src/pre-built/*.a libs/
@@ -63,6 +64,7 @@ all:
 	$(Q)cp src/BootLoadEx/bootloadex*.h include/
 	$(Q)cp src/iplsdk/*.a libs
 	$(Q)cp src/iplsdk/include/*.h include/iplsdk
+	$(Q)cp src/microlz/*.a libs
 
 install: all
 	$(Q)cp -r include/* $(PSPSDK)/include/
@@ -99,3 +101,4 @@ clean:
 	$(MAKE) -C src/LibPspExploit clean
 	$(MAKE) -C src/BootLoadEx clean
 	$(MAKE) -C src/iplsdk clean
+	$(MAKE) -C src/microlz clean
