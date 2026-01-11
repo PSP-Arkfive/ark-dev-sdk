@@ -281,3 +281,9 @@
 #ifdef F_SystemCtrlForKernel_0091
     IMPORT_FUNC "SystemCtrlForKernel",0x6F515CDC,sctrlHENFindRefInGlobals
 #endif
+#ifdef F_SystemCtrlForKernel_0092
+    IMPORT_FUNC "SystemCtrlForKernel",0x46268461,sctrlHENFindFunctionInMod
+#endif
+#ifdef F_SystemCtrlForKernel_0093
+    IMPORT_FUNC "SystemCtrlForKernel",0xDF306CFC,sctrlHENFindImportInMod
+#endif

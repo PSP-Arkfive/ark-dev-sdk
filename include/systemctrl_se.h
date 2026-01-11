@@ -30,15 +30,17 @@ enum fakeregion
     FAKE_REGION_DEBUG_TYPE_II = 13,
 };
 
-// No MODE_OE_LEGACY any more
 enum SEUmdModes
 {
     MODE_UMD = 0,
-    MODE_MARCH33 = 1, // not available anymore, will default to inferno
-    MODE_NP9660 = 2, // (Galaxy) not available anymore, will default to inferno for iso/cso or np9660 for PBP
-    MODE_INFERNO = 3,
-    MODE_VSHUMD = 4,
-    MODE_UPDATERUMD = 5,
+    MODE_OE_LEGACY, // not available anymore, will default to inferno
+    MODE_MARCH33,
+    MODE_NP9660, // (Galaxy) if not available, will default to inferno for iso/cso or np9660 for PBP
+    MODE_INFERNO,
+    MODE_ME,
+    MODE_VSHUMD,
+    MODE_UPDATERUMD,
+    MODE_RECOVERY,
 };
 
 enum swap_xo
@@ -61,6 +63,47 @@ enum umdregion
     UMD_REGION_AMERICA,
     UMD_REGION_EUROPE,
     UMD_REGION_JAPAN,
+};
+
+enum IsoCacheNumberConf {
+	ISO_CACHE_NUM_AUTO,
+	ISO_CACHE_NUM_001,
+	ISO_CACHE_NUM_002,
+	ISO_CACHE_NUM_004,
+	ISO_CACHE_NUM_008,
+	ISO_CACHE_NUM_016,
+	ISO_CACHE_NUM_032,
+	ISO_CACHE_NUM_064,
+	ISO_CACHE_NUM_128,
+};
+
+enum IsoCacheSizeConf {
+	ISO_CACHE_SIZE_AUTO,
+	ISO_CACHE_SIZE_01KB,
+	ISO_CACHE_SIZE_02KB,
+	ISO_CACHE_SIZE_04KB,
+	ISO_CACHE_SIZE_08KB,
+	ISO_CACHE_SIZE_16KB,
+	ISO_CACHE_SIZE_32KB,
+	ISO_CACHE_SIZE_64KB,
+};
+
+enum CpuBusSpeed {
+	CLOCK_SPEED_DISABLED,
+	CLOCK_SPEED_20_10,
+	CLOCK_SPEED_75_37,
+	CLOCK_SPEED_100_50,
+	CLOCK_SPEED_133_66,
+	CLOCK_SPEED_222_111,
+	CLOCK_SPEED_266_133,
+	CLOCK_SPEED_300_150,
+	CLOCK_SPEED_333_166,
+};
+
+enum ForceHighMemory {
+	HIGHMEM_OPT_OFF,
+	HIGHMEM_OPT_STABLE,
+	HIGHMEM_OPT_MAX,
 };
 
 // M33's SEConfig (also used by L/ME)
@@ -143,7 +186,7 @@ typedef struct SEConfigPRO
 // Adrenaline's SEConfig
 #define SECONFIG_MAGIC_ADR1 0x192EFC3C
 #define SECONFIG_MAGIC_ADR2 0x17BEB6AA
-typedef struct SEConfigADR{
+typedef struct {
 	int magic[2];
 	/** 0 - Disabled, 1 - Enabled */
 	u8 hide_corrupt;
@@ -205,7 +248,10 @@ typedef struct SEConfigADR{
 	u8 use_ge2;
 	/** Use `kermit_me_wrapper_2.prx` instead of `kermit_me_wrapper.prx`. 0- Off, 1 = On. */
 	u8 use_me2;
+	/** Hide CFW files from games. 0 - Hide, 1 - Do not hide */
+	u8 no_hide_cfw_files;
 } SEConfigADR;
+#define IS_ADR_SECONFIG(config) ((((SEConfigADR*)config)->magic[0] == SECONFIG_MAGIC_ADR1) && (((SEConfigADR*)config)->magic[1] == SECONFIG_MAGIC_ADR2))
 
 // ARK's SEConfig
 typedef struct SEConfigARK
@@ -297,6 +343,23 @@ int sctrlSESetConfig(SEConfig *config);
 int sctrlSESetConfigEx(SEConfig *config, int size);
 
 /**
+ * Immediately sets the SE configuration in memory without saving to flash.
+ * This function can corrupt the configuration in memory, use
+ * sctrlSEApplyConfigEX instead.
+ *
+ * @param config - pointer to a SEConfig structure that has the SE configuration to set
+*/
+void sctrlSEApplyConfig(SEConfig *conf);
+
+/**
+ * Immediately sets the SE configuration in memory without saving to flash.
+ *
+ * @param config - pointer to a SEConfig structure that has the SE configuration to set
+ * @returns 0 on success, and -1 on error
+*/
+int sctrlSEApplyConfigEX(SEConfig *conf, int size);
+
+/**
  * Initiates the emulation of a disc from an ISO9660/CSO file.
  *
  * @param file - The path of the 
@@ -361,6 +424,7 @@ int sctrlSEGetDiscType(void);
  * Sets the current umd file (kernel only)
 */
 char *sctrlSEGetUmdFile(void);
+char *GetUmdFile(void);
 
 /**
  * Sets the current umd file (kernel only)

@@ -17,3 +17,6 @@
 #ifdef F_libpspPSAR_0003
 	IMPORT_FUNC  "pspPSAR",0xC907D012,pspPSARSetBufferPosition
 #endif
+#ifdef F_libpspPSAR_0003
+	IMPORT_FUNC  "pspPSAR",0xD31CB80A,pspDecryptTable
+#endif

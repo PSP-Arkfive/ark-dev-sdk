@@ -227,3 +227,9 @@
 #ifdef F_SystemCtrlForUser_0073
 	IMPORT_FUNC  "SystemCtrlForUser",0x6F515CDC,sctrlHENFindRefInGlobals
 #endif
+#ifdef F_SystemCtrlForUser_0074
+	IMPORT_FUNC  "SystemCtrlForUser",0x46268461,sctrlHENFindFunctionInMod
+#endif
+#ifdef F_SystemCtrlForUser_0075
+	IMPORT_FUNC  "SystemCtrlForUser",0xDF306CFC,sctrlHENFindImportInMod
+#endif

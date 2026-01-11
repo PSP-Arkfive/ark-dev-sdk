@@ -8,6 +8,7 @@ OBJS = \
 	libpspPSAR_0001.o \
 	libpspPSAR_0002.o \
 	libpspPSAR_0003.o \
+	libpspPSAR_0004.o \
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 

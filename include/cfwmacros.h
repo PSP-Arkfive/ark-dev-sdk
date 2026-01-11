@@ -18,6 +18,18 @@
 #ifndef _MACROS_H_
 #define _MACROS_H_
 
+// magic numbers
+#define PBP_MAGIC 0x50425000
+#define ELF_MAGIC 0x464C457F
+#define PSP_MAGIC 0x5053507E
+#define BTCNF_MAGIC 0x0F803001
+#define SFO_MAGIC 0x46535000
+
+// Different firmware versions
+#define FW_661 0x06060110
+#define FW_660 0x06060010
+#define FW_150 0x01050001
+
 #define FLASH0_PATH "flash0:/"
 #define FLASH1_PATH "flash1:/"
 #define USER_BASE 0x08800000 // user partition (p2)
@@ -32,6 +44,9 @@
 #define VITA_FLASH_SIZE 0x01000000 // vita flash ramfs size
 #define EXTRA_RAM_SIZE (32 * 1024 * 1024) // size of extra ram (2k+)
 #define MAX_HIGH_MEMSIZE 55 // max ram that can be given to user
+
+#define ALIGN(x, align) (((x) + ((align) - 1)) & ~((align) - 1))
+#define PTR_ALIGN_64(p) ((void*) ALIGN((u32)p, 64))
 
 // Kernelify Address
 #define KERNELIFY(f) (0x80000000 | ((unsigned int)(f)))
@@ -48,21 +63,48 @@
 // jal addr
 #define JAL(f) (0x0C000000 | (((unsigned int)(f) >> 2) & 0x03ffffff))
 
-#define MAKE_JUMP(a, f) _sw(JUMP(f), a);
-#define MAKE_CALL(a, f) _sw(JAL(f), a);
-#define MAKE_SYSCALL(a, n) _sw(SYSCALL(n), (u32)(a));
-
 // jal checker
 #define IS_JAL(i) ((((unsigned int)i) & 0xFC000000) == 0x0C000000)
 
 // nop
 #define NOP 0
 
+// Move from `zr` zero register to `v0` register (`move v0, zr`) instruction value
+#define MOVE_V0_ZR 0x00001021
+
 // jr ra
 #define JR_RA 0x03E00008
 
 // v0 result setter
 #define LI_V0(n) ((0x2402 << 16) | ((n) & 0xFFFF))
+
+#define MAKE_JUMP(a, f) _sw(JUMP(f), a);
+#define MAKE_CALL(a, f) _sw(JAL(f), a);
+#define MAKE_SYSCALL(a, n) _sw(SYSCALL(n), (u32)(a));
+
+// Insert a instruction optcode `i` at the address `a`
+#define MAKE_INSTRUCTION(a, i) _sw(i, a);
+
+// Insert a no operation (`nop`) instruction at the address `a`
+#define MAKE_NOP(a) _sw(NOP, a);
+
+// Volatile read a u8 value from the address `addr`
+#define VREAD8(addr) _lb(addr)
+// Volatile read a u16 value from the address `addr`
+#define VREAD16(addr) _lh(addr)
+// Volatile read a u32 value from the address `addr`
+#define VREAD32(addr) _lw(addr)
+// Volatile read a u64 value from the address `addr`
+#define VREAD64(addr) _ld(addr)
+
+// Volatile write to `addr` the byte value of `val`
+#define VWRITE8(addr, val) _sb(val, addr);
+// Volatile write to `addr` the u16 value of `val`
+#define VWRITE16(addr, val) _sh(val, addr);
+// Volatile write to `addr` the u32 value of `val`
+#define VWRITE32(addr, val) _sw(val, addr);
+// Volatile write to `addr` the u64 value of `val`
+#define VWRITE64(addr, val) _sd(val, addr);
 
 #define MAKE_DUMMY_FUNCTION_RETURN_0(a) \
     _sw(JR_RA, a);\
@@ -98,7 +140,6 @@
 #define GET_FUNCTION_OPCODE(x) (_lw(x) & 0x3F)
 
 #define MAKE_JUMP_PATCH(a, f) _sw(0x08000000 | (((u32)(f) & 0x0FFFFFFC) >> 2), a);
-#define PTR_ALIGN_64(p) ((void*)((((u32)p)+64-1)&(~(64-1))))
 
 //by Davee
 #define HIJACK_FUNCTION(a, f, p) \

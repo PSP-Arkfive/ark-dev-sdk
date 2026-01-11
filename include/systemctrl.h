@@ -113,6 +113,8 @@ u32 sctrlHENFindJALGeneric(u32 addr, int reversed, int skip);
 u32 sctrlHENFindFirstBEQ(u32 addr);
 u32 sctrlHENFindRefInGlobals(char* libname, u32 addr, u32 ptr);
 
+int sctrlHENIsSystemBooted();
+
 /**
  *  Find Import Library Stub Table
  */
@@ -126,7 +128,7 @@ unsigned int sctrlFindImportByNID(SceModule * pMod, char * library, unsigned int
 /**
  *  Replace Import Function Stub
  */
-int sctrlHookImportByNID(SceModule * pMod, char * library, unsigned int nid, void * func);
+int sctrlHookImportByNID(SceModule * pMod, const char * library, unsigned int nid, void * func);
 
 /**
  * Restart the vsh.
@@ -202,11 +204,13 @@ int sctrlGzipDecompress(void* dest, void* src, int size);
  * LZ4 decompress
  */
 int LZ4_decompress_fast(const char* source, char* dest, int outputSize);
+#define sctrlLz4Decompress LZ4_decompress_fast
 
 /**
  * LZO decompress
  */
 int lzo1x_decompress(void* source, unsigned src_len, void* dest, unsigned* dst_len, void*);
+#define sctrlLzoDecompress lzo1x_decompress
 
 /**
  * Check if currently running with ms0 being redirected to ef0.
@@ -425,7 +429,22 @@ PspIoDrv *sctrlHENFindDriver(const char *drvname);
  * @returns - The function address or 0 if not found
  *
  */
-unsigned int sctrlHENFindFunction(char *modname, char *libname, unsigned int nid);
+unsigned int sctrlHENFindFunction(const char *modname, const char *libname, unsigned int nid);
+
+/**
+ * Finds an exported function in a ::SceModule.
+ *
+ * Good to optimize when you already have a ::SceModule module and wants to
+ * find a function in that module.
+ *
+ * @param mod - The module where to search the function
+ * @param library - The library name
+ * @param nid - The nid of the function
+ *
+ * @returns - The function address or 0 if not found
+ *
+*/
+unsigned int sctrlHENFindFunctionInMod(SceModule * mod, const char *library, unsigned int nid);
 
 /** 
  * Finds an import.
@@ -438,6 +457,18 @@ unsigned int sctrlHENFindFunction(char *modname, char *libname, unsigned int nid
  *
  */
 unsigned int sctrlHENFindImport(const char *modname, const char *libname, unsigned int nid);
+
+/** 
+ * Finds an import.
+ *
+ * @param mod - The module where to search the function
+ * @param libname - The library name
+ * @nid - The nid of the function
+ *
+ * @returns - The function address or 0 if not found
+ *
+ */
+unsigned int sctrlHENFindImportInMod(SceModule *mod, const char *libname, unsigned int nid);
 
 /**
  * Sets a function to be called just before module_start of a module is gonna be called (useful for patching purposes)

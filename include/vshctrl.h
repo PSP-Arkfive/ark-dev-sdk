@@ -1,6 +1,8 @@
 #ifndef __VSHCTRL_H__
 #define __VSHCTRL_H__
 
+#include <stddef.h>
+#include <pspsdk.h>
 #include <pspctrl.h>
 
 #include <systemctrl_se.h>
