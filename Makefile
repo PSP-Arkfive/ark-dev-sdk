@@ -30,6 +30,7 @@ all:
 	$(MAKE) -C src/mini2d
 	$(MAKE) -C src/LibPspExploit
 	$(MAKE) -C src/BootLoadEx
+	$(MAKE) -C src/LibCisoRead
 	$(MAKE) -C src/iplsdk
 	$(MAKE) -C src/microlz
 	$(Q)mkdir -p libs
@@ -62,6 +63,8 @@ all:
 	$(Q)cp src/LibPspExploit/*.h include/
 	$(Q)cp src/BootLoadEx/*.a libs
 	$(Q)cp src/BootLoadEx/bootloadex*.h include/
+	$(Q)cp src/LibCisoRead/*.a libs
+	$(Q)cp src/LibCisoRead/ciso*.h include/
 	$(Q)cp src/iplsdk/*.a libs
 	$(Q)cp src/iplsdk/include/*.h include/iplsdk
 	$(Q)cp src/microlz/*.a libs
@@ -75,6 +78,7 @@ clean:
 	$(Q)rm -rf libs
 	$(Q)rm -rf include/iplsdk
 	$(Q)rm -f include/bootloadex*.h
+	$(Q)rm -f include/ciso*.h
 	$(MAKE) -C src/KUBridge clean
 	$(MAKE) -C src/SystemCtrlForUser clean
 	$(MAKE) -C src/SystemCtrlForKernel clean
@@ -100,5 +104,6 @@ clean:
 	$(MAKE) -C src/mini2d clean
 	$(MAKE) -C src/LibPspExploit clean
 	$(MAKE) -C src/BootLoadEx clean
+	$(MAKE) -C src/LibCisoRead clean
 	$(MAKE) -C src/iplsdk clean
 	$(MAKE) -C src/microlz clean

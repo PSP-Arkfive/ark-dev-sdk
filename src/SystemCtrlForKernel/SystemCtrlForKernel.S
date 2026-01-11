@@ -290,3 +290,6 @@
 #ifdef F_SystemCtrlForKernel_0094
     IMPORT_FUNC "SystemCtrlForKernel",0xD67E7551,sctrlSEGetConfigInternal
 #endif
+#ifdef F_SystemCtrlForKernel_0095
+    IMPORT_FUNC "SystemCtrlForKernel",0x2A199EFE,oe_memalign
+#endif

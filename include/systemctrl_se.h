@@ -458,6 +458,9 @@ unsigned int sctrlSEGetBootConfFileIndex(void);
 // Allocate Memory in kernel space
 void * oe_malloc(unsigned int size);
 
+// Allocate Memory in kernel space with alignment
+void * oe_memalign(unsigned int align, unsigned int size);
+
 // Free memory
 void oe_free(void * p);
 
