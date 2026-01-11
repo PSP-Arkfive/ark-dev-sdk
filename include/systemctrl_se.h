@@ -312,7 +312,7 @@ int sctrlSEGetVersion();
  * @param config - pointer to a SEConfig structure that receives the SE configuration
  * @returns pointer to original SEConfig structure in SystemControl
 */
-SEConfig* sctrlSEGetConfig(SEConfig *config);
+int sctrlSEGetConfig(SEConfig *config);
 
 /**
  * Gets the SE configuration
@@ -321,7 +321,7 @@ SEConfig* sctrlSEGetConfig(SEConfig *config);
  * @param size - The size of the structure
  * @returns pointer to original SEConfig structure in SystemControl
 */
-SEConfig* sctrlSEGetConfigEx(SEConfig *config, int size);
+int sctrlSEGetConfigEx(SEConfig *config, int size);
 
 /**
  * Sets the SE configuration
@@ -358,6 +358,14 @@ int sctrlSEApplyConfig(SEConfig *conf);
  * @returns 0 on success, and -1 on error
 */
 int sctrlSEApplyConfigEX(SEConfig *conf, int size);
+
+
+/**
+ * Get the CFW's internal SEConfig structure.
+ *
+ * @returns pointer to SEConfig.
+*/
+SEConfig* sctrlSEGetConfigInternal();
 
 /**
  * Initiates the emulation of a disc from an ISO9660/CSO file.

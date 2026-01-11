@@ -287,3 +287,6 @@
 #ifdef F_SystemCtrlForKernel_0093
     IMPORT_FUNC "SystemCtrlForKernel",0xDF306CFC,sctrlHENFindImportInMod
 #endif
+#ifdef F_SystemCtrlForKernel_0094
+    IMPORT_FUNC "SystemCtrlForKernel",0xD67E7551,sctrlSEGetConfigInternal
+#endif
