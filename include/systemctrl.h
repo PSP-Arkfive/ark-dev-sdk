@@ -123,7 +123,7 @@ SceLibraryStubTable * sctrlFindImportLib(SceModule * pMod, char * library);
 /**
  *  Find Import Function Stub Address
  */
-unsigned int sctrlFindImportByNID(SceModule * pMod, char * library, unsigned int nid);
+unsigned int sctrlFindImportByNID(SceModule * pMod, const char * library, unsigned int nid);
 
 /**
  *  Replace Import Function Stub

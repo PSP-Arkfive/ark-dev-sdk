@@ -37,6 +37,4 @@ int pspPSARGetNextFile(u8 *dataPSAR, int cbFile, u8 *dataOut, u8 *dataOut2, char
 */
 int pspPSARSetBufferPosition(int position);
 
-int pspDecryptTable(u8 *buf1, u8 *buf2, int size, int mode);
-
 #endif
