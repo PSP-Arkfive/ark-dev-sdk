@@ -77,7 +77,6 @@ static void decompress_cso2(void* src, int src_len, void* dst, int dst_len, uint
 
 int ciso_open(CisoFile* file)
 {
-
     if (file == NULL || file->read_data == NULL)
         return CISO_BAD_ARGS;
     
@@ -144,6 +143,7 @@ int ciso_open(CisoFile* file)
 
         if (file->idx_cache == NULL){
             file->idx_cache = file->memalign(64, file->idx_cache_num * 4);
+            file->idx_start_block = -1;
         }
 
         // all done
@@ -274,4 +274,26 @@ int ciso_read(CisoFile* file, uint8_t* addr, uint32_t size, uint32_t offset)
     }
 
     return offset - o_offset;
+}
+
+int ciso_close(CisoFile* file){
+    if (file){
+        if (file->memalign && file->free){
+            if (file->dec_buf){
+                file->free(file->dec_buf);
+                file->dec_buf = NULL;
+            }
+            if (file->block_buf){
+                file->free(file->block_buf);
+                file->block_buf = NULL;
+            }
+            if (file->idx_cache){
+                file->free(file->idx_cache);
+                file->idx_cache = NULL;
+            }
+        }
+        file->idx_start_block = -1;
+        return CISO_OK;
+    }
+    return CISO_BAD_ARGS;
 }

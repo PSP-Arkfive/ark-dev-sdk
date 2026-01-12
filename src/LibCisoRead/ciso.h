@@ -58,14 +58,15 @@ typedef struct {
     // this needs to be provided by user
     void* reader_arg;
     int (*read_data)(void* reader_arg, void* buf, uint32_t size, uint32_t offset);
+    // either provide this or the buffers
     void* (*memalign)(unsigned int align, size_t size);
     void (*free)(void* ptr);
-    // ciso data
+    // ciso data, used by reader
     void (*decompressor)(void* src, int src_len, void* dst, int dst_len, uint32_t topbit);
-    uint8_t *block_buf;
-    uint8_t *dec_buf;
-    uint32_t *idx_cache;
-    int idx_start_block; // NOTE: must be initialized to -1
+    uint8_t *block_buf; // align 64
+    uint8_t *dec_buf; // align 64
+    uint32_t *idx_cache; // align 64
+    int idx_start_block; // initialize to -1
     uint32_t idx_cache_num;
     uint32_t header_size;
     uint32_t block_size;
@@ -83,7 +84,40 @@ enum CisoErrors{
 };
 
 
+/**
+ * Before opening a ciso file, you must initialize the CisoFile structure with necessary data.
+ * 
+ * 1) read_data() is always needed but reader_arg depends on the user, it will be passed as first arg to read_data.
+ * 2) either provive dynamic allocation functions or buffers for block_buf, dec_buf, and idx_cache
+ * 
+ * example 1: with dynamic allocation functions:
+ * 
+ *   CisoFile g_ciso_file = {
+ *      .read_data = &read_raw_data,
+ *      .memalign = &memalign,
+ *      .free = &free,
+ *   };
+ * 
+ * example 2: with statically allocated buffers
+ * 
+ * 
+ *   unsigned char block_buf[DAX_COMP_BUF];
+ *   unsigned char dec_buf[DAX_COMP_BUF];
+ *   unsigned int idx_cache[CISO_IDX_MAX_ENTRIES];
+ * 
+ *   CisoFile g_ciso_file = {
+ *      .read_data = &read_raw_data,
+ *      .block_buf = block_buf,
+ *      .dec_buf = dec_buf,
+ *      .idx_cache = idx_cache,
+ *      .idx_start_block = -1, // this is important when doing static buffers
+ *   };
+ * 
+ */
+
+
 int ciso_open(CisoFile* file);
 int ciso_read(CisoFile* file, uint8_t* addr, uint32_t size, uint32_t offset);
+int ciso_close(CisoFile* file);
 
 #endif
