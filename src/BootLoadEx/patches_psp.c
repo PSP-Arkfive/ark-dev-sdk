@@ -87,16 +87,6 @@ int _sceBootLfatMount()
 
 int _sceBootLfatOpen(char * filename)
 {
-    //load on reboot module open
-    if (strcmp(filename, REBOOT_MODULE) == 0)
-    {
-        //mark for read
-        rebootmodule_open = 1;
-
-        //return success
-        return 0;
-    }
-
     int is_btcnf = (memcmp(filename+4, "pspbtcnf", 8) == 0);
     
     if (is_btcnf){
@@ -111,6 +101,16 @@ int _sceBootLfatOpen(char * filename)
 
     // add file to boot list
     strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), filename);
+
+    //load on reboot module open
+    if (strcmp(filename, REBOOT_MODULE) == 0)
+    {
+        //mark for read
+        rebootmodule_open = 1;
+
+        //return success
+        return 0;
+    }
 
     if (ble_config->boot_storage == MS_BOOT){
         char path[128];
