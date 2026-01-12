@@ -29,6 +29,12 @@
 */
 void* user_malloc(size_t size);
 
+
+/**
+ * Allocate aligned memory in user ram.
+*/
+void* user_memalign(unsigned int align, unsigned int size);
+
 /**
  * Registers the vsh menu.
  * When HOME is pressed, vshctrl will load the satelite module.
