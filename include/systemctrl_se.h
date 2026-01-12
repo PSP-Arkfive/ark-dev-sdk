@@ -349,7 +349,7 @@ int sctrlSESetConfigEx(SEConfig *config, int size);
  *
  * @param config - pointer to a SEConfig structure that has the SE configuration to set
 */
-int sctrlSEApplyConfig(SEConfig *conf);
+void sctrlSEApplyConfig(SEConfig *conf);
 
 /**
  * Immediately sets the SE configuration in memory without saving to flash.

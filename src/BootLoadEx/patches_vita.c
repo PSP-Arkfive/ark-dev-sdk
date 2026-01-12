@@ -26,9 +26,6 @@ void relocateFlashFile(BootFile* file){
 int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
 {
     char* p = file->name;
-
-    // add file to boot list
-    strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), p);
  
     if (ble_config->extra_io.vita_io.pspemuLfatOpenExtra(file) == 0){
         return 0;

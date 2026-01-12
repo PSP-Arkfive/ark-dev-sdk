@@ -29,7 +29,6 @@ int pspemuLfatOpenArkVPSP(BootFile* file){
     char* p = file->name;
     
     if (strcmp(p, "pspbtcnf.bin") == 0){
-        boot_files->nfiles = 0;
         p[2] = 'v'; // custom btcnf for PS Vita
         switch(reboot_conf->iso_mode) {
             case MODE_MARCH33:

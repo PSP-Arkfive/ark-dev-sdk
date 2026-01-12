@@ -87,9 +87,6 @@ int _sceBootLfatMount()
 
 int _sceBootLfatOpen(char * filename)
 {
-    // add file to boot list
-    strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), filename);
-
     //load on reboot module open
     if (strcmp(filename, REBOOT_MODULE) == 0)
     {
@@ -103,6 +100,7 @@ int _sceBootLfatOpen(char * filename)
     int is_btcnf = (memcmp(filename+4, "pspbtcnf", 8) == 0);
     
     if (is_btcnf){
+        boot_files->nfiles = 0;
         if (filename[12] == '_'){
             psp_model = (10*(filename[13]-'0') + (filename[14]-'0')) - 1;
         }
@@ -110,6 +108,9 @@ int _sceBootLfatOpen(char * filename)
             ble_config->extra_io.psp_io.BtcnfPathHandler(filename);
         }
     }
+
+    // add file to boot list
+    strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), filename);
 
     if (ble_config->boot_storage == MS_BOOT){
         char path[128];

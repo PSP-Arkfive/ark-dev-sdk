@@ -293,3 +293,6 @@
 #ifdef F_SystemCtrlForKernel_0095
     IMPORT_FUNC "SystemCtrlForKernel",0x2A199EFE,oe_memalign
 #endif
+#ifdef F_SystemCtrlForKernel_0096
+    IMPORT_FUNC "SystemCtrlForKernel",0x7F5FBFCC,sctrlHENMakeSyscallStub
+#endif

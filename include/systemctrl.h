@@ -204,13 +204,13 @@ int sctrlGzipDecompress(void* dest, void* src, int size);
  * LZ4 decompress
  */
 int LZ4_decompress_fast(const char* source, char* dest, int outputSize);
-#define sctrlLz4Decompress LZ4_decompress_fast
+#define sctrlLz4Decompress(dest, src, size) LZ4_decompress_fast(src, dest, size)
 
 /**
  * LZO decompress
  */
 int lzo1x_decompress(void* source, unsigned src_len, void* dest, unsigned* dst_len, void*);
-#define sctrlLzoDecompress lzo1x_decompress
+#define sctrlLzoDecompress(dest, dst_size, src, src_size) lzo1x_decompress(src, src_size, dest, dst_size)
 
 /**
  * Check if currently running with ms0 being redirected to ef0.
@@ -506,6 +506,25 @@ unsigned int sctrlHENFindImportInMod(SceModule *mod, const char *libname, unsign
  *
  */
 STMOD_HANDLER sctrlHENSetStartModuleHandler(STMOD_HANDLER new_handler);
+
+/**
+ * Creates a syscall stub for the given `function` in user-memory.
+ *
+ * Creating a syscall stub this way allows a kernel program to inject syscall
+ * calls in a user module without overwriting a existing syscall stub in the
+ * module being modified.
+ *
+ * @note The given `function` must be exported as syscall for it to work.
+ *
+ * @param function The function pointer to the function to create the syscall stub
+ *
+ * @return The syscall stub of the given function (> 0). Or zero if the function fails to create the stub.
+ *
+ * @attention Every call to this function allocates 8 bytes of memory in the
+ * user RAM, which is also the available memory for the running application. So,
+ * avoid excessive use of this function.
+ */
+unsigned int sctrlHENMakeSyscallStub(void *function);
 
 /**
  * Sets the speed (only for kernel usage)
