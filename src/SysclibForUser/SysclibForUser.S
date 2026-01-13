@@ -9,13 +9,13 @@
 	IMPORT_START "SysclibForUser",0x40090000
 #endif
 #ifdef F_SysclibForUser_0001
-	IMPORT_FUNC  "SysclibForUser",0x4C0FE24C,malloc
+	IMPORT_FUNC_WITH_ALIAS  "SysclibForUser",0x4C0FE24C,malloc,user_malloc
 #endif
 #ifdef F_SysclibForUser_0002
-	IMPORT_FUNC  "SysclibForUser",0xA65E8BC4,free
+	IMPORT_FUNC_WITH_ALIAS  "SysclibForUser",0xA65E8BC4,free,user_free
 #endif
 #ifdef F_SysclibForUser_0003
-	IMPORT_FUNC  "SysclibForUser",0xB19C939A,memalign
+	IMPORT_FUNC_WITH_ALIAS  "SysclibForUser",0xB19C939A,memalign,user_memalign
 #endif
 #ifdef F_SysclibForUser_0004
 	IMPORT_FUNC  "SysclibForUser",0x7661E728,sprintf
