@@ -6,9 +6,9 @@
 #include <systemctrl_se.h>
 #include <bootloadex.h>
 #include <pspbtcnf.h>
-#include <rebootconfig.h>
+#include <rebootexconfig.h>
 
-RebootConfigARK* reboot_conf = (RebootConfigARK*)REBOOTEX_CONFIG;
+RebootexConfigARK* reboot_conf = (RebootexConfigARK*)REBOOTEX_CONFIG;
 ARKConfig* ark_config = (ARKConfig*)ARK_CONFIG;
 
 void initArkRebootConfig(BootLoadExConfig* ble_config){

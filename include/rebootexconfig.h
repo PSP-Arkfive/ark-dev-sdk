@@ -62,9 +62,9 @@ typedef struct RebootexConfigARK {
         char game_id[10];
         char path[REBOOTEX_CONFIG_ISO_PATH_MAXSIZE];
     } last_played;
-} RebootConfigARK;
+} RebootexConfigARK;
 
-typedef struct {
+typedef struct RebootexConfigADR{
     int bootfileindex;
     u8 iso_disc_type;
 
@@ -85,7 +85,7 @@ typedef struct {
 } RebootexConfigADR;
 
 // L/ME
-typedef struct RebootexParam {
+typedef struct RebootexConfigLME {
     char    file[REBOOTEX_FILELEN_MAX_LME];//0
     u32     config[0x70/4];//0x50
     int     reboot_index;//0xc0
@@ -118,7 +118,7 @@ typedef struct RebootexConfigPRO {
 typedef union{
     RebootexConfigLME lme;
     RebootexConfigPRO pro;
-    RebootConfigARK ark;
+    RebootexConfigARK ark;
     RebootexConfigADR adr;
 } RebootexConfig;
 

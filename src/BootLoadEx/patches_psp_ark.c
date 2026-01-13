@@ -7,7 +7,7 @@
 #include <pspbtcnf.h>
 #include <bootloadex.h>
 #include <bootloadex_ark.h>
-#include <rebootconfig.h>
+#include <rebootexconfig.h>
 
 // ARK files
 #define PATH_SYSTEMCTRL FLASH0_PATH "kd/ark_systemctrl.prx"

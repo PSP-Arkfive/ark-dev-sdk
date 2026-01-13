@@ -1,7 +1,8 @@
 #ifndef _BOOTLOADEX_ARK_H_
 #define _BOOTLOADEX_ARK_H_
 
-#include "rebootconfig.h"
+#include <ark.h>
+#include <rebootexconfig.h>
 
 typedef struct{
     u8 filesize[4];
@@ -10,7 +11,7 @@ typedef struct{
 } ArkFlashFile;
 
 // ARK specific functions
-extern RebootConfigARK* reboot_conf;
+extern RebootexConfigARK* reboot_conf;
 extern ARKConfig* ark_config;
 void initArkRebootConfig(BootLoadExConfig*);
 int UnpackBootConfigArkPSP(char *buffer, int length);

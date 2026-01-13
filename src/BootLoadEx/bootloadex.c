@@ -22,7 +22,7 @@
 #include <systemctrl.h>
 #include <systemctrl_se.h>
 #include <bootloadex.h>
-#include <rebootconfig.h>
+#include <rebootexconfig.h>
 
 
 int psp_model = PSP_1000;
