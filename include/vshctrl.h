@@ -36,6 +36,11 @@ void* user_malloc(size_t size);
 void* user_memalign(unsigned int align, unsigned int size);
 
 /**
+ * Free reserved memory.
+ */
+void user_free(void* ptr);
+
+/**
  * Registers the vsh menu.
  * When HOME is pressed, vshctrl will load the satelite module.
  * In module_start, call this function to register the vsh menu.
