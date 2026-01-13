@@ -210,7 +210,7 @@ int LZ4_decompress_fast(const char* source, char* dest, int outputSize);
  * LZO decompress
  */
 int lzo1x_decompress(void* source, unsigned src_len, void* dest, unsigned* dst_len, void*);
-#define sctrlLzoDecompress(dest, dst_size, src, src_size) lzo1x_decompress(src, src_size, dest, dst_size)
+#define sctrlLzoDecompress(dest, dst_size, src, src_size) lzo1x_decompress(src, src_size, dest, dst_size, NULL)
 
 /**
  * Check if currently running with ms0 being redirected to ef0.
