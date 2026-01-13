@@ -30,6 +30,7 @@ extern "C"{
 #include <pspkernel.h>
 #include <pspinit.h>
 
+#include <rebootexconfig.h>
 
 #define GAME_ID_MINIMUM_BUFFER_SIZE 10
 
@@ -681,6 +682,11 @@ int sctrlGetRealEthernetAddress(uint8_t * mac);
 int sctrlDeflateDecompress(void* dest, void* src, int size);
 
 /**
+ * Obtain RebootexConfig structure. Needs to be casted correctly based on running CFW.
+ */
+RebootexConfig* sctrlHENGetRebootexConfig(RebootexConfig*);
+
+/**
  * Copy the exploited game ID into dest.
  *
  * @param dest pointer to where to copy the game ID, maximum of 10 characters (including the null terminating byte)
@@ -688,11 +694,6 @@ int sctrlDeflateDecompress(void* dest, void* src, int size);
  */
 void sctrlGetExploitID(char* dest);
 
-/**
- * Exit back to ARK's Custom Launcher.
- * If launcher is unavailable, it will do an exitVSH.
- */
-int sctrlArkExitLauncher(void);
 
 #ifdef __cplusplus
 }

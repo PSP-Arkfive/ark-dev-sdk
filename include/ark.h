@@ -136,8 +136,16 @@ typedef struct ARKConfig{
 #define IS_VITA_ADR(_arkconfigptr_) (_arkconfigptr_->exec_mode==PSV_ADR)
 #define IS_VITA_POPS(_arkconfigptr_) (_arkconfigptr_->exec_mode==PSV_POPS)
 
-// Function to obtain ARK's execution environment configuration
+/*
+ * Function to obtain ARK's execution environment configuration.
+ */
 void* sctrlArkGetConfig(ARKConfig* conf);
+
+/**
+ * Exit back to ARK's Custom Launcher.
+ * If launcher is unavailable, it will do an exitVSH.
+ */
+int sctrlArkExitLauncher(void);
 
 #ifdef __cplusplus
 }

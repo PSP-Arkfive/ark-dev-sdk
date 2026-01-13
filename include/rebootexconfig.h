@@ -19,15 +19,17 @@
 #define _REBOOTCONFIG_H_
 
 #include <pspsdk.h>
-#include <ark.h>
 
 #define REBOOTEX_MAX_SIZE 0x5000
 
-// PROCFW Reboot Buffer Configuration Address
-#define REBOOTEX_CONFIG (REBOOTEX_TEXT - 0x10000)
+// Reboot Buffer Configuration Address
+#define REBOOTEX_CONFIG 0x88FB0000
 
-// PROCFW Reboot Buffer ISO Path (so we don't lose that information)
+// PROCFW/ARK Reboot Buffer ISO Path (so we don't lose that information)
 #define REBOOTEX_CONFIG_ISO_PATH_MAXSIZE 0x100
+
+// L/ME
+#define REBOOTEX_FILELEN_MAX_LME 0x50
 
 /**
     Originally ARK used a similar rebootex config as PRO with the same magic number.
@@ -40,7 +42,7 @@
 */
 
 // ARK Rebootex config
-typedef struct RebootConfigARK {
+typedef struct RebootexConfigARK {
     unsigned int magic; // ARK magic
     unsigned int reboot_buffer_size; // size of this struct (redundancy)
     unsigned char iso_mode; // Inferno, NP9660
@@ -62,7 +64,64 @@ typedef struct RebootConfigARK {
     } last_played;
 } RebootConfigARK;
 
-extern RebootConfigARK* sctrlHENGetRebootexConfig(RebootConfigARK*);
+typedef struct {
+    int bootfileindex;
+    u8 iso_disc_type;
+
+    char *module_after;
+    void *buf;
+    int size;
+    int flags;
+
+    u32 ram2;
+    u32 ram11;
+
+    char umdfilename[256];
+    char title_id[10];
+
+    // Maybe make it generic for the whole SEConfigADR
+    u8 overwrite_use_psposk;
+    u8 overwrite_use_psposk_to;
+} RebootexConfigADR;
+
+// L/ME
+typedef struct RebootexParam {
+    char    file[REBOOTEX_FILELEN_MAX_LME];//0
+    u32     config[0x70/4];//0x50
+    int     reboot_index;//0xc0
+    int     mem2;
+    int     mem8;
+    int     k150_flag;
+    void*   on_reboot_after;
+    void*   on_reboot_buf;
+    int     on_reboot_size;
+    int     on_reboot_flag;
+} RebootexConfigLME;
+
+typedef struct RebootexConfigPRO {
+    u32 magic;
+    u32 rebootex_size;
+    u32 p2_size;
+    u32 p9_size;
+    char *insert_module_before;
+    void *insert_module_binary;
+    u32 insert_module_size;
+    u32 insert_module_flags;
+    u32 psp_fw_version;
+    u8 psp_model;
+    u8 iso_mode;
+    u8 recovery_mode;
+    u8 ofw_mode;
+    u8 iso_disc_type;
+} RebootexConfigPRO;
+
+typedef union{
+    RebootexConfigLME lme;
+    RebootexConfigPRO pro;
+    RebootConfigARK ark;
+    RebootexConfigADR adr;
+} RebootexConfig;
+
 
 #endif
 
