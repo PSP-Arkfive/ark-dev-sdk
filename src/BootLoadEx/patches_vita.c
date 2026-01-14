@@ -25,12 +25,20 @@ void relocateFlashFile(BootFile* file){
 
 int _pspemuLfatOpen(BootFile* file, u32 a1, u32 a2, u32 a3, u32 t0)
 {
-    char* p = file->name;
- 
+
+    int is_btcnf = (memcmp(file->name, "pspbtcnf", 8) == 0);
+
+    if (is_btcnf){
+        boot_files->nfiles = 0;
+    }
+
+    // add file to boot list
+    strcpy((char*)&(boot_files->bootfile[boot_files->nfiles++]), file->name);
+
     if (ble_config->extra_io.vita_io.pspemuLfatOpenExtra(file) == 0){
         return 0;
     }
-    else if (strcmp(p, REBOOT_MODULE) == 0){
+    else if (strcmp(file->name, REBOOT_MODULE) == 0){
         file->buffer = ble_config->rtm_mod.buffer;
         file->size = ble_config->rtm_mod.size;
         relocateFlashFile(file);
