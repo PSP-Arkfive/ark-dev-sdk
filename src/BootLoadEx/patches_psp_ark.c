@@ -204,8 +204,10 @@ int UnpackBootConfigArkPSP(char *buffer, int length)
                 newsize = patch_bootconf_updaterumd(buffer, result);
                 if (newsize > 0) result = newsize;
                 break;
-            case MODE_MARCH33:
+            case MODE_ME:
             case MODE_INFERNO:
+            case MODE_MARCH33:
+            case MODE_OE_LEGACY:
                 reboot_conf->iso_mode = MODE_INFERNO;
                 newsize = patch_bootconf_inferno(buffer, result);
                 if (newsize > 0) result = newsize;

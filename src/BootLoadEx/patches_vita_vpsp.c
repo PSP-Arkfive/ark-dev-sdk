@@ -31,8 +31,10 @@ int pspemuLfatOpenArkVPSP(BootFile* file){
     if (strcmp(p, "pspbtcnf.bin") == 0){
         p[2] = 'v'; // custom btcnf for PS Vita
         switch(reboot_conf->iso_mode) {
-            case MODE_MARCH33:
+            case MODE_ME:
             case MODE_INFERNO:
+            case MODE_MARCH33:
+            case MODE_OE_LEGACY:
             case MODE_VSHUMD: // inferno ISO mode
                 reboot_conf->iso_mode = MODE_INFERNO;
                 p[5] = 'j'; // use inferno ISO mode (psvbtjnf.bin)
