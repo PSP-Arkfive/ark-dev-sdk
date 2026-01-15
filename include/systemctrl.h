@@ -63,12 +63,6 @@ enum ToolkitType
     PSP_TOOLKIT_TYPE_DEV = 2, // development tool kit
 };
 
-typedef struct _pspMsPrivateDirent {
-  SceSize size;
-  char s_name[16];
-  char l_name[1024];
-} pspMsPrivateDirent;
-
 // Custom Utility Modules
 #define PSP_MODULE_NET_FTP			   0x0180
 #define PSP_MODULE_AV_PNG   			 0x0380
@@ -93,8 +87,8 @@ typedef struct _pspMsPrivateDirent {
 // Prologue Module Start Handler
 typedef int (* STMOD_HANDLER)(SceModule *);
 
-// Thread Context
-typedef struct SceThreadContext SceThreadContext;
+// data for HijackFunction
+typedef unsigned int FunctionPatchData[5];
 
 // Decrypt extension functions
 typedef int (* KDEC_HANDLER)(u32 *buf, int size, int *retSize, int m);
@@ -472,6 +466,18 @@ unsigned int sctrlHENFindImport(const char *modname, const char *libname, unsign
 unsigned int sctrlHENFindImportInMod(SceModule *mod, const char *libname, unsigned int nid);
 
 /**
+ * Hijack a function.
+ * Stackable function hijacking.
+ * 
+ * @param patch_data buffer to store data for the patch.
+ * @param func_addr address of function to be hijacked
+ * @param patch_func function that will take over
+ * @param orig_func pointer to a pointer, will store pointer to call original (or next) function.
+ * 
+ */
+void sctrlHENHijackFunction(FunctionPatchData* patch_data, void* func_addr, void* patch_func, void** orig_func);
+
+/**
  * Sets a function to be called just before module_start of a module is gonna be called (useful for patching purposes)
  *
  * @param handler - The function, that will receive the module structure before the module is started.
@@ -686,13 +692,18 @@ int sctrlDeflateDecompress(void* dest, void* src, int size);
  */
 RebootexConfig* sctrlHENGetRebootexConfig(RebootexConfig*);
 
+
 /**
- * Copy the exploited game ID into dest.
- *
- * @param dest pointer to where to copy the game ID, maximum of 10 characters (including the null terminating byte)
- *
+ * Resolve a NID.
+ * Obtains the new version of a NID given the older version.
+ * 
+ * @param libName library name
+ * @param nid old NID
+ * 
+ * @return new NID
+ * 
  */
-void sctrlGetExploitID(char* dest);
+unsigned int sctrlKernelResolveNid(const char * libName, unsigned int nid);
 
 
 #ifdef __cplusplus

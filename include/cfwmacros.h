@@ -50,6 +50,7 @@
 
 // Kernelify Address
 #define KERNELIFY(f) (0x80000000 | ((unsigned int)(f)))
+#define IS_KERNEL_ADDR(a) ((0x80000000&((unsigned int)(a))) != 0)
 
 // j addr
 #define JUMP(f) (0x08000000 | (((unsigned int)(f) >> 2) & 0x03ffffff))

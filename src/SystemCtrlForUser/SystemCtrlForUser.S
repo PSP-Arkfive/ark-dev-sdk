@@ -233,3 +233,6 @@
 #ifdef F_SystemCtrlForUser_0075
 	IMPORT_FUNC  "SystemCtrlForUser",0xDF306CFC,sctrlHENFindImportInMod
 #endif
+#ifdef F_SystemCtrlForUser_0076
+	IMPORT_FUNC  "SystemCtrlForUser",0xDB39A3EC,sctrlHENHijackFunction
+#endif

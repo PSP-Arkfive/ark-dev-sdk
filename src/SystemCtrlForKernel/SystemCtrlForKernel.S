@@ -296,3 +296,6 @@
 #ifdef F_SystemCtrlForKernel_0096
     IMPORT_FUNC "SystemCtrlForKernel",0x7F5FBFCC,sctrlHENMakeSyscallStub
 #endif
+#ifdef F_SystemCtrlForKernel_0097
+    IMPORT_FUNC "SystemCtrlForKernel",0xDB39A3EC,sctrlHENHijackFunction
+#endif
